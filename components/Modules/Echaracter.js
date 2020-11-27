@@ -94,6 +94,24 @@ export default class Char extends Component {
     } else if (this.props.element === "Crystal") {
       statusColour = styles.containerC;
     }
+    const skillColour = (v) => {
+      if (v.match(/^Wind/)) {
+        return styles.containerWi;
+      } else if (v.match(/^Water/)) {
+        return styles.containerWa;
+      } else if (v.match(/^Fire/)) {
+        return styles.containerF;
+      } else if (v.match(/^Earth/)) {
+        return styles.containerE;
+      } else if (v.match(/^Shade/)) {
+        return styles.containerS;
+      } else if (v.match(/^Crystal/)) {
+        return styles.containerC;
+      } else if (v.match(/^Thunder/)) {
+        return styles.containerL;
+      } else return;
+    };
+
     let weapon = require("../pics/Sword.png");
     if (this.props.weapon === "Fists") {
       weapon = require("../pics/Fists.png");
@@ -152,7 +170,7 @@ export default class Char extends Component {
             <View style={styles.deLine}>
               <Image
                 source={
-                  this.props.uri !== ""
+                  this.props.uri
                     ? {
                         uri: this.props.uri,
                       }
@@ -348,7 +366,7 @@ export default class Char extends Component {
             <View style={styles.deLine}>
               <Image
                 source={
-                  this.props.uriAs !== ""
+                  this.props.uriAs
                     ? {
                         uri: this.props.uriAs,
                       }
@@ -475,7 +493,10 @@ export default class Char extends Component {
                   (skills, i) => (
                     i++,
                     (
-                      <View key={i} style={[styles.inLine]}>
+                      <View
+                        key={i}
+                        style={[styles.inLine, skillColour(skills.skillEffect)]}
+                      >
                         <View key={i} style={styles.boxName}>
                           <Text style={styles.skillText}>
                             {skills.skillName}
@@ -493,7 +514,13 @@ export default class Char extends Component {
                       (skills, i) => (
                         i++,
                         (
-                          <View key={i} style={[styles.inLine]}>
+                          <View
+                            key={i}
+                            style={[
+                              styles.inLine,
+                              skillColour(skills.skillEffect),
+                            ]}
+                          >
                             <View style={styles.boxName}>
                               <Text style={styles.skillText}>
                                 {skills.skillName}
@@ -520,7 +547,13 @@ export default class Char extends Component {
                       (skills, i) => (
                         i++,
                         (
-                          <View key={i} style={[styles.inLine]}>
+                          <View
+                            key={i}
+                            style={[
+                              styles.inLine,
+                              skillColour(skills.skillEffect),
+                            ]}
+                          >
                             <View style={styles.boxName}>
                               <Text style={styles.skillText}>
                                 {skills.skillName}
@@ -600,6 +633,9 @@ const styles = StyleSheet.create({
   },
   containerL: {
     backgroundColor: colors.lightning,
+  },
+  containerN: {
+    backgroundColor: colors.white,
   },
   containerWa: {
     backgroundColor: colors.water,
