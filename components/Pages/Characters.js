@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import Char from "../Modules/Echaracter";
 import * as firebase from "firebase";
@@ -68,6 +69,7 @@ class CPage extends Component {
     charactersRead: [{}],
     weaponFilter: "",
     elementFilter: "",
+    loading: false,
   };
   componentDidMount() {
     this.getInitialState();
@@ -194,6 +196,7 @@ class CPage extends Component {
     await firebase.database().ref("characters").set({ characters });
   };
   handleFilterWeapon = (v) => {
+    this.setState({ loading: true });
     let charactersRead = this.state.characters.filter((w) => w.weapon == v);
     if (v === this.state.weaponFilter) charactersRead = this.state.characters;
     if (this.state.elementFilter !== "")
@@ -203,8 +206,10 @@ class CPage extends Component {
     if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
     else this.setState({ weaponFilter: v });
     this.setState({ charactersRead });
+    setTimeout(() => this.setState({ loading: false }));
   };
   handleFilterElement = (v) => {
+    this.setState({ loading: true });
     let charactersRead = this.state.characters.filter((e) => e.element == v);
     if (v === this.state.elementFilter) charactersRead = this.state.characters;
     if (this.state.weaponFilter !== "")
@@ -214,6 +219,7 @@ class CPage extends Component {
     if (v === this.state.elementFilter) this.setState({ elementFilter: "" });
     else this.setState({ elementFilter: v });
     this.setState({ charactersRead });
+    setTimeout(() => this.setState({ loading: false }));
   };
   render() {
     return (
@@ -376,44 +382,48 @@ class CPage extends Component {
             </TouchableOpacity>
           </View>
         </View>
-        <ScrollView nestedScrollEnabled={true}>
-          <View style={{ flexDirection: "column-reverse" }}>
-            {this.state.charactersRead.map(
-              (characters, i) => (
-                i++,
-                (
-                  <View key={i}>
-                    {characters.name !== "" ? (
-                      <Char
-                        key={characters.id}
-                        id={characters.id}
-                        name={characters.name}
-                        skills={characters.skills}
-                        weapon={characters.weapon}
-                        shadow={characters.shadow}
-                        element={characters.element}
-                        vc={characters.vc}
-                        vcAS={characters.vcAS}
-                        uri={characters.uri}
-                        tomeName={characters.tomeName}
-                        tomeNameAs={characters.tomeNameAs}
-                        tomeLocation={characters.tomeLocation}
-                        tomeLocationAs={characters.tomeLocationAs}
-                        as={characters.as}
-                        stats={characters.stats}
-                        statsAs={characters.statsAs}
-                        uriAs={characters.uriAs}
-                        manifest={characters.manifest}
-                        manifestAs={characters.manifestAs}
-                        LStats={characters.LStats}
-                      />
-                    ) : null}
-                  </View>
+        {this.state.loading ? (
+          <ActivityIndicator size={"large"} color={colors.black} />
+        ) : (
+          <ScrollView nestedScrollEnabled={true}>
+            <View style={{ flexDirection: "column-reverse" }}>
+              {this.state.charactersRead.map(
+                (characters, i) => (
+                  i++,
+                  (
+                    <View key={i}>
+                      {characters.name !== "" ? (
+                        <Char
+                          key={characters.id}
+                          id={characters.id}
+                          name={characters.name}
+                          skills={characters.skills}
+                          weapon={characters.weapon}
+                          shadow={characters.shadow}
+                          element={characters.element}
+                          vc={characters.vc}
+                          vcAS={characters.vcAS}
+                          uri={characters.uri}
+                          tomeName={characters.tomeName}
+                          tomeNameAs={characters.tomeNameAs}
+                          tomeLocation={characters.tomeLocation}
+                          tomeLocationAs={characters.tomeLocationAs}
+                          as={characters.as}
+                          stats={characters.stats}
+                          statsAs={characters.statsAs}
+                          uriAs={characters.uriAs}
+                          manifest={characters.manifest}
+                          manifestAs={characters.manifestAs}
+                          LStats={characters.LStats}
+                        />
+                      ) : null}
+                    </View>
+                  )
                 )
-              )
-            )}
-          </View>
-        </ScrollView>
+              )}
+            </View>
+          </ScrollView>
+        )}
       </View>
     );
   }

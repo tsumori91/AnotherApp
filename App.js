@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, StatusBar } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  ActivityIndicator,
+} from "react-native";
 import CPage from "./components/Pages/Characters";
 import Puller from "./components/Pages/Puller";
 import * as firebase from "firebase";
@@ -16,11 +22,17 @@ if (!firebase.apps.length) {
 
 export default class AnotherApp extends Component {
   state = {
-    display: "",
+    display: "characters",
     weapons: [{}],
+    loading: true,
   };
+  componentDidMount() {
+    setTimeout(() => this.setState({ loading: false }));
+  }
   handlePages = (v) => {
+    this.setState({ loading: true });
     this.setState({ display: v });
+    setTimeout(() => this.setState({ loading: false }));
   };
   getWeapons = () => {
     firebase
@@ -62,19 +74,27 @@ export default class AnotherApp extends Component {
             onPress={() => this.handlePages("puller")}
           />
         </View>
-        <View style={styles.container}>
-          {this.state.display === "weapons" ? (
-            <Weapons />
-          ) : this.state.display === "puller" ? (
-            <Puller />
-          ) : this.state.display === "armor" ? (
-            <Armors />
-          ) : this.state.display === "toDo" ? (
-            <ToDo weapons={this.state.weapons} />
-          ) : (
-            <CPage />
-          )}
-        </View>
+        {this.state.loading ? (
+          <ActivityIndicator
+            size={"large"}
+            color={colors.black}
+            style={{ flex: 1, alignSelf: "center" }}
+          />
+        ) : (
+          <View style={styles.container}>
+            {this.state.display === "weapons" ? (
+              <Weapons />
+            ) : this.state.display === "puller" ? (
+              <Puller />
+            ) : this.state.display === "armor" ? (
+              <Armors />
+            ) : this.state.display === "toDo" ? (
+              <ToDo weapons={this.state.weapons} />
+            ) : (
+              <CPage />
+            )}
+          </View>
+        )}
       </View>
     );
   }
@@ -83,7 +103,7 @@ export default class AnotherApp extends Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     marginHorizontal: "0.5%",
     flex: 1,
   },
