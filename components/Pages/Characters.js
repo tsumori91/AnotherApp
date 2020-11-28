@@ -347,7 +347,7 @@ class CPage extends Component {
                   this.state.elementFilter === "Shade" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
-                source={require("../pics/Shadow.png")}
+                source={require("../pics/Shade.png")}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -359,7 +359,7 @@ class CPage extends Component {
                   this.state.elementFilter === "Thunder" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
-                source={require("../pics/Lightning.png")}
+                source={require("../pics/Thunder.png")}
               />
             </TouchableOpacity>
             <TouchableOpacity

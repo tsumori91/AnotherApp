@@ -94,6 +94,30 @@ export default class Char extends Component {
     } else if (this.props.element === "Crystal") {
       statusColour = styles.containerC;
     }
+    let elementPic = null;
+    switch (this.props.element) {
+      case "Wind":
+        elementPic = require("../pics/Wind.png");
+        break;
+      case "Fire":
+        elementPic = require("../pics/Fire.png");
+        break;
+      case "Water":
+        elementPic = require("../pics/Water.png");
+        break;
+      case "Earth":
+        elementPic = require("../pics/Earth.png");
+        break;
+      case "Crystal":
+        elementPic = require("../pics/Crystal.png");
+        break;
+      case "Shade":
+        elementPic = require("../pics/Shade.png");
+        break;
+      case "Thunder":
+        elementPic = require("../pics/Thunder.png");
+        break;
+    }
     const skillColour = (v) => {
       if (v.match(/^Wind/)) {
         return styles.containerWi;
@@ -318,7 +342,7 @@ export default class Char extends Component {
                 Stats at {bonus}{" "}
                 {this.props.shadow === true ? "Shadow" : "Light"}
               </Text>
-              {this.props.LStats[8].value !== 0 &&
+              {this.props.LStats[8].stat !== "" &&
               this.props.LStats[1].stat !== "" ? (
                 <Slider
                   tapToSeek={false}
@@ -356,11 +380,26 @@ export default class Char extends Component {
                           ]}
                         >
                           {stats.value}{" "}
+                          {this.state.showAs === false
+                            ? stats.value !== this.props.stats[i - 1].value
+                              ? `(+${
+                                  stats.value - this.props.stats[i - 1].value
+                                })`
+                              : null
+                            : stats.value !== this.props.statsAs[i - 1].value
+                            ? `(+${
+                                stats.value - this.props.statsAs[i - 1].value
+                              })`
+                            : null}
                         </Text>
                       </View>
                     )
                   )
                 )}
+                <Text style={[{ fontWeight: "bold" }, styles.descriptions]}>
+                  VC Grasta Gives:
+                </Text>
+                <Text style={styles.descriptions}>{this.props.vcStats}</Text>
               </View>
             </View>
           ) : null}
@@ -651,13 +690,13 @@ const styles = StyleSheet.create({
   deLine: {
     flexDirection: "column",
   },
-  descriptions: { lineHeight: 16 },
+  descriptions: { lineHeight: 15 },
   fade: {
     backgroundColor: colors.grey,
   },
   image: {
-    height: 105,
-    width: 105,
+    height: 106,
+    width: 106,
   },
 
   inLine: {
@@ -667,7 +706,7 @@ const styles = StyleSheet.create({
   main: {
     paddingBottom: 100,
     flex: 2,
-    height: 122.7,
+    height: 125.78,
   },
   pic: {
     height: 20,
@@ -691,12 +730,13 @@ const styles = StyleSheet.create({
   stats: {
     fontSize: 24,
     fontWeight: "bold",
-    lineHeight: 29,
+    lineHeight: 28,
   },
   tabsBottom: {
     flex: 1,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
+    paddingVertical: 1,
   },
   tabsBottomText: {
     fontSize: 13,

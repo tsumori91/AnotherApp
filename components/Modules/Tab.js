@@ -29,5 +29,6 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     fontWeight: "bold",
     alignSelf: "center",
+    textTransform: "none",
   },
 });
