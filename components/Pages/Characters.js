@@ -224,12 +224,6 @@ class CPage extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button
-          title={"add"}
-          onPress={() => {
-            this.handleUpdate();
-          }}
-        />
         <View style={styles.allButtons}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={() => this.handleFilterWeapon("Staff")}>
@@ -435,6 +429,7 @@ const styles = StyleSheet.create({
   allButtons: {
     backgroundColor: colors.grey,
     minWidth: "100%",
+    paddingVertical: 6,
     justifyContent: "center",
     alignItems: "center",
   },

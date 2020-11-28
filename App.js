@@ -13,7 +13,6 @@ import ApiKeys from "./components/Config/ApiKeys";
 import Tab from "./components/Modules/Tab";
 import Weapons from "./components/Pages/Weapons";
 import Armors from "./components/Pages/Armors";
-import ToDo from "./components/Pages/ToDo";
 import colors from "./components/Config/colors";
 
 if (!firebase.apps.length) {
@@ -33,16 +32,6 @@ export default class AnotherApp extends Component {
     this.setState({ loading: true });
     this.setState({ display: v });
     setTimeout(() => this.setState({ loading: false }));
-  };
-  getWeapons = () => {
-    firebase
-      .database()
-      .ref("weapons")
-      .on("value", (snapshot) =>
-        this.setState({
-          weapons: snapshot.val().weapons,
-        })
-      );
   };
 
   render() {
@@ -88,8 +77,6 @@ export default class AnotherApp extends Component {
               <Puller />
             ) : this.state.display === "armor" ? (
               <Armors />
-            ) : this.state.display === "toDo" ? (
-              <ToDo weapons={this.state.weapons} />
             ) : (
               <CPage />
             )}

@@ -241,9 +241,9 @@ export default class Char extends Component {
               >
                 {this.props.name}
               </Text>
-              <View style={styles.inLine}>
+              <View style={[styles.inLine]}>
                 <Text style={{ fontWeight: "bold" }}>Weapon type: </Text>
-                <Text>
+                <Text style={styles.weaponLine}>
                   {this.props.weapon}
                   <Image style={styles.pic} source={weapon} />
                   <Image
@@ -338,7 +338,9 @@ export default class Char extends Component {
                     i++,
                     (
                       <View key={i} style={[styles.inLine, { width: "50%" }]}>
-                        <Text style={{ fontWeight: "bold" }}>
+                        <Text
+                          style={[{ fontWeight: "bold" }, styles.descriptions]}
+                        >
                           {stats.stat}:{" "}
                         </Text>
                         <Text
@@ -649,7 +651,7 @@ const styles = StyleSheet.create({
   deLine: {
     flexDirection: "column",
   },
-  descriptions: {},
+  descriptions: { lineHeight: 16 },
   fade: {
     backgroundColor: colors.grey,
   },
@@ -689,6 +691,7 @@ const styles = StyleSheet.create({
   stats: {
     fontSize: 24,
     fontWeight: "bold",
+    lineHeight: 29,
   },
   tabsBottom: {
     flex: 1,
@@ -711,5 +714,9 @@ const styles = StyleSheet.create({
   },
   topRightTab: {
     borderTopLeftRadius: 0,
+  },
+  weaponLine: {
+    lineHeight: 19,
+    paddingBottom: 1,
   },
 });
