@@ -335,7 +335,7 @@ export default class Char extends Component {
                 styles.main,
                 { paddingHorizontal: 7 },
                 statusColour,
-                styles.borderOg,
+                this.state.showAs ? styles.borderAs : styles.borderOg,
               ]}
             >
               <Text style={styles.stats}>
@@ -397,9 +397,18 @@ export default class Char extends Component {
                   )
                 )}
                 <Text style={[{ fontWeight: "bold" }, styles.descriptions]}>
-                  VC Grasta Gives:
+                  VC Grasta Gives:{" "}
                 </Text>
-                <Text style={styles.descriptions}>{this.props.vcStats}</Text>
+                <Text
+                  style={[
+                    styles.descriptions,
+                    { fontSize: 12.5, textTransform: "uppercase" },
+                  ]}
+                >
+                  {this.state.showAs && this.props.vcStatsAs
+                    ? this.props.vcStatsAs
+                    : this.props.vcStats}
+                </Text>
               </View>
             </View>
           ) : null}

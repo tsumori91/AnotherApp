@@ -409,6 +409,8 @@ class CPage extends Component {
                           manifest={characters.manifest}
                           manifestAs={characters.manifestAs}
                           LStats={characters.LStats}
+                          vcStats={characters.vcStats}
+                          vcStatsAs={characters.vcStatsAs}
                         />
                       ) : null}
                     </View>

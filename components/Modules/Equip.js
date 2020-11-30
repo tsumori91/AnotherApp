@@ -63,17 +63,18 @@ export default class Weapon extends Component {
             <View style={styles.name}>
               <Text>{this.props.name}</Text>
             </View>
-            {this.props.armor === true ? (
+            {
               <View style={styles.stats}>
-                <Text>Defense: {this.props.stats[0]} </Text>
-                <Text>M.Defense: {this.props.stats[1]} </Text>
+                <Text>
+                  {this.props.armor === true ? "Defense: " : "Attack: "}
+                  {this.props.stats[0]}
+                </Text>
+                <Text>
+                  {this.props.armor === true ? "M.Defense: " : "M.Attack: "}
+                  {this.props.stats[1]}
+                </Text>
               </View>
-            ) : (
-              <View style={styles.stats}>
-                <Text>Attack: {this.props.stats[0]} </Text>
-                <Text>M.Attack: {this.props.stats[1]} </Text>
-              </View>
-            )}
+            }
             <View style={styles.effects}>
               <Text>{this.props.effects}</Text>
             </View>
@@ -94,7 +95,24 @@ export default class Weapon extends Component {
                   <Text style={{ fontWeight: "bold" }}>
                     {this.props.materialsLocation}
                   </Text>
-                  <Text>-{this.props.materials.join("\n-")}</Text>
+                  <Text>
+                    -
+                    {this.props.materialsLocation2
+                      ? this.props.materials.slice(0, -1).join("\n-")
+                      : this.props.materials.join("\n-")}
+                  </Text>
+                  {this.props.materialsLocation2
+                    ? (
+                        <Text style={{ fontWeight: "bold" }}>
+                          {"\n"}
+                          {this.props.materialsLocation2}
+                        </Text>
+                      ) && (
+                        <Text>
+                          {this.props.materials.slice(-1).join("\n-")}
+                        </Text>
+                      )
+                    : null}
                 </View>
               ) : null}
             </View>
