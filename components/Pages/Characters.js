@@ -267,7 +267,7 @@ class CPage extends Component {
         (e) => e.element == this.state.elementFilter
       );
     if (this.state.painFilter) {
-      charactersRead = charactersRead.filter((w) => w.poison == true);
+      charactersRead = charactersRead.filter((w) => w.pain == true);
     }
     this.setState({ poisonFilter: !this.state.poisonFilter });
     this.setState({ charactersRead });
