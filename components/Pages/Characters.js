@@ -70,6 +70,8 @@ class CPage extends Component {
     weaponFilter: "",
     elementFilter: "",
     loading: false,
+    poisonFilter: false,
+    painFilter: false,
   };
   componentDidMount() {
     this.getInitialState();
@@ -203,6 +205,12 @@ class CPage extends Component {
       charactersRead = charactersRead.filter(
         (e) => e.element == this.state.elementFilter
       );
+    if (this.state.painFilter) {
+      charactersRead = charactersRead.filter((w) => w.pain == true);
+    }
+    if (this.state.poisonFilter) {
+      charactersRead = charactersRead.filter((w) => w.poison == true);
+    }
     if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
     else this.setState({ weaponFilter: v });
     this.setState({ charactersRead });
@@ -216,8 +224,52 @@ class CPage extends Component {
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter
       );
+    if (this.state.painFilter) {
+      charactersRead = charactersRead.filter((w) => w.pain == true);
+    }
+    if (this.state.poisonFilter) {
+      charactersRead = charactersRead.filter((w) => w.poison == true);
+    }
     if (v === this.state.elementFilter) this.setState({ elementFilter: "" });
     else this.setState({ elementFilter: v });
+    this.setState({ charactersRead });
+    setTimeout(() => this.setState({ loading: false }));
+  };
+  handleFilterPain = () => {
+    this.setState({ loading: true });
+    let charactersRead = this.state.characters.filter((e) => e.pain == true);
+    if (this.state.painFilter) charactersRead = this.state.characters;
+    if (this.state.weaponFilter !== "")
+      charactersRead = charactersRead.filter(
+        (w) => w.weapon == this.state.weaponFilter
+      );
+    if (this.state.elementFilter !== "")
+      charactersRead = charactersRead.filter(
+        (e) => e.element == this.state.elementFilter
+      );
+    if (this.state.poisonFilter) {
+      charactersRead = charactersRead.filter((w) => w.poison == true);
+    }
+    this.setState({ painFilter: !this.state.painFilter });
+    this.setState({ charactersRead });
+    setTimeout(() => this.setState({ loading: false }));
+  };
+  handleFilterPoison = () => {
+    this.setState({ loading: true });
+    let charactersRead = this.state.characters.filter((e) => e.poison == true);
+    if (this.state.poisonFilter) charactersRead = this.state.characters;
+    if (this.state.weaponFilter !== "")
+      charactersRead = charactersRead.filter(
+        (w) => w.weapon == this.state.weaponFilter
+      );
+    if (this.state.elementFilter !== "")
+      charactersRead = charactersRead.filter(
+        (e) => e.element == this.state.elementFilter
+      );
+    if (this.state.painFilter) {
+      charactersRead = charactersRead.filter((w) => w.poison == true);
+    }
+    this.setState({ poisonFilter: !this.state.poisonFilter });
     this.setState({ charactersRead });
     setTimeout(() => this.setState({ loading: false }));
   };
@@ -298,6 +350,16 @@ class CPage extends Component {
                 source={require("../pics/Hammer.png")}
               />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.handleFilterPoison()}>
+              <Image
+                style={[
+                  styles.weaponIcon,
+                  styles.debuff,
+                  this.state.poisonFilter ? styles.fade : null,
+                ]}
+                source={require("../pics/Poison.png")}
+              />
+            </TouchableOpacity>
           </View>
           <View style={[styles.buttonContainer]}>
             <TouchableOpacity onPress={() => this.handleFilterElement("Fire")}>
@@ -374,6 +436,17 @@ class CPage extends Component {
                 source={require("../pics/Crystal.png")}
               />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.handleFilterPain()}>
+              <Image
+                style={[
+                  styles.weaponIcon,
+                  styles.debuff,
+                  this.state.painFilter ? styles.fade : null,
+                  { marginHorizontal: 3 },
+                ]}
+                source={require("../pics/Pain.png")}
+              />
+            </TouchableOpacity>
           </View>
         </View>
         {this.state.loading ? (
@@ -411,6 +484,8 @@ class CPage extends Component {
                           LStats={characters.LStats}
                           vcStats={characters.vcStats}
                           vcStatsAs={characters.vcStatsAs}
+                          poison={characters.poison}
+                          pain={characters.pain}
                         />
                       ) : null}
                     </View>
@@ -442,6 +517,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+  },
+  debuff: {
+    resizeMode: "cover",
+    height: 34,
+    width: 34,
+    alignSelf: "center",
+    marginVertical: 5,
   },
   weaponIcon: {
     height: 40,
