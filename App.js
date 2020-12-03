@@ -5,6 +5,7 @@ import {
   View,
   StatusBar,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import CPage from "./components/Pages/Characters";
 import Puller from "./components/Pages/Puller";
@@ -36,7 +37,11 @@ export default class AnotherApp extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ImageBackground
+        imageStyle={{ opacity: 0.45 }}
+        style={styles.allContainer}
+        source={require("./components/pics/Background.png")}
+      >
         <View style={styles.buttons}>
           <Tab
             title={"Characters"}
@@ -82,12 +87,18 @@ export default class AnotherApp extends Component {
             )}
           </View>
         )}
-      </View>
+      </ImageBackground>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  allContainer: {
+    alignItems: "center",
+    marginHorizontal: "0.1%",
+    resizeMode: "cover",
+    flex: 1,
+  },
   container: {
     alignItems: "center",
     justifyContent: "flex-start",
