@@ -7,7 +7,7 @@ export default class Weapon extends Component {
     expand: false,
   };
   getBackground = () => {
-    let background = null;
+    let background = styles.backgroundLight;
     if (this.props.id % 2 !== 0) {
       background = styles.backgroundGrey;
     }
@@ -57,7 +57,7 @@ export default class Weapon extends Component {
           <View style={styles.row}>
             <Image
               style={styles.type}
-              source={this.getPic()}
+              source={this.props.uri ? { uri: this.props.uri } : this.getPic()}
               resizeMode={"contain"}
             />
             <View style={styles.name}>
@@ -80,39 +80,45 @@ export default class Weapon extends Component {
             </View>
           </View>
           {this.state.expand === true ? (
-            <View
-              style={[
-                styles.row,
-                styles.container,
-                this.props.id % 2 === 0 ? { borderColor: colors.grey } : null,
-              ]}
-            >
-              <Text style={[styles.name, { flex: 3 }]}>
+            <View style={[styles.row, styles.container]}>
+              <Text
+                style={[
+                  styles.name,
+                  {
+                    flex: 3,
+                    borderLeftWidth: 0,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                ]}
+              >
                 {this.props.getHow}
               </Text>
               {this.props.craft === true ? (
                 <View style={styles.materials}>
-                  <Text style={{ fontWeight: "bold" }}>
+                  <Text style={{ fontWeight: "bold", marginHorizontal: 5 }}>
                     {this.props.materialsLocation}
                   </Text>
-                  <Text>
+                  <Text style={{ marginHorizontal: 5 }}>
                     -
                     {this.props.materialsLocation2
-                      ? this.props.materials.slice(0, -1).join("\n-")
+                      ? this.props.materials
+                          .slice(0, -1)
+                          .filter((v) => v !== "")
+                          .join("\n-")
                       : this.props.materials.join("\n-")}
                   </Text>
-                  {this.props.materialsLocation2
-                    ? (
-                        <Text style={{ fontWeight: "bold" }}>
-                          {"\n"}
-                          {this.props.materialsLocation2}
-                        </Text>
-                      ) && (
-                        <Text>
-                          {this.props.materials.slice(-1).join("\n-")}
-                        </Text>
-                      )
-                    : null}
+                  {this.props.materialsLocation2 ? (
+                    <View>
+                      <Text style={{ fontWeight: "bold", marginHorizontal: 5 }}>
+                        {"\n"}
+                        {this.props.materialsLocation2}
+                      </Text>
+                      <Text style={{ marginHorizontal: 5 }}>
+                        -{this.props.materials.slice(-1).join("\n-")}
+                      </Text>
+                    </View>
+                  ) : null}
                 </View>
               ) : null}
             </View>
@@ -127,6 +133,9 @@ const styles = StyleSheet.create({
   backgroundGrey: {
     backgroundColor: colors.grey,
   },
+  backgroundLight: {
+    backgroundColor: "grey",
+  },
   container: {
     borderTopWidth: 2,
     borderColor: colors.white,
@@ -135,12 +144,18 @@ const styles = StyleSheet.create({
   effects: {
     flex: 3,
     paddingHorizontal: 3,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 3,
   },
   name: {
     flex: 2,
+    borderLeftWidth: 2,
     paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
   row: {
     flexDirection: "row",
@@ -150,17 +165,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
   type: {
     flex: 1,
-    backgroundColor: colors.white,
     borderRightWidth: 2,
     height: 40,
     borderColor: colors.white,
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
   },
   materials: {
     flex: 5,
-    paddingHorizontal: 5,
-    marginHorizontal: 0.2,
+    paddingHorizontal: 1.5,
+    marginHorizontal: 2.2,
+    paddingVertical: 3,
   },
 });

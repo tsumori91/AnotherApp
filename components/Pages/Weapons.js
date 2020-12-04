@@ -18,6 +18,7 @@ export default class Weapons extends Component {
     weapons: [{}],
     weaponsRead: [],
     weaponFilter: "",
+    sort: null,
   };
   componentDidMount() {
     this.getWeapons();
@@ -26,7 +27,7 @@ export default class Weapons extends Component {
     firebase
       .database()
       .ref("weapons")
-      .once("value", (snapshot) =>
+      .on("value", (snapshot) =>
         this.setState({
           weapons: snapshot.val().weapons,
           weaponsRead: snapshot.val().weapons,
@@ -38,6 +39,14 @@ export default class Weapons extends Component {
     if (v === this.state.weaponFilter) weaponsRead = this.state.weapons;
     if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
     else this.setState({ weaponFilter: v });
+    this.setState({ weaponsRead });
+  };
+  sortWep = (i) => {
+    this.setState({ sort: i });
+    let weaponsRead = [...this.state.weaponsRead];
+    weaponsRead = weaponsRead.sort((a, b) => {
+      return b.stats[i] - a.stats[i];
+    });
     this.setState({ weaponsRead });
   };
   handleAdd = async () => {
@@ -135,16 +144,18 @@ export default class Weapons extends Component {
         </View>
         <DropDownPicker
           items={[
-            { label: "Sort", value: "", hidden: true, disabled: true },
-            { label: "ATK", value: "atk" },
-            { label: "M.ATK", value: "mAtk" },
+            { label: "ATK", value: 0 },
+            { label: "M.ATK", value: 1 },
           ]}
-          containerStyle={{ height: 50 }}
-          dropDownStyle={{ height: 150, flex: 1, position: "relative" }}
+          placeholder={"Sort"}
+          defaultValue={""}
+          containerStyle={{ height: 43 }}
+          dropDownStyle={{ height: 80, flex: 1 }}
+          onChangeItem={(i) => this.sortWep(i.value)}
         />
         <View style={styles.row}>
           <View style={styles.type}>
-            <Text>Type</Text>
+            <Text>WPN</Text>
           </View>
           <View style={styles.name}>
             <Text>Name</Text>
@@ -169,6 +180,8 @@ export default class Weapons extends Component {
                 getHow={u.getHow}
                 materials={u.materials}
                 materialsLocation={u.materialsLocation}
+                materialsLocation2={u.materialsLocation2}
+                uri={u.uri}
                 craft={u.craft}
                 type={u.type}
               />
@@ -189,6 +202,8 @@ const styles = StyleSheet.create({
   effect: {
     flex: 3,
     paddingHorizontal: 3,
+    justifyContent: "center",
+    alignItems: "center",
   },
   fade: {
     opacity: 0.65,
@@ -204,6 +219,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
   row: {
     flexDirection: "row",
@@ -214,11 +231,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
   type: {
     flex: 1,
     borderRightWidth: 2,
+    paddingHorizontal: 1,
     borderColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
   weaponIcon: {
     height: 40,
