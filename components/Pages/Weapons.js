@@ -42,11 +42,16 @@ export default class Weapons extends Component {
     this.setState({ weaponsRead });
   };
   sortWep = (i) => {
-    this.setState({ sort: i });
     let weaponsRead = [...this.state.weaponsRead];
-    weaponsRead = weaponsRead.sort((a, b) => {
-      return b.stats[i] - a.stats[i];
-    });
+    if (this.state.sort === i) {
+      weaponsRead = weaponsRead.sort((a, b) => {
+        return a.stats[i] - b.stats[i];
+      });
+    } else
+      weaponsRead = weaponsRead.sort((a, b) => {
+        return b.stats[i] - a.stats[i];
+      });
+    this.setState({ sort: i });
     this.setState({ weaponsRead });
   };
   handleAdd = async () => {
@@ -149,7 +154,7 @@ export default class Weapons extends Component {
           ]}
           placeholder={"Sort"}
           defaultValue={""}
-          containerStyle={{ height: 43 }}
+          containerStyle={{ height: 43, marginVertical: 2 }}
           dropDownStyle={{ height: 80, flex: 1 }}
           onChangeItem={(i) => this.sortWep(i.value)}
         />
@@ -167,7 +172,7 @@ export default class Weapons extends Component {
             <Text>Effect (max)</Text>
           </View>
         </View>
-        <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
+        <ScrollView nestedScrollEnabled={true}>
           {this.state.weaponsRead.map((u, i) => {
             i++;
             return (
@@ -181,12 +186,14 @@ export default class Weapons extends Component {
                 materials={u.materials}
                 materialsLocation={u.materialsLocation}
                 materialsLocation2={u.materialsLocation2}
+                materialsLocation3={u.materialsLocation3}
                 uri={u.uri}
                 craft={u.craft}
                 type={u.type}
               />
             );
           })}
+          <View style={{ height: 240 }}></View>
         </ScrollView>
       </View>
     );
@@ -245,5 +252,7 @@ const styles = StyleSheet.create({
   weaponIcon: {
     height: 40,
     width: 40,
+    marginHorizontal: 1.3,
+    marginVertical: 5,
   },
 });

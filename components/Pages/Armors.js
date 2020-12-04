@@ -6,82 +6,117 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Button,
 } from "react-native";
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
 import colors from "../Config/colors";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default class Armors extends Component {
   state = {
-    armors: [
-      {
-        name: "Swift Cherry Blossom",
-        stats: [170, 28],
-        effects: "SPD+ (10)\nType Attack+ (10%)",
-        getHow: "Purchased from Blacksmith",
-        materials: ["Thick palm", "Water wheel plume", "Bear Stomach"],
-        materialsLocation: "Vermillion Road",
-        craft: true,
-        type: "Sword",
-      },
-    ],
-    armorsRead: [],
-    armorFilter: "",
+    armor: [{}],
+    armorRead: [],
+    weaponFilter: "",
+    sort: null,
   };
-
-  getarmors = () => {
+  componentDidMount() {
+    this.getarmor();
+  }
+  getarmor = () => {
     firebase
       .database()
-      .ref("armors")
-      .once("value", (snapshot) =>
+      .ref("armor")
+      .on("value", (snapshot) =>
         this.setState({
-          armors: snapshot.val().armors,
-          armorsRead: snapshot.val().armors,
+          armor: snapshot.val().armor,
+          armorRead: snapshot.val().armor,
         })
       );
   };
-  handleFilterarmor = (v) => {
-    let armorsRead = this.state.armors.filter((w) => w.type == v);
-    if (v === this.state.armorFilter) armorsRead = this.state.armors;
-    if (v === this.state.armorFilter) this.setState({ armorFilter: "" });
-    else this.setState({ armorFilter: v });
-    this.setState({ armorsRead });
+  handleFilterWeapon = (v) => {
+    let armorRead = this.state.armor.filter((w) => w.type == v);
+    if (v === this.state.weaponFilter) armorRead = this.state.armor;
+    if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
+    else this.setState({ weaponFilter: v });
+    this.setState({ armorRead });
+  };
+  sortArm = (i) => {
+    let armorRead = [...this.state.armorRead];
+    if (this.state.sort === i) {
+      armorRead = armorRead.sort((a, b) => {
+        return a.stats[i] - b.stats[i];
+      });
+    } else
+      armorRead = armorRead.sort((a, b) => {
+        return b.stats[i] - a.stats[i];
+      });
+    this.setState({ sort: i });
+    this.setState({ armorRead });
+  };
+  handleAdd = async () => {
+    const armor = [...this.state.armor];
+    this.setState({ armor });
+    armor.push({
+      craft: false,
+      effects: "",
+      armor: true,
+      getHow: "Purchased from Blacksmith",
+      materials: ["1", "2", "3"],
+      materialsLocation: "",
+      name: "",
+      stats: [1, 1],
+      type: "Bangle",
+    });
+    await firebase.database().ref("armor").set({ armor });
   };
   render() {
     return (
       <View style={styles.container}>
+        <Button title={"Add"} onPress={this.handleAdd} />
         <View style={styles.filter}>
-          <TouchableOpacity onPress={() => this.handleFilterarmor("Bangle")}>
+          <TouchableOpacity onPress={() => this.handleFilterWeapon("Bangle")}>
             <Image
               style={[
-                styles.armorIcon,
-                this.state.armorFilter === "Bangle" ? styles.fade : null,
+                styles.weaponIcon,
+                this.state.weaponFilter === "Bangle" ? styles.fade : null,
               ]}
               source={require("../pics/Bangle.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.handleFilterarmor("Necklace")}>
+          <TouchableOpacity onPress={() => this.handleFilterWeapon("Ring")}>
             <Image
               style={[
-                styles.armorIcon,
-                this.state.armorFilter === "Necklace" ? styles.fade : null,
-              ]}
-              source={require("../pics/Necklace.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.handleFilterarmor("Ring")}>
-            <Image
-              style={[
-                styles.armorIcon,
-                this.state.armorFilter === "Ring" ? styles.fade : null,
+                styles.weaponIcon,
+                this.state.weaponFilter === "Ring" ? styles.fade : null,
               ]}
               source={require("../pics/Ring.png")}
             />
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.handleFilterWeapon("Necklace")}>
+            <Image
+              style={[
+                styles.weaponIcon,
+                this.state.weaponFilter === "Necklace" ? styles.fade : null,
+              ]}
+              source={require("../pics/Necklace.png")}
+            />
+          </TouchableOpacity>
         </View>
+        <DropDownPicker
+          items={[
+            { label: "DEF", value: 0 },
+            { label: "M.DEF", value: 1 },
+          ]}
+          placeholder={"Sort"}
+          defaultValue={""}
+          containerStyle={{ height: 43, marginVertical: 2 }}
+          dropDownStyle={{ height: 80, flex: 1 }}
+          onChangeItem={(i) => this.sortArm(i.value)}
+        />
         <View style={styles.row}>
           <View style={styles.type}>
-            <Text>Type</Text>
+            <Text>ARM</Text>
           </View>
           <View style={styles.name}>
             <Text>Name</Text>
@@ -93,8 +128,8 @@ export default class Armors extends Component {
             <Text>Effect (max)</Text>
           </View>
         </View>
-        <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
-          {this.state.armorsRead.map((u, i) => {
+        <ScrollView nestedScrollEnabled={true}>
+          {this.state.armorRead.map((u, i) => {
             i++;
             return (
               <Equip
@@ -104,13 +139,18 @@ export default class Armors extends Component {
                 stats={u.stats}
                 effects={u.effects}
                 getHow={u.getHow}
+                armor={u.armor}
                 materials={u.materials}
                 materialsLocation={u.materialsLocation}
+                materialsLocation2={u.materialsLocation2}
+                materialsLocation3={u.materialsLocation3}
+                uri={u.uri}
                 craft={u.craft}
                 type={u.type}
               />
             );
           })}
+          <View style={{ height: 240 }}></View>
         </ScrollView>
       </View>
     );
@@ -124,8 +164,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   effect: {
-    flex: 2,
+    flex: 3,
     paddingHorizontal: 3,
+    justifyContent: "center",
+    alignItems: "center",
   },
   fade: {
     opacity: 0.65,
@@ -137,23 +179,37 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   name: {
-    flex: 1,
+    flex: 2,
     paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
   row: {
     flexDirection: "row",
     backgroundColor: colors.crystal,
   },
   stats: {
-    flex: 1,
+    flex: 2,
     paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  armorIcon: {
+  type: {
+    flex: 1,
+    borderRightWidth: 2,
+    paddingHorizontal: 1,
+    borderColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  weaponIcon: {
     height: 40,
     width: 40,
+    marginHorizontal: 1.3,
+    marginVertical: 5,
   },
 });

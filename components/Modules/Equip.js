@@ -101,7 +101,9 @@ export default class Weapon extends Component {
                   </Text>
                   <Text style={{ marginHorizontal: 5 }}>
                     -
-                    {this.props.materialsLocation2
+                    {this.props.materialsLocation3
+                      ? this.props.materials[0]
+                      : this.props.materialsLocation2
                       ? this.props.materials
                           .slice(0, -1)
                           .filter((v) => v !== "")
@@ -115,8 +117,24 @@ export default class Weapon extends Component {
                         {this.props.materialsLocation2}
                       </Text>
                       <Text style={{ marginHorizontal: 5 }}>
-                        -{this.props.materials.slice(-1).join("\n-")}
+                        -
+                        {this.props.materialsLocation3
+                          ? this.props.materials[1]
+                          : this.props.materials.slice(-1).join("\n-")}
                       </Text>
+                      {this.props.materialsLocation3 ? (
+                        <View>
+                          <Text
+                            style={{ fontWeight: "bold", marginHorizontal: 5 }}
+                          >
+                            {"\n"}
+                            {this.props.materialsLocation3}
+                          </Text>
+                          <Text style={{ marginHorizontal: 5 }}>
+                            -{this.props.materials[2]}
+                          </Text>
+                        </View>
+                      ) : null}
                     </View>
                   ) : null}
                 </View>
