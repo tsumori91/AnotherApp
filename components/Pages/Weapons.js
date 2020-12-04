@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
@@ -19,6 +20,7 @@ export default class Weapons extends Component {
     weaponsRead: [],
     weaponFilter: "",
     sort: null,
+    loading: false,
   };
   componentDidMount() {
     this.getWeapons();
@@ -35,11 +37,13 @@ export default class Weapons extends Component {
       );
   };
   handleFilterWeapon = (v) => {
+    this.setState({ loading: true });
     let weaponsRead = this.state.weapons.filter((w) => w.type == v);
     if (v === this.state.weaponFilter) weaponsRead = this.state.weapons;
     if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
     else this.setState({ weaponFilter: v });
     this.setState({ weaponsRead });
+    setTimeout(() => this.setState({ loading: false }));
   };
   sortWep = (i) => {
     let weaponsRead = [...this.state.weaponsRead];
@@ -172,29 +176,33 @@ export default class Weapons extends Component {
             <Text>Effect (max)</Text>
           </View>
         </View>
-        <ScrollView nestedScrollEnabled={true}>
-          {this.state.weaponsRead.map((u, i) => {
-            i++;
-            return (
-              <Equip
-                key={i}
-                id={i}
-                name={u.name}
-                stats={u.stats}
-                effects={u.effects}
-                getHow={u.getHow}
-                materials={u.materials}
-                materialsLocation={u.materialsLocation}
-                materialsLocation2={u.materialsLocation2}
-                materialsLocation3={u.materialsLocation3}
-                uri={u.uri}
-                craft={u.craft}
-                type={u.type}
-              />
-            );
-          })}
-          <View style={{ height: 240 }}></View>
-        </ScrollView>
+        {this.state.loading ? (
+          <ActivityIndicator size={"large"} color={colors.black} />
+        ) : (
+          <ScrollView nestedScrollEnabled={true}>
+            {this.state.weaponsRead.map((u, i) => {
+              i++;
+              return (
+                <Equip
+                  key={i}
+                  id={i}
+                  name={u.name}
+                  stats={u.stats}
+                  effects={u.effects}
+                  getHow={u.getHow}
+                  materials={u.materials}
+                  materialsLocation={u.materialsLocation}
+                  materialsLocation2={u.materialsLocation2}
+                  materialsLocation3={u.materialsLocation3}
+                  uri={u.uri}
+                  craft={u.craft}
+                  type={u.type}
+                />
+              );
+            })}
+            <View style={{ height: 240 }}></View>
+          </ScrollView>
+        )}
       </View>
     );
   }
