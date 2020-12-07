@@ -61,45 +61,48 @@ export default class Weapon extends Component {
               resizeMode={"contain"}
             />
             <View style={styles.name}>
-              <Text>{this.props.name}</Text>
+              <Text style={styles.text}>{this.props.name}</Text>
             </View>
             {
               <View style={styles.stats}>
-                <Text>
+                <Text style={styles.text}>
                   {this.props.armor === true ? "Defense: " : "Attack: "}
                   {this.props.stats[0]}
                 </Text>
-                <Text>
+                <Text style={styles.text}>
                   {this.props.armor === true ? "M.Defense: " : "M.Attack: "}
                   {this.props.stats[1]}
                 </Text>
               </View>
             }
             <View style={styles.effects}>
-              <Text>{this.props.effects}</Text>
+              <Text style={styles.text}>{this.props.effects}</Text>
             </View>
           </View>
           {this.state.expand === true ? (
-            <View style={[styles.row, styles.container]}>
-              <Text
+            <View style={[styles.row, styles.container, { borderTopWidth: 2 }]}>
+              <View style={styles.type}>
+                <Text style={styles.text}></Text>
+              </View>
+              <View
                 style={[
                   styles.name,
-                  {
-                    flex: 3,
-                    borderLeftWidth: 0,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  },
+                  !this.props.craft ? { flex: 7, borderRightWidth: 0 } : null,
                 ]}
               >
-                {this.props.getHow}
-              </Text>
+                <Text style={styles.text}>{this.props.getHow}</Text>
+              </View>
               {this.props.craft === true ? (
-                <View style={styles.materials}>
-                  <Text style={{ fontWeight: "bold", marginHorizontal: 5 }}>
+                <View style={[styles.materials, this.getBackground()]}>
+                  <Text
+                    style={[
+                      styles.text,
+                      { fontWeight: "bold", paddingHorizontal: 15 },
+                    ]}
+                  >
                     {this.props.materialsLocation}
                   </Text>
-                  <Text style={{ marginHorizontal: 5 }}>
+                  <Text style={styles.text}>
                     -
                     {this.props.materialsLocation3
                       ? this.props.materials[0]
@@ -112,11 +115,16 @@ export default class Weapon extends Component {
                   </Text>
                   {this.props.materialsLocation2 ? (
                     <View>
-                      <Text style={{ fontWeight: "bold", marginHorizontal: 5 }}>
+                      <Text
+                        style={[
+                          styles.text,
+                          { fontWeight: "bold", paddingHorizontal: 15 },
+                        ]}
+                      >
                         {"\n"}
                         {this.props.materialsLocation2}
                       </Text>
-                      <Text style={{ marginHorizontal: 5 }}>
+                      <Text style={styles.text}>
                         -
                         {this.props.materialsLocation3
                           ? this.props.materials[1]
@@ -125,12 +133,15 @@ export default class Weapon extends Component {
                       {this.props.materialsLocation3 ? (
                         <View>
                           <Text
-                            style={{ fontWeight: "bold", marginHorizontal: 5 }}
+                            style={[
+                              styles.text,
+                              { fontWeight: "bold", paddingHorizontal: 15 },
+                            ]}
                           >
                             {"\n"}
                             {this.props.materialsLocation3}
                           </Text>
-                          <Text style={{ marginHorizontal: 5 }}>
+                          <Text style={styles.text}>
                             -{this.props.materials[2]}
                           </Text>
                         </View>
@@ -150,9 +161,11 @@ export default class Weapon extends Component {
 const styles = StyleSheet.create({
   backgroundGrey: {
     backgroundColor: colors.grey,
+    borderRightColor: colors.grey,
   },
   backgroundLight: {
     backgroundColor: "grey",
+    borderRightColor: "grey",
   },
   container: {
     borderTopWidth: 2,
@@ -161,7 +174,6 @@ const styles = StyleSheet.create({
   },
   effects: {
     flex: 3,
-    paddingHorizontal: 3,
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 3,
@@ -169,7 +181,6 @@ const styles = StyleSheet.create({
   name: {
     flex: 2,
     borderLeftWidth: 2,
-    paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
     justifyContent: "center",
@@ -180,16 +191,17 @@ const styles = StyleSheet.create({
   },
   stats: {
     flex: 2,
-    paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
   },
+  text: {
+    paddingHorizontal: 6,
+  },
   type: {
-    flex: 1,
-    borderRightWidth: 2,
     height: 40,
+    width: 40,
     borderColor: colors.white,
     alignSelf: "center",
     justifyContent: "center",
@@ -197,8 +209,7 @@ const styles = StyleSheet.create({
   },
   materials: {
     flex: 5,
-    paddingHorizontal: 1.5,
-    marginHorizontal: 2.2,
-    paddingVertical: 3,
+    paddingVertical: 4,
+    borderRightWidth: 2,
   },
 });

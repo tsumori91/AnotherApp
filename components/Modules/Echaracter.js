@@ -189,9 +189,9 @@ export default class Char extends Component {
             />
           ) : null}
         </View>
-        <View style={[styles.inLine, { alignItems: "flex-start" }]}>
+        <View style={[styles.inLine, styles.mainPage]}>
           {this.state.showAs === false ? (
-            <View style={styles.deLine}>
+            <View style={[styles.deLine, { flex: 2 }]}>
               <Image
                 source={
                   this.props.uri
@@ -704,8 +704,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grey,
   },
   image: {
-    height: 106,
-    width: 106,
+    resizeMode: "cover",
+    flexGrow: 1,
   },
 
   inLine: {
@@ -713,9 +713,12 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   main: {
-    paddingBottom: 100,
-    flex: 2,
-    height: 125.78,
+    flex: 5,
+    height: "100%",
+  },
+  mainPage: {
+    alignItems: "flex-start",
+    height: 145,
   },
   pic: {
     height: 20,

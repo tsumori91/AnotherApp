@@ -46,6 +46,7 @@ export default class Weapons extends Component {
     setTimeout(() => this.setState({ loading: false }));
   };
   sortWep = (i) => {
+    this.setState({ loading: true });
     let weaponsRead = [...this.state.weaponsRead];
     if (this.state.sort === i) {
       weaponsRead = weaponsRead.sort((a, b) => {
@@ -57,6 +58,7 @@ export default class Weapons extends Component {
       });
     this.setState({ sort: i });
     this.setState({ weaponsRead });
+    setTimeout(() => this.setState({ loading: false }));
   };
   handleAdd = async () => {
     const weapons = [...this.state.weapons];
@@ -67,9 +69,10 @@ export default class Weapons extends Component {
       getHow: "Purchased from Blacksmith",
       materials: ["1", "2", "3"],
       materialsLocation: "",
+      materialsLocation2: 0,
       name: "",
       stats: [1, 1],
-      type: "Sword",
+      type: "Lance",
     });
     await firebase.database().ref("weapons").set({ weapons });
   };
@@ -251,8 +254,9 @@ const styles = StyleSheet.create({
   },
   type: {
     flex: 1,
+    maxWidth: 40,
     borderRightWidth: 2,
-    paddingHorizontal: 1,
+    marginHorizontal: 2,
     borderColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
