@@ -77,7 +77,6 @@ export default class Armors extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button title={"Add"} onPress={this.handleAdd} />
         <View style={styles.filter}>
           <TouchableOpacity onPress={() => this.handleFilterWeapon("Bangle")}>
             <Image
@@ -173,7 +172,6 @@ const styles = StyleSheet.create({
   },
   effect: {
     flex: 3,
-    paddingHorizontal: 3,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -188,7 +186,7 @@ const styles = StyleSheet.create({
   },
   name: {
     flex: 2,
-    paddingHorizontal: 3,
+    borderLeftWidth: 2,
     borderRightWidth: 2,
     borderColor: colors.white,
     justifyContent: "center",
@@ -208,9 +206,6 @@ const styles = StyleSheet.create({
   },
   type: {
     flex: 1,
-    borderRightWidth: 2,
-    paddingHorizontal: 1,
-    borderColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
   },
