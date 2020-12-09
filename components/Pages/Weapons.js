@@ -45,6 +45,41 @@ export default class Weapons extends Component {
     this.setState({ weaponsRead });
     setTimeout(() => this.setState({ loading: false }));
   };
+  handleOtherFilters = (v) => {
+    this.setState({ loading: true });
+    let weaponsRead = [...this.state.weapons];
+    if (this.state.weaponFilter) {
+      weaponsRead = weaponsRead.filter(
+        (w) => w.type == this.state.weaponFilter
+      );
+    }
+    switch (v) {
+      case 0:
+        weaponsRead = weaponsRead.filter((w) => w.effects);
+        break;
+      case 1:
+        weaponsRead = weaponsRead.filter((w) => !w.effects);
+        break;
+      case 2:
+        weaponsRead = weaponsRead.filter(
+          (w) => w.getHow.toLowerCase().indexOf("auction house") !== -1
+        );
+        break;
+      case 3:
+        weaponsRead = weaponsRead.filter((w) => w.materialsLocation);
+        weaponsRead = weaponsRead.filter(
+          (w) => w.materialsLocation.toLowerCase().indexOf("otherlands") !== -1
+        );
+        break;
+      case 4:
+        weaponsRead = weaponsRead.filter(
+          (w) => w.getHow.toLowerCase().indexOf("defeat") !== -1
+        );
+        break;
+    }
+    this.setState({ weaponsRead });
+    setTimeout(() => this.setState({ loading: false }));
+  };
   sortWep = (i) => {
     this.setState({ loading: true });
     let weaponsRead = [...this.state.weaponsRead];
@@ -153,17 +188,35 @@ export default class Weapons extends Component {
             />
           </TouchableOpacity>
         </View>
-        <DropDownPicker
-          items={[
-            { label: "ATK", value: 0 },
-            { label: "M.ATK", value: 1 },
-          ]}
-          placeholder={"Sort"}
-          defaultValue={""}
-          containerStyle={{ height: 43, marginVertical: 2 }}
-          dropDownStyle={{ height: 80, flex: 1 }}
-          onChangeItem={(i) => this.sortWep(i.value)}
-        />
+        <View style={styles.filter}>
+          <DropDownPicker
+            items={[
+              { label: "ATK", value: 0 },
+              { label: "M.ATK", value: 1 },
+            ]}
+            placeholder={"Sort"}
+            defaultValue={""}
+            containerStyle={styles.picker}
+            dropDownStyle={{ height: 80, flex: 1 }}
+            onChangeItem={(i) => this.sortWep(i.value)}
+          />
+          <DropDownPicker
+            items={[
+              { label: "Effect", value: 0 },
+              { label: "No Effect", value: 1 },
+              { label: "Auction House", value: 2 },
+              { label: "Otherlands", value: 3 },
+              { label: "Boss reward", value: 4 },
+            ]}
+            placeholder={"Filter"}
+            defaultValue={""}
+            containerStyle={styles.picker}
+            dropDownStyle={{ height: 100, flex: 1 }}
+            onChangeItem={(i) => {
+              this.handleOtherFilters(i.value);
+            }}
+          />
+        </View>
         <View style={styles.row}>
           <View style={styles.type}>
             <Text>WPN</Text>
@@ -241,6 +294,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     backgroundColor: colors.crystal,
+  },
+  picker: {
+    flex: 1,
+    height: 43,
+    marginVertical: 4,
+    marginHorizontal: 9,
   },
   stats: {
     flex: 2,

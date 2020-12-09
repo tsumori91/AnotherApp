@@ -18,7 +18,7 @@ export default class Armors extends Component {
   state = {
     armor: [{}],
     armorRead: [],
-    weaponFilter: "",
+    armorFilter: "",
     sort: null,
     loading: false,
   };
@@ -36,12 +36,45 @@ export default class Armors extends Component {
         })
       );
   };
-  handleFilterWeapon = (v) => {
+  handleFilterArmor = (v) => {
     this.setState({ loading: true });
     let armorRead = this.state.armor.filter((w) => w.type == v);
-    if (v === this.state.weaponFilter) armorRead = this.state.armor;
-    if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
-    else this.setState({ weaponFilter: v });
+    if (v === this.state.armorFilter) armorRead = this.state.armor;
+    if (v === this.state.armorFilter) this.setState({ armorFilter: "" });
+    else this.setState({ armorFilter: v });
+    this.setState({ armorRead });
+    setTimeout(() => this.setState({ loading: false }));
+  };
+  handleOtherFilters = (v) => {
+    this.setState({ loading: true });
+    let armorRead = [...this.state.armor];
+    if (this.state.armorFilter) {
+      armorRead = armorRead.filter((w) => w.type == this.state.armorFilter);
+    }
+    switch (v) {
+      case 0:
+        armorRead = armorRead.filter((w) => w.effects);
+        break;
+      case 1:
+        armorRead = armorRead.filter((w) => !w.effects);
+        break;
+      case 2:
+        armorRead = armorRead.filter(
+          (w) => w.getHow.toLowerCase().indexOf("auction house") !== -1
+        );
+        break;
+      case 3:
+        armorRead = armorRead.filter((w) => w.materialsLocation);
+        armorRead = armorRead.filter(
+          (w) => w.materialsLocation.toLowerCase().indexOf("otherlands") !== -1
+        );
+        break;
+      case 4:
+        armorRead = armorRead.filter(
+          (w) => w.getHow.toLowerCase().indexOf("defeat") !== -1
+        );
+        break;
+    }
     this.setState({ armorRead });
     setTimeout(() => this.setState({ loading: false }));
   };
@@ -68,54 +101,70 @@ export default class Armors extends Component {
       materialsLocation: "",
       name: "",
       stats: [1, 1],
-      type: "Bangle",
+      type: "",
     });
     await firebase.database().ref("armor").set({ armor });
   };
   render() {
     return (
       <View style={styles.container}>
-        <Button title={"add"} onPress={() => this.handleAdd()} />
         <View style={styles.filter}>
-          <TouchableOpacity onPress={() => this.handleFilterWeapon("Bangle")}>
+          <TouchableOpacity onPress={() => this.handleFilterArmor("Bangle")}>
             <Image
               style={[
                 styles.weaponIcon,
-                this.state.weaponFilter === "Bangle" ? styles.fade : null,
+                this.state.armorFilter === "Bangle" ? styles.fade : null,
               ]}
               source={require("../pics/Bangle.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.handleFilterWeapon("Ring")}>
+          <TouchableOpacity onPress={() => this.handleFilterArmor("Ring")}>
             <Image
               style={[
                 styles.weaponIcon,
-                this.state.weaponFilter === "Ring" ? styles.fade : null,
+                this.state.armorFilter === "Ring" ? styles.fade : null,
               ]}
               source={require("../pics/Ring.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.handleFilterWeapon("Necklace")}>
+          <TouchableOpacity onPress={() => this.handleFilterArmor("Necklace")}>
             <Image
               style={[
                 styles.weaponIcon,
-                this.state.weaponFilter === "Necklace" ? styles.fade : null,
+                this.state.armorFilter === "Necklace" ? styles.fade : null,
               ]}
               source={require("../pics/Necklace.png")}
             />
           </TouchableOpacity>
         </View>
-        <DropDownPicker
-          items={[
-            { label: "DEF", value: 0 },
-            { label: "M.DEF", value: 1 },
-          ]}
-          placeholder={"Sort"}
-          defaultValue={""}
-          containerStyle={{ height: 43, marginVertical: 2 }}
-          dropDownStyle={{ height: 80, flex: 1 }}
-          onChangeItem={(i) => this.sortArm(i.value)}
-        />
+        <View style={styles.filter}>
+          <DropDownPicker
+            items={[
+              { label: "ATK", value: 0 },
+              { label: "M.ATK", value: 1 },
+            ]}
+            placeholder={"Sort"}
+            defaultValue={""}
+            containerStyle={styles.picker}
+            dropDownStyle={{ height: 80, flex: 1 }}
+            onChangeItem={(i) => this.sortArm(i.value)}
+          />
+          <DropDownPicker
+            items={[
+              { label: "Effect", value: 0 },
+              { label: "No Effect", value: 1 },
+              { label: "Auction House", value: 2 },
+              { label: "Otherlands", value: 3 },
+            ]}
+            placeholder={"Filter"}
+            defaultValue={""}
+            containerStyle={styles.picker}
+            dropDownStyle={{ height: 100, flex: 1 }}
+            onChangeItem={(i) => {
+              this.handleOtherFilters(i.value);
+            }}
+          />
+        </View>
         <View style={styles.row}>
           <View style={styles.type}>
             <Text>ARM</Text>
@@ -190,6 +239,12 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
+  },
+  picker: {
+    flex: 1,
+    height: 43,
+    marginVertical: 4,
+    marginHorizontal: 9,
   },
   row: {
     flexDirection: "row",
