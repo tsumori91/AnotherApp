@@ -66,11 +66,11 @@ export default class Weapon extends Component {
             {
               <View style={styles.stats}>
                 <Text style={styles.text}>
-                  {this.props.armor === true ? "Defense: " : "Attack: "}
+                  {this.props.armor === true ? "Def: " : "Atk: "}
                   {this.props.stats[0]}
                 </Text>
                 <Text style={styles.text}>
-                  {this.props.armor === true ? "M.Defense: " : "M.Attack: "}
+                  {this.props.armor === true ? "M.Def: " : "M.Atk: "}
                   {this.props.stats[1]}
                 </Text>
               </View>

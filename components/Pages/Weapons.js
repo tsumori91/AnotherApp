@@ -72,7 +72,7 @@ export default class Weapons extends Component {
       materialsLocation2: 0,
       name: "",
       stats: [1, 1],
-      type: "Lance",
+      type: "",
     });
     await firebase.database().ref("weapons").set({ weapons });
   };

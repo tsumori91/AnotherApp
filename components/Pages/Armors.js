@@ -60,11 +60,9 @@ export default class Armors extends Component {
   };
   handleAdd = async () => {
     const armor = [...this.state.armor];
-    this.setState({ armor });
     armor.push({
       craft: false,
       effects: "",
-      armor: true,
       getHow: "Purchased from Blacksmith",
       materials: ["1", "2", "3"],
       materialsLocation: "",
@@ -77,6 +75,7 @@ export default class Armors extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Button title={"add"} onPress={() => this.handleAdd()} />
         <View style={styles.filter}>
           <TouchableOpacity onPress={() => this.handleFilterWeapon("Bangle")}>
             <Image
@@ -145,7 +144,7 @@ export default class Armors extends Component {
                   stats={u.stats}
                   effects={u.effects}
                   getHow={u.getHow}
-                  armor={u.armor}
+                  armor={true}
                   materials={u.materials}
                   materialsLocation={u.materialsLocation}
                   materialsLocation2={u.materialsLocation2}
@@ -198,16 +197,15 @@ const styles = StyleSheet.create({
   },
   stats: {
     flex: 2,
-    paddingHorizontal: 3,
     borderRightWidth: 2,
     borderColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
   },
   type: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    width: 40,
   },
   weaponIcon: {
     height: 40,
