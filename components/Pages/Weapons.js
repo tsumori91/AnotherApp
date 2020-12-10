@@ -95,7 +95,7 @@ export default class Weapons extends Component {
     this.setState({ weaponsRead });
     setTimeout(() => this.setState({ loading: false }));
   };
-  handleAdd = async () => {
+  handleAddWeapon = async () => {
     const weapons = [...this.state.weapons];
     this.setState({ weapons });
     weapons.push({
@@ -110,6 +110,14 @@ export default class Weapons extends Component {
       type: "",
     });
     await firebase.database().ref("weapons").set({ weapons });
+  };
+  handleAdd = (v) => {
+    let tracker = [...this.props.tracker];
+    let num = this.state.weapons.findIndex((w) => w.name === v);
+    let toAdd = this.state.weapons.slice(num, num + 1);
+    if (!toAdd[0].craft) return;
+    tracker = tracker.concat(toAdd);
+    this.props.addEquip(tracker);
   };
   render() {
     return (
@@ -252,6 +260,7 @@ export default class Weapons extends Component {
                   uri={u.uri}
                   craft={u.craft}
                   type={u.type}
+                  onAdd={this.handleAdd}
                 />
               );
             })}

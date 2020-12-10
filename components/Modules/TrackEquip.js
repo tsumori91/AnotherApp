@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import colors from "../Config/colors";
 
-export default class Weapon extends Component {
+export default class TrackEquip extends Component {
   state = {
     expand: false,
   };
@@ -67,11 +67,19 @@ export default class Weapon extends Component {
             {
               <View style={styles.stats}>
                 <Text style={styles.text}>
-                  {this.props.armor === true ? "Def: " : "Atk: "}
+                  {this.props.type === "Bangle" ||
+                  this.props.type === "Necklace" ||
+                  this.props.type === "Ring"
+                    ? "Def: "
+                    : "Atk: "}
                   {this.props.stats[0]}
                 </Text>
                 <Text style={styles.text}>
-                  {this.props.armor === true ? "M.Def: " : "M.Atk: "}
+                  {this.props.type === "Bangle" ||
+                  this.props.type === "Necklace" ||
+                  this.props.type === "Ring"
+                    ? "M.Def: "
+                    : "M.Atk: "}
                   {this.props.stats[1]}
                 </Text>
               </View>
@@ -85,72 +93,65 @@ export default class Weapon extends Component {
               <View style={styles.type}>
                 <Text style={styles.text}></Text>
               </View>
-              <View
-                style={[
-                  styles.name,
-                  !this.props.craft ? { flex: 7, borderRightWidth: 0 } : null,
-                ]}
-              >
-                <Text style={styles.text}>{this.props.getHow}</Text>
+              <View style={styles.name}>
+                <Text style={styles.text}>Purchase at blacksmith</Text>
               </View>
-              {this.props.craft === true ? (
-                <View style={[styles.materials, this.getBackground()]}>
-                  <Text
-                    style={[
-                      styles.text,
-                      { fontWeight: "bold", paddingHorizontal: 15 },
-                    ]}
-                  >
-                    {this.props.materialsLocation}
-                  </Text>
-                  <Text style={styles.text}>
-                    -
-                    {this.props.materialsLocation3
-                      ? this.props.materials[0]
-                      : this.props.materialsLocation2
-                      ? this.props.materials
-                          .slice(0, -1)
-                          .filter((v) => v !== "")
-                          .join("\n-")
-                      : this.props.materials.join("\n-")}
-                  </Text>
-                  {this.props.materialsLocation2 ? (
-                    <View>
-                      <Text
-                        style={[
-                          styles.text,
-                          { fontWeight: "bold", paddingHorizontal: 15 },
-                        ]}
-                      >
-                        {"\n"}
-                        {this.props.materialsLocation2}
-                      </Text>
-                      <Text style={styles.text}>
-                        -
-                        {this.props.materialsLocation3
-                          ? this.props.materials[1]
-                          : this.props.materials.slice(-1).join("\n-")}
-                      </Text>
-                      {this.props.materialsLocation3 ? (
-                        <View>
-                          <Text
-                            style={[
-                              styles.text,
-                              { fontWeight: "bold", paddingHorizontal: 15 },
-                            ]}
-                          >
-                            {"\n"}
-                            {this.props.materialsLocation3}
-                          </Text>
-                          <Text style={styles.text}>
-                            -{this.props.materials[2]}
-                          </Text>
-                        </View>
-                      ) : null}
-                    </View>
-                  ) : null}
-                </View>
-              ) : null}
+              <View style={[styles.materials, this.getBackground()]}>
+                <Text
+                  style={[
+                    styles.text,
+                    { fontWeight: "bold", paddingHorizontal: 15 },
+                  ]}
+                >
+                  {this.props.materialsLocation}
+                </Text>
+                <Text style={styles.text}>
+                  -
+                  {this.props.materialsLocation3
+                    ? this.props.materials[0]
+                    : this.props.materialsLocation2
+                    ? this.props.materials
+                        .slice(0, -1)
+                        .filter((v) => v !== "")
+                        .join("\n-")
+                    : this.props.materials.join("\n-")}
+                </Text>
+                {this.props.materialsLocation2 ? (
+                  <View>
+                    <Text
+                      style={[
+                        styles.text,
+                        { fontWeight: "bold", paddingHorizontal: 15 },
+                      ]}
+                    >
+                      {"\n"}
+                      {this.props.materialsLocation2}
+                    </Text>
+                    <Text style={styles.text}>
+                      -
+                      {this.props.materialsLocation3
+                        ? this.props.materials[1]
+                        : this.props.materials.slice(-1).join("\n-")}
+                    </Text>
+                    {this.props.materialsLocation3 ? (
+                      <View>
+                        <Text
+                          style={[
+                            styles.text,
+                            { fontWeight: "bold", paddingHorizontal: 15 },
+                          ]}
+                        >
+                          {"\n"}
+                          {this.props.materialsLocation3}
+                        </Text>
+                        <Text style={styles.text}>
+                          -{this.props.materials[2]}
+                        </Text>
+                      </View>
+                    ) : null}
+                  </View>
+                ) : null}
+              </View>
             </View>
           ) : null}
         </TouchableOpacity>

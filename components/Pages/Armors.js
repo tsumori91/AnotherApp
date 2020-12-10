@@ -91,7 +91,7 @@ export default class Armors extends Component {
     this.setState({ sort: i });
     this.setState({ armorRead });
   };
-  handleAdd = async () => {
+  handleAddArmor = async () => {
     const armor = [...this.state.armor];
     armor.push({
       craft: false,
@@ -104,6 +104,14 @@ export default class Armors extends Component {
       type: "",
     });
     await firebase.database().ref("armor").set({ armor });
+  };
+  handleAdd = (v) => {
+    let tracker = [...this.props.tracker];
+    let num = this.state.armor.findIndex((w) => w.name === v);
+    let toAdd = this.state.armor.slice(num, num + 1);
+    if (!toAdd[0].craft) return;
+    tracker = tracker.concat(toAdd);
+    this.props.addEquip(tracker);
   };
   render() {
     return (
@@ -201,6 +209,7 @@ export default class Armors extends Component {
                   uri={u.uri}
                   craft={u.craft}
                   type={u.type}
+                  onAdd={this.handleAdd}
                 />
               );
             })}

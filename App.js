@@ -14,7 +14,9 @@ import ApiKeys from "./components/Config/ApiKeys";
 import Tab from "./components/Modules/Tab";
 import Weapons from "./components/Pages/Weapons";
 import Armors from "./components/Pages/Armors";
+import myEquips from "./components/Pages/MyEquips";
 import colors from "./components/Config/colors";
+import MyEquips from "./components/Pages/MyEquips";
 
 if (!firebase.apps.length) {
   firebase.initializeApp(ApiKeys.firebaseConfig);
@@ -25,6 +27,7 @@ export default class AnotherApp extends Component {
     display: "characters",
     weapons: [{}],
     loading: true,
+    tracker: [],
   };
   componentDidMount() {
     setTimeout(() => this.setState({ loading: false }));
@@ -33,6 +36,10 @@ export default class AnotherApp extends Component {
     this.setState({ loading: true });
     this.setState({ display: v });
     setTimeout(() => this.setState({ loading: false }));
+  };
+  addEquip = (tracker) => {
+    this.setState({ tracker });
+    console.log(tracker);
   };
 
   render() {
@@ -48,6 +55,12 @@ export default class AnotherApp extends Component {
             color={this.state.display === "characters" ? "gold" : "primary"}
             onPress={() => this.handlePages("characters")}
             style={styles.button}
+          />
+          <Tab
+            title={"My Equips"}
+            color={this.state.display === "myEquips" ? "gold" : "primary"}
+            style={styles.button}
+            onPress={() => this.handlePages("myEquips")}
           />
           <Tab
             title={"Weapons"}
@@ -77,11 +90,13 @@ export default class AnotherApp extends Component {
         ) : (
           <View style={styles.container}>
             {this.state.display === "weapons" ? (
-              <Weapons />
+              <Weapons tracker={this.state.tracker} addEquip={this.addEquip} />
             ) : this.state.display === "puller" ? (
               <Puller />
             ) : this.state.display === "armor" ? (
-              <Armors />
+              <Armors tracker={this.state.tracker} addEquip={this.addEquip} />
+            ) : this.state.display === "myEquips" ? (
+              <MyEquips tracker={this.state.tracker} addEquip={this.addEquip} />
             ) : (
               <CPage />
             )}
@@ -108,11 +123,14 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 0,
     borderColor: colors.white,
-    borderWidth: 1,
+    borderWidth: 0.8,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
     flexGrow: 1,
   },
   buttons: {
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 45,
+    marginBottom: 10,
     backgroundColor: "#fff",
     width: "100%",
     alignItems: "center",
