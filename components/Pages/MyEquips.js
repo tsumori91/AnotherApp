@@ -37,8 +37,12 @@ export default class MyEquips extends Component {
     let matList = [];
     tracker.map((t) => {
       t.materialsLocation === d ? matList.push(t.materials[0]) : null;
-      !t.materialsLocation3 ? matList.push(t.materials[1]) : null;
-      !t.materialsLocation2 ? matList.push(t.materials[2]) : null;
+      t.materialsLocation === d && !t.materialsLocation3
+        ? matList.push(t.materials[1])
+        : null;
+      t.materialsLocation === d && !t.materialsLocation2
+        ? matList.push(t.materials[2])
+        : null;
       t.materialsLocation2 === d
         ? t.materialsLocation3
           ? matList.push(t.materials[1])
