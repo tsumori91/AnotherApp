@@ -9,7 +9,10 @@ export default class MyEquips extends Component {
   }
   handleDelete = (v) => {
     let tracker = [...this.props.tracker];
-    tracker = tracker.filter((t) => t.name !== v);
+    let index = tracker.findIndex((t) => t.name === v);
+    if (index >= 0) {
+      tracker.splice(index, 1);
+    }
     this.props.addEquip(tracker);
     this.updateDungeon();
   };
