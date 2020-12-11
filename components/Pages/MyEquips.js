@@ -11,9 +11,69 @@ export default class MyEquips extends Component {
     let tracker = [...this.props.tracker];
     tracker = tracker.filter((t) => t.name !== v);
     this.props.addEquip(tracker);
+    this.updateDungeon();
   };
   updateDungeon = () => {
     let tracker = [...this.props.tracker];
+    let dungeons = tracker.map((t) => t.materialsLocation);
+    let dungeons2 = tracker.map((t) =>
+      t.materialsLocation2 ? t.materialsLocation2 : null
+    );
+    let dungeons3 = tracker.map((t) =>
+      t.materialsLocation3 ? t.materialsLocation3 : null
+    );
+    dungeons = [...new Set(dungeons.concat(dungeons2).concat(dungeons3))];
+    dungeons = dungeons.filter((n) => n !== null);
+    this.setState({ dungeons });
+  };
+  findMats = (d) => {
+    let tracker = [...this.props.tracker];
+    tracker = tracker.filter(
+      (t) =>
+        t.materialsLocation === d ||
+        t.materialsLocation2 === d ||
+        t.materialsLocation3 === d
+    );
+    let matList = [];
+    tracker.map((t) => {
+      t.materialsLocation === d ? matList.push(t.materials[0]) : null;
+      !t.materialsLocation3 ? matList.push(t.materials[1]) : null;
+      !t.materialsLocation2 ? matList.push(t.materials[2]) : null;
+      t.materialsLocation2 === d
+        ? t.materialsLocation3
+          ? matList.push(t.materials[1])
+          : matList.push(t.materials[2])
+        : null;
+      t.materialsLocation3 === d ? matList.push(t.materials[2]) : null;
+    });
+    let cleanMatList = matList.map((value) =>
+      value
+        .replace(/[0-9,(,)]/g, "")
+        .replace(/Horror/g, "(Horror)")
+        .replace(/Sparkles/g, "(Sparkles)")
+        .replace(/Chest/g, "(Chests)")
+    );
+    let uniqueList = [...new Set(cleanMatList)];
+    const plzWork = this.addValues(uniqueList, cleanMatList, matList);
+    return plzWork.map((mat, i) => {
+      i++;
+      return <Text key={i}>{mat}</Text>;
+    });
+  };
+  addValues = (uniqueList, cleanMatList, matList) => {
+    let finishedList = [];
+    uniqueList.forEach((element) => {
+      let indices = [];
+      cleanMatList.forEach((a, i) => {
+        if (a === element) indices.push(i);
+      });
+      let itemNumber = 0;
+      indices.forEach(
+        (index) => (itemNumber += Number(matList[index].replace(/[^0-9]/g, "")))
+      );
+      finishedList.push(element + itemNumber);
+    });
+    return finishedList;
   };
   render() {
     return (
@@ -21,12 +81,26 @@ export default class MyEquips extends Component {
         {this.props.tracker.length ? (
           <ScrollView nestedScrollEnabled={true}>
             <View style={styles.dungeonList}>
-              <Text style={{ fontWeight: "bold" }}>
-                Dungeons you need to run:
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  flex: 1,
+                  alignSelf: "center",
+                }}
+              >
+                Dungeons to run or places to go:
               </Text>
               {this.state.dungeons.map((d, i) => {
                 i++;
-                return <Text key={i}>{"\n" + d}</Text>;
+                return (
+                  <View key={i}>
+                    <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                      {"\n" + d}
+                    </Text>
+                    {this.findMats(d)}
+                  </View>
+                );
               })}
             </View>
             {this.props.tracker.map((u, i) => {

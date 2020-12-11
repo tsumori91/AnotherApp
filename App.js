@@ -39,7 +39,6 @@ export default class AnotherApp extends Component {
   };
   addEquip = (tracker) => {
     this.setState({ tracker });
-    console.log(tracker);
   };
 
   render() {
