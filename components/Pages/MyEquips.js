@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ScrollView, Text } from "react-native";
+import { View, StyleSheet, ScrollView, Text, Alert } from "react-native";
 import Weapon from "../Modules/Equip";
 import TrackEquip from "../Modules/TrackEquip";
 export default class MyEquips extends Component {
@@ -13,8 +13,26 @@ export default class MyEquips extends Component {
     if (index >= 0) {
       tracker.splice(index, 1);
     }
-    this.props.addEquip(tracker);
-    this.updateDungeon();
+    Alert.alert(
+      "Removing item from craft list.",
+      "Do you want to remove " + v + " from your list?",
+      [
+        {
+          text: "No",
+          onPress: () => {
+            return;
+          },
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            this.props.addEquip(tracker);
+            this.updateDungeon();
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
   updateDungeon = () => {
     let tracker = [...this.props.tracker];

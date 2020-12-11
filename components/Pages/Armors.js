@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Button,
+  Alert,
   ActivityIndicator,
 } from "react-native";
 import Equip from "../Modules/Equip";
@@ -110,8 +111,26 @@ export default class Armors extends Component {
     let num = this.state.armor.findIndex((w) => w.name === v);
     let toAdd = this.state.armor.slice(num, num + 1);
     if (!toAdd[0].craft) return;
-    tracker = tracker.concat(toAdd);
-    this.props.addEquip(tracker);
+    Alert.alert(
+      "Adding armor to craft list.",
+      "Do you want to add " + v + " to your list?",
+      [
+        {
+          text: "No",
+          onPress: () => {
+            return;
+          },
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            tracker = tracker.concat(toAdd);
+            this.props.addEquip(tracker);
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
   render() {
     return (
