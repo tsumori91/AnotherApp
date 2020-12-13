@@ -35,12 +35,15 @@ export default class AnotherApp extends Component {
     this.setState({ loading: true });
     this.setState({ display: v });
     let tracker = await Storage.getItem("tracker");
+    if (tracker == null || !tracker) {
+      tracker = [];
+    }
     this.setState({ tracker });
     setTimeout(() => this.setState({ loading: false }));
   };
-  addEquip = (tracker) => {
+  addEquip = async (tracker) => {
     this.setState({ tracker });
-    Storage.setItem("tracker", tracker);
+    await Storage.setItem("tracker", tracker);
   };
 
   render() {

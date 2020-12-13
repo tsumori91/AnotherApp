@@ -13,6 +13,7 @@ import {
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
 import colors from "../Config/colors";
+import Storage from "../Config/Storage";
 import DropDownPicker from "react-native-dropdown-picker";
 
 export default class Armors extends Component {
@@ -22,20 +23,48 @@ export default class Armors extends Component {
     armorFilter: "",
     sort: null,
     loading: false,
+    date: "",
   };
   componentDidMount() {
-    this.getarmor();
+    if (this.checkDate() === true) {
+      this.getArmor();
+    } else this.getArmorLocal();
   }
-  getarmor = () => {
-    firebase
-      .database()
-      .ref("armor")
-      .on("value", (snapshot) =>
-        this.setState({
-          armor: snapshot.val().armor,
-          armorRead: snapshot.val().armor,
-        })
-      );
+  checkDate = async () => {
+    let today = new Date();
+    let date = String(today.getDate()) + String(today.getMonth());
+    let oldDate = await Storage.getItem("armordate");
+    if (date === oldDate) {
+      return false;
+    } else return true;
+  };
+  getArmorLocal = async () => {
+    let armor = await Storage.getItem("armor");
+    if (armor != null && armor) this.setState({ armor, armorRead: armor });
+    else {
+      this.getArmor();
+    }
+  };
+  getArmor = async () => {
+    if (firebase.database().ref("armor")) {
+      firebase
+        .database()
+        .ref("armor")
+        .on("value", (snapshot) =>
+          this.setState({
+            armor: snapshot.val().armor,
+            armorRead: snapshot.val().armor,
+          })
+        );
+      let today = new Date();
+      let date = String(today.getDate()) + String(today.getMonth());
+      this.setState({ date });
+      await Storage.setItem("armordate", date);
+      await Storage.setItem("armor", this.state.armor);
+    } else {
+      let armor = await Storage.getItem("armor");
+      if (armor != null && armor) this.setState({ armor, armorRead: armor });
+    }
   };
   handleFilterArmor = (v) => {
     this.setState({ loading: true });

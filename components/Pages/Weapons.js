@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
+import Storage from "../Config/Storage";
 import colors from "../Config/colors";
 import DropDownPicker from "react-native-dropdown-picker";
 
@@ -22,20 +23,55 @@ export default class Weapons extends Component {
     weaponFilter: "",
     sort: null,
     loading: false,
+    date: "",
   };
   componentDidMount() {
-    this.getWeapons();
+    if (this.checkDate() === true) {
+      this.getWeapons();
+    } else this.getWeaponsLocal();
   }
-  getWeapons = () => {
-    firebase
-      .database()
-      .ref("weapons")
-      .on("value", (snapshot) =>
-        this.setState({
-          weapons: snapshot.val().weapons,
-          weaponsRead: snapshot.val().weapons,
-        })
-      );
+  checkDate = async () => {
+    let today = new Date();
+    let date = String(today.getDate()) + String(today.getMonth());
+    let oldDate = await Storage.getItem("weaponsDate");
+    if (date === oldDate) {
+      return false;
+    } else return true;
+  };
+  getWeaponsLocal = async () => {
+    let weapons = await Storage.getItem("weapons");
+    if (weapons != null && weapons)
+      this.setState({ weapons, weaponsRead: weapons });
+    else {
+      this.getWeapons();
+    }
+  };
+  getWeapons = async () => {
+    if (firebase.database().ref("weapons")) {
+      firebase
+        .database()
+        .ref("weapons")
+        .on("value", (snapshot) =>
+          this.setState({
+            weapons: snapshot.val().weapons,
+            weaponsRead: snapshot.val().weapons,
+          })
+        );
+      let today = new Date();
+      let date = String(today.getDate()) + String(today.getMonth());
+      this.setState({ date });
+      await Storage.setItem("weaponsDate", date);
+      await Storage.setItem("weapons", this.state.weapons);
+    } else {
+      let weapons = await Storage.getItem("weapons");
+      if (weapons != null && weapons)
+        this.setState({ weapons, weaponsRead: weapons });
+      else
+        Alert.alert(
+          "Not connected to internet",
+          "You need to connect to the internet at least once to initialize this page"
+        );
+    }
   };
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });

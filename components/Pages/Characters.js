@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import Char from "../Modules/Echaracter";
 import * as firebase from "firebase";
+import Storage from "../Config/Storage";
 import Tab from "../Modules/Tab";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../Config/colors";
@@ -72,10 +73,21 @@ class CPage extends Component {
     loading: false,
     poisonFilter: false,
     painFilter: false,
+    date: "",
   };
   componentDidMount() {
-    this.getInitialState();
+    if (this.checkDate() === true) {
+      this.getInitialState();
+    } else this.getInitialState();
   }
+  checkDate = async () => {
+    let today = new Date();
+    let date = String(today.getDate()) + String(today.getMonth());
+    let oldDate = await Storage.getItem("charactersDate");
+    if (date === oldDate) {
+      return false;
+    } else return true;
+  };
   getInitialState = () => {
     firebase
       .database()

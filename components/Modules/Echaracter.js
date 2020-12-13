@@ -412,8 +412,9 @@ export default class Char extends Component {
               </View>
             </View>
           ) : null}
+
           {this.state.showAs === true ? (
-            <View style={styles.deLine}>
+            <View style={[styles.deLine, { flex: 2 }]}>
               <Image
                 source={
                   this.props.uriAs
