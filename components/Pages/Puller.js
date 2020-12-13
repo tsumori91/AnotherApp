@@ -35,26 +35,28 @@ export default class Puller extends Component {
     let banners = [...this.state.banners];
     banners.push(banners[banners.length - 1]);
     this.setState({ banners });
-    /*await firebase.database().ref("banners").set({ banners });*/
+    await firebase.database().ref("banners").set({ banners });
   };
   render() {
     return (
       <ScrollView style={styles.container} nestedScrollEnabled={true}>
-        <Tab title={"new banner"} onPress={() => this.handleNewBanner()} />
-        {this.state.banners.map((b) => (
-          <Banner
-            rates={b.rates}
-            key={b.key}
-            charactersAs={b.charactersAs}
-            charactersFive={b.charactersFive}
-            AsRates={b.AsRates}
-            bannerCharacters={b.bannerCharacters}
-            bannerFiveRates={b.bannerFiveRates}
-            bannerFourFRates={b.bannerFourFRates}
-            bannerImage={b.bannerImage}
-            characters={this.state.characters}
-          />
-        ))}
+        {/*<Tab title={"new banner"} onPress={() => this.handleNewBanner()} />*/}
+        <View style={{ flexDirection: "column-reverse" }}>
+          {this.state.banners.map((b) => (
+            <Banner
+              rates={b.rates}
+              key={b.key}
+              charactersAs={b.charactersAs}
+              charactersFive={b.charactersFive}
+              AsRates={b.AsRates}
+              bannerCharacters={b.bannerCharacters}
+              bannerFiveRates={b.bannerFiveRates}
+              bannerFourFRates={b.bannerFourFRates}
+              bannerImage={b.bannerImage}
+              characters={this.state.characters}
+            />
+          ))}
+        </View>
       </ScrollView>
     );
   }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   StatusBar,
   ActivityIndicator,
@@ -14,9 +13,9 @@ import ApiKeys from "./components/Config/ApiKeys";
 import Tab from "./components/Modules/Tab";
 import Weapons from "./components/Pages/Weapons";
 import Armors from "./components/Pages/Armors";
-import myEquips from "./components/Pages/MyEquips";
 import colors from "./components/Config/colors";
 import MyEquips from "./components/Pages/MyEquips";
+import Storage from "./components/Config/Storage";
 
 if (!firebase.apps.length) {
   firebase.initializeApp(ApiKeys.firebaseConfig);
@@ -32,13 +31,16 @@ export default class AnotherApp extends Component {
   componentDidMount() {
     setTimeout(() => this.setState({ loading: false }));
   }
-  handlePages = (v) => {
+  handlePages = async (v) => {
     this.setState({ loading: true });
     this.setState({ display: v });
+    let tracker = await Storage.getItem("tracker");
+    this.setState({ tracker });
     setTimeout(() => this.setState({ loading: false }));
   };
   addEquip = (tracker) => {
     this.setState({ tracker });
+    Storage.setItem("tracker", tracker);
   };
 
   render() {
@@ -74,7 +76,7 @@ export default class AnotherApp extends Component {
             onPress={() => this.handlePages("armor")}
           />
           <Tab
-            title={"Puller"}
+            title={"Pullsim"}
             color={this.state.display === "puller" ? "gold" : "primary"}
             style={styles.button}
             onPress={() => this.handlePages("puller")}

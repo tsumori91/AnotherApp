@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet, ScrollView, Text, Alert } from "react-native";
-import Weapon from "../Modules/Equip";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrackEquip from "../Modules/TrackEquip";
 export default class MyEquips extends Component {
   state = { dungeons: [] };
