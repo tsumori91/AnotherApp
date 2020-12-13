@@ -39,14 +39,21 @@ export default class Weapons extends Component {
     } else return true;
   };
   getWeaponsLocal = async () => {
-    let weapons = await Storage.getItem("weapons");
-    if (weapons != null && weapons)
-      this.setState({ weapons, weaponsRead: weapons });
-    else {
+    this.setState({ loading: true });
+    try {
+      let weapons = await Storage.getItem("weapons");
+      if (weapons && weapons != null) {
+        this.setState({ weapons, weaponsRead: weapons });
+      } else {
+        this.getWeapons();
+      }
+    } catch (error) {
       this.getWeapons();
     }
+    setTimeout(() => this.setState({ loading: false }));
   };
   getWeapons = async () => {
+    this.setState({ loading: true });
     if (firebase.database().ref("weapons")) {
       firebase
         .database()
@@ -60,18 +67,20 @@ export default class Weapons extends Component {
       let today = new Date();
       let date = String(today.getDate()) + String(today.getMonth());
       this.setState({ date });
-      await Storage.setItem("weaponsDate", date);
-      await Storage.setItem("weapons", this.state.weapons);
+      Storage.setItem("weaponsDate", date);
+      Storage.setItem("weapons", this.state.weapons);
     } else {
       let weapons = await Storage.getItem("weapons");
-      if (weapons != null && weapons)
+      if (weapons != null && weapons) {
         this.setState({ weapons, weaponsRead: weapons });
-      else
+      } else {
         Alert.alert(
           "Not connected to internet",
           "You need to connect to the internet at least once to initialize this page"
         );
+      }
     }
+    setTimeout(() => this.setState({ loading: false }));
   };
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });

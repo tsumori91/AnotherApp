@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  Alert,
   ActivityIndicator,
 } from "react-native";
 import Char from "../Modules/Echaracter";
@@ -78,7 +79,7 @@ class CPage extends Component {
   componentDidMount() {
     if (this.checkDate() === true) {
       this.getInitialState();
-    } else this.getInitialState();
+    } else this.getInitialStateLocal();
   }
   checkDate = async () => {
     let today = new Date();
@@ -88,7 +89,20 @@ class CPage extends Component {
       return false;
     } else return true;
   };
-  getInitialState = () => {
+  getInitialStateLocal = async () => {
+    this.setState({ loading: true });
+    try {
+      let characters = await Storage.getItem("characters");
+      if (characters && characters != null)
+        this.setState({ characters, charactersRead: characters });
+      else this.getInitialState();
+    } catch (error) {
+      this.getInitialState();
+    }
+    setTimeout(() => this.setState({ loading: false }));
+  };
+  getInitialState = async () => {
+    this.setState({ loading: true });
     firebase
       .database()
       .ref("characters")
@@ -98,6 +112,22 @@ class CPage extends Component {
           charactersRead: snapshot.val().characters,
         })
       );
+    let characters = [...this.state.characters];
+    if (characters[0].id === 1) {
+      Storage.setItem("characters", characters);
+      this.saveDate();
+    } else {
+      let characters = await Storage.getItem("characters");
+      if (characters != null && characters) {
+        this.setState({ characters, charactersRead: characters });
+      } else {
+        Alert.alert(
+          "Not connected to internet",
+          "You need to connect to the internet at least once to initialize this page"
+        );
+      }
+    }
+    setTimeout(() => this.setState({ loading: false }));
   };
   handleUpdate = async () => {
     let characters = [...this.state.characters];
@@ -285,6 +315,13 @@ class CPage extends Component {
     this.setState({ charactersRead });
     setTimeout(() => this.setState({ loading: false }));
   };
+  saveDate() {
+    let today = new Date();
+    let date = String(today.getDate()) + String(today.getMonth());
+    this.setState({ date });
+    Storage.setItem("charactersDate", date);
+  }
+
   render() {
     return (
       <View style={styles.container}>

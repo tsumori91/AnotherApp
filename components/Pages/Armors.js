@@ -39,13 +39,21 @@ export default class Armors extends Component {
     } else return true;
   };
   getArmorLocal = async () => {
-    let armor = await Storage.getItem("armor");
-    if (armor != null && armor) this.setState({ armor, armorRead: armor });
-    else {
+    this.setState({ loading: true });
+    try {
+      let armor = await Storage.getItem("armor");
+      if (armor != null && armor) {
+        this.setState({ armor, armorRead: armor });
+      } else {
+        this.getArmor();
+      }
+    } catch (error) {
       this.getArmor();
     }
+    setTimeout(() => this.setState({ loading: false }));
   };
   getArmor = async () => {
+    this.setState({ loading: true });
     if (firebase.database().ref("armor")) {
       firebase
         .database()
@@ -59,11 +67,13 @@ export default class Armors extends Component {
       let today = new Date();
       let date = String(today.getDate()) + String(today.getMonth());
       this.setState({ date });
-      await Storage.setItem("armordate", date);
-      await Storage.setItem("armor", this.state.armor);
+      Storage.setItem("armordate", date);
+      Storage.setItem("armor", this.state.armor);
+      setTimeout(() => this.setState({ loading: false }));
     } else {
       let armor = await Storage.getItem("armor");
       if (armor != null && armor) this.setState({ armor, armorRead: armor });
+      setTimeout(() => this.setState({ loading: false }));
     }
   };
   handleFilterArmor = (v) => {
