@@ -255,16 +255,33 @@ export default class Char extends Component {
                 this.state.showAs === false ? styles.borderOg : styles.borderAs,
               ]}
             >
-              <Text
-                style={{
-                  fontSize: 23,
-                  fontWeight: "bold",
-                  lineHeight: 5,
-                  paddingTop: 22,
-                }}
-              >
-                {this.props.name}
-              </Text>
+              <View style={styles.inLine}>
+                <Text
+                  style={{
+                    fontSize: 23,
+                    fontWeight: "bold",
+                    lineHeight: 5,
+                    paddingTop: 22,
+                    flex: 4,
+                    width: "40%",
+                  }}
+                >
+                  {this.props.name}
+                </Text>
+                <Text
+                  style={{
+                    alignItems: "flex-end",
+                    fontSize: 23,
+                    fontWeight: "bold",
+                    lineHeight: 5,
+                    paddingTop: 23,
+                    flex: 1,
+                    width: "20%",
+                  }}
+                >
+                  {this.state.showAs ? this.props.scoreAs : this.props.score}
+                </Text>
+              </View>
               <View style={[styles.inLine]}>
                 <Text style={{ fontWeight: "bold" }}>Weapon type: </Text>
                 <Text style={styles.weaponLine}>

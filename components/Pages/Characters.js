@@ -418,6 +418,8 @@ class CPage extends Component {
                           vcStatsAs={characters.vcStatsAs}
                           poison={characters.poison}
                           pain={characters.pain}
+                          score={characters.score}
+                          scoreAs={characters.scoreAs}
                         />
                       ) : null}
                     </View>
