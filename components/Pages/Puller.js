@@ -31,7 +31,7 @@ export default class Puller extends Component {
               bannerFiveRates={b.bannerFiveRates}
               bannerFourFRates={b.bannerFourFRates}
               bannerImage={b.bannerImage}
-              characters={this.state.characters}
+              characters={this.props.characters}
             />
           ))}
         </View>

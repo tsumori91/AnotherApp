@@ -35,41 +35,47 @@ export default class AnotherApp extends Component {
   componentDidMount() {
     this.checkDate();
   }
-  loadData = async () => {
+  loadData = () => {
     this.setState({ loading: true });
     firebase
       .database()
       .ref("characters")
-      .on("value", (snapshot) =>
+      .once("value", async (snapshot) => {
+        await Storage.setItem("characters", snapshot.val().characters);
         this.setState({
           characters: snapshot.val().characters,
-        })
-      );
+        });
+      });
     firebase
       .database()
       .ref("weapons")
-      .on("value", (snapshot) =>
+      .once("value", async (snapshot) => {
+        await Storage.setItem("weapons", snapshot.val().weapons);
         this.setState({
           weapons: snapshot.val().weapons,
-        })
-      );
+        });
+      });
     firebase
       .database()
       .ref("armor")
-      .on("value", (snapshot) =>
+      .once("value", async (snapshot) => {
+        await Storage.setItem("armor", snapshot.val().armor);
         this.setState({
           armor: snapshot.val().armor,
-        })
-      );
+        });
+      });
     firebase
       .database()
       .ref("banners")
-      .on("value", (snapshot) =>
+      .once("value", async (snapshot) => {
+        await Storage.setItem("banners", snapshot.val().banners);
         this.setState({
           banners: snapshot.val().banners,
-        })
-      );
-    this.saveData();
+        });
+      });
+    if (firebase.apps.length) {
+      this.setDate();
+    }
     setTimeout(() => this.setState({ loading: false }));
   };
   loadDataLocal = async () => {
@@ -79,23 +85,6 @@ export default class AnotherApp extends Component {
     let armor = await Storage.getItem("armor");
     let banners = await Storage.getItem("banners");
     this.setState({ characters, weapons, armor, banners });
-    this.setState({ loading: false });
-  };
-  saveData = async () => {
-    this.setState({ loading: true });
-    let characters = [...this.state.characters];
-    let weapons = [...this.state.weapons];
-    let armor = [...this.state.armor];
-    let banners = [...this.state.banners];
-    if (!weapons[0].craft) {
-      this.loadDataLocal();
-      return;
-    }
-    await Storage.setItem("characters", characters);
-    await Storage.setItem("weapons", weapons);
-    await Storage.setItem("armor", armor);
-    await Storage.setItem("banners", banners);
-    this.setDate();
     this.setState({ loading: false });
   };
   setDate = async () => {
