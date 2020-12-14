@@ -10,31 +10,9 @@ export default class Puller extends Component {
     banners: [],
     characters: [],
   };
-  componentDidMount() {
-    this.handleGetBanners();
-  }
-  handleGetBanners = () => {
-    firebase
-      .database()
-      .ref("banners")
-      .once("value", (snapshot) =>
-        this.setState({
-          banners: snapshot.val().banners,
-        })
-      );
-    firebase
-      .database()
-      .ref("characters")
-      .once("value", (snapshot) =>
-        this.setState({
-          characters: snapshot.val().characters,
-        })
-      );
-  };
   handleNewBanner = async () => {
-    let banners = [...this.state.banners];
+    let banners = [...this.props.banners];
     banners.push(banners[banners.length - 1]);
-    this.setState({ banners });
     await firebase.database().ref("banners").set({ banners });
   };
   render() {
@@ -42,7 +20,7 @@ export default class Puller extends Component {
       <ScrollView style={styles.container} nestedScrollEnabled={true}>
         {/*<Tab title={"new banner"} onPress={() => this.handleNewBanner()} />*/}
         <View style={{ flexDirection: "column-reverse" }}>
-          {this.state.banners.map((b) => (
+          {this.props.banners.map((b) => (
             <Banner
               rates={b.rates}
               key={b.key}

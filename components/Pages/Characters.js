@@ -19,56 +19,7 @@ import colors from "../Config/colors";
 
 class CPage extends Component {
   state = {
-    characters: [
-      {
-        id: 0,
-        name: "",
-        vc: "",
-        vcAS: "",
-        as: false,
-        weapon: "",
-        manifest: false,
-        manifestAs: false,
-        uri: "",
-        uriAs: "",
-        tomeName: "",
-        tomeNameAs: "",
-        tomeLocationAs: "VH/Garulea dungeons",
-        tomeLocation: "",
-        element: "",
-        stats: [
-          { stat: "HP", value: 0 },
-          { stat: "MP", value: 0 },
-          { stat: "STR", value: 0 },
-          { stat: "INT", value: 0 },
-          { stat: "SPD", value: 0 },
-          { stat: "SPR", value: 0 },
-          { stat: "END", value: 0 },
-        ],
-        statsAs: [
-          { stat: "HP", value: 0 },
-          { stat: "MP", value: 0 },
-          { stat: "STR", value: 0 },
-          { stat: "INT", value: 0 },
-          { stat: "SPD", value: 0 },
-          { stat: "SPR", value: 0 },
-          { stat: "END", value: 0 },
-        ],
-        skillsAs: [
-          {
-            skillName: "",
-            skillEffect: "",
-          },
-        ],
-        skills: [
-          {
-            skillName: "",
-            skillEffect: "",
-          },
-        ],
-      },
-    ],
-    charactersRead: [{}],
+    charactersRead: [],
     weaponFilter: "",
     elementFilter: "",
     loading: false,
@@ -77,81 +28,14 @@ class CPage extends Component {
     date: "",
   };
   componentDidMount() {
-    if (this.checkDate() === true) {
-      this.getInitialState();
-    } else this.getInitialStateLocal();
+    this.setPage();
   }
-  checkDate = async () => {
-    let today = new Date();
-    let date = String(today.getDate()) + String(today.getMonth());
-    let oldDate = await Storage.getItem("charactersDate");
-    if (date === oldDate) {
-      return false;
-    } else return true;
-  };
-  getInitialStateLocal = async () => {
-    this.setState({ loading: true });
-    try {
-      let characters = await Storage.getItem("characters");
-      if (characters && characters != null)
-        this.setState({ characters, charactersRead: characters });
-      else this.getInitialState();
-    } catch (error) {
-      this.getInitialState();
-    }
-    setTimeout(() => this.setState({ loading: false }));
-  };
-  getInitialState = async () => {
-    this.setState({ loading: true });
-    firebase
-      .database()
-      .ref("characters")
-      .on("value", (snapshot) =>
-        this.setState({
-          characters: snapshot.val().characters,
-          charactersRead: snapshot.val().characters,
-        })
-      );
-    let characters = [...this.state.characters];
-    if (characters[0].id === 1) {
-      Storage.setItem("characters", characters);
-      this.saveDate();
-    } else {
-      let characters = await Storage.getItem("characters");
-      if (characters != null && characters) {
-        this.setState({ characters, charactersRead: characters });
-      } else {
-        Alert.alert(
-          "Not connected to internet",
-          "You need to connect to the internet at least once to initialize this page"
-        );
-      }
-    }
-    setTimeout(() => this.setState({ loading: false }));
-  };
-  handleUpdate = async () => {
-    let characters = [...this.state.characters];
-    characters.forEach((v) => {
-      if (!v.LStats) {
-        v.LStats = [
-          { stat: "", value: 5 },
-          { stat: "", value: 10 },
-          { stat: "", value: 10 },
-          { stat: "", value: 15 },
-          { stat: "", value: 15 },
-          { stat: "", value: 20 },
-          { stat: "", value: 20 },
-          { stat: "", value: 25 },
-          { stat: "", value: 25 },
-          { stat: "", value: 30 },
-        ];
-      }
-    });
-    this.setState({ characters });
-    await firebase.database().ref("characters").set({ characters });
+  setPage = () => {
+    let charactersRead = [...this.props.characters];
+    this.setState({ charactersRead });
   };
   handleAdd = async () => {
-    const characters = [...this.state.characters];
+    const characters = [...this.props.characters];
     characters.push({
       id: characters[characters.length - 1].id + 1,
       name: "",
@@ -236,13 +120,12 @@ class CPage extends Component {
         },
       ],
     });
-    this.setState({ characters });
     await firebase.database().ref("characters").set({ characters });
   };
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((w) => w.weapon == v);
-    if (v === this.state.weaponFilter) charactersRead = this.state.characters;
+    let charactersRead = this.props.characters.filter((w) => w.weapon == v);
+    if (v === this.state.weaponFilter) charactersRead = this.props.characters;
     if (this.state.elementFilter !== "")
       charactersRead = charactersRead.filter(
         (e) => e.element == this.state.elementFilter
@@ -260,8 +143,8 @@ class CPage extends Component {
   };
   handleFilterElement = (v) => {
     this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((e) => e.element == v);
-    if (v === this.state.elementFilter) charactersRead = this.state.characters;
+    let charactersRead = this.props.characters.filter((e) => e.element == v);
+    if (v === this.state.elementFilter) charactersRead = this.props.characters;
     if (this.state.weaponFilter !== "")
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter
@@ -279,8 +162,8 @@ class CPage extends Component {
   };
   handleFilterPain = () => {
     this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((e) => e.pain == true);
-    if (this.state.painFilter) charactersRead = this.state.characters;
+    let charactersRead = this.props.characters.filter((e) => e.pain == true);
+    if (this.state.painFilter) charactersRead = [...this.props.characters];
     if (this.state.weaponFilter !== "")
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter
@@ -298,8 +181,8 @@ class CPage extends Component {
   };
   handleFilterPoison = () => {
     this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((e) => e.poison == true);
-    if (this.state.poisonFilter) charactersRead = this.state.characters;
+    let charactersRead = this.props.characters.filter((e) => e.poison == true);
+    if (this.state.poisonFilter) charactersRead = [...this.props.characters];
     if (this.state.weaponFilter !== "")
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter

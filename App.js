@@ -24,13 +24,93 @@ if (!firebase.apps.length) {
 export default class AnotherApp extends Component {
   state = {
     display: "characters",
-    weapons: [{}],
     loading: true,
     tracker: [],
+    characters: [],
+    banners: [],
+    weapons: [],
+    armor: [],
+    dates: "",
   };
   componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }));
+    this.checkDate();
   }
+  loadData = async () => {
+    this.setState({ loading: true });
+    firebase
+      .database()
+      .ref("characters")
+      .on("value", (snapshot) =>
+        this.setState({
+          characters: snapshot.val().characters,
+        })
+      );
+    firebase
+      .database()
+      .ref("weapons")
+      .on("value", (snapshot) =>
+        this.setState({
+          weapons: snapshot.val().weapons,
+        })
+      );
+    firebase
+      .database()
+      .ref("armor")
+      .on("value", (snapshot) =>
+        this.setState({
+          armor: snapshot.val().armor,
+        })
+      );
+    firebase
+      .database()
+      .ref("banners")
+      .on("value", (snapshot) =>
+        this.setState({
+          banners: snapshot.val().banners,
+        })
+      );
+    this.saveData();
+    setTimeout(() => this.setState({ loading: false }));
+  };
+  loadDataLocal = async () => {
+    this.setState({ loading: true });
+    let characters = await Storage.getItem("characters");
+    let weapons = await Storage.getItem("weapons");
+    let armor = await Storage.getItem("armor");
+    let banners = await Storage.getItem("banners");
+    this.setState({ characters, weapons, armor, banners });
+    this.setState({ loading: false });
+  };
+  saveData = async () => {
+    this.setState({ loading: true });
+    let characters = [...this.state.characters];
+    let weapons = [...this.state.weapons];
+    let armor = [...this.state.armor];
+    let banners = [...this.state.banners];
+    if (!weapons[0].craft) {
+      this.loadDataLocal();
+      return;
+    }
+    await Storage.setItem("characters", characters);
+    await Storage.setItem("weapons", weapons);
+    await Storage.setItem("armor", armor);
+    await Storage.setItem("banners", banners);
+    this.setDate();
+    this.setState({ loading: false });
+  };
+  setDate = async () => {
+    let today = new Date();
+    let dates = String(today.getDate()) + String(today.getMonth());
+    this.setState({ dates });
+    await Storage.setItem("dates", dates);
+  };
+  checkDate = async () => {
+    let today = new Date();
+    let dates = String(today.getDate()) + String(today.getMonth());
+    let oldDate = await Storage.getItem("dates");
+    if (dates === oldDate) this.loadDataLocal();
+    else this.loadData();
+  };
   handlePages = async (v) => {
     this.setState({ loading: true });
     this.setState({ display: v });
@@ -94,15 +174,26 @@ export default class AnotherApp extends Component {
         ) : (
           <View style={styles.container}>
             {this.state.display === "weapons" ? (
-              <Weapons tracker={this.state.tracker} addEquip={this.addEquip} />
+              <Weapons
+                tracker={this.state.tracker}
+                addEquip={this.addEquip}
+                weapons={this.state.weapons}
+              />
             ) : this.state.display === "puller" ? (
-              <Puller />
+              <Puller
+                characters={this.state.characters}
+                banners={this.state.banners}
+              />
             ) : this.state.display === "armor" ? (
-              <Armors tracker={this.state.tracker} addEquip={this.addEquip} />
+              <Armors
+                tracker={this.state.tracker}
+                addEquip={this.addEquip}
+                armor={this.state.armor}
+              />
             ) : this.state.display === "myEquips" ? (
               <MyEquips tracker={this.state.tracker} addEquip={this.addEquip} />
             ) : (
-              <CPage />
+              <CPage characters={this.state.characters} />
             )}
           </View>
         )}

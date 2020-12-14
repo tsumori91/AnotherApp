@@ -18,7 +18,6 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 export default class Weapons extends Component {
   state = {
-    weapons: [{}],
     weaponsRead: [],
     weaponFilter: "",
     sort: null,
@@ -26,66 +25,17 @@ export default class Weapons extends Component {
     date: "",
   };
   componentDidMount() {
-    if (this.checkDate() === true) {
-      this.getWeapons();
-    } else this.getWeaponsLocal();
+    this.setPage();
   }
-  checkDate = async () => {
-    let today = new Date();
-    let date = String(today.getDate()) + String(today.getMonth());
-    let oldDate = await Storage.getItem("weaponsDate");
-    if (date === oldDate) {
-      return false;
-    } else return true;
+  setPage = () => {
+    let weaponsRead = [...this.props.weapons];
+    this.setState({ weaponsRead });
   };
-  getWeaponsLocal = async () => {
-    this.setState({ loading: true });
-    try {
-      let weapons = await Storage.getItem("weapons");
-      if (weapons && weapons != null) {
-        this.setState({ weapons, weaponsRead: weapons });
-      } else {
-        this.getWeapons();
-      }
-    } catch (error) {
-      this.getWeapons();
-    }
-    setTimeout(() => this.setState({ loading: false }));
-  };
-  getWeapons = async () => {
-    this.setState({ loading: true });
-    if (firebase.database().ref("weapons")) {
-      firebase
-        .database()
-        .ref("weapons")
-        .on("value", (snapshot) =>
-          this.setState({
-            weapons: snapshot.val().weapons,
-            weaponsRead: snapshot.val().weapons,
-          })
-        );
-      let today = new Date();
-      let date = String(today.getDate()) + String(today.getMonth());
-      this.setState({ date });
-      Storage.setItem("weaponsDate", date);
-      Storage.setItem("weapons", this.state.weapons);
-    } else {
-      let weapons = await Storage.getItem("weapons");
-      if (weapons != null && weapons) {
-        this.setState({ weapons, weaponsRead: weapons });
-      } else {
-        Alert.alert(
-          "Not connected to internet",
-          "You need to connect to the internet at least once to initialize this page"
-        );
-      }
-    }
-    setTimeout(() => this.setState({ loading: false }));
-  };
+
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });
-    let weaponsRead = this.state.weapons.filter((w) => w.type == v);
-    if (v === this.state.weaponFilter) weaponsRead = this.state.weapons;
+    let weaponsRead = this.props.weapons.filter((w) => w.type == v);
+    if (v === this.state.weaponFilter) weaponsRead = [...this.props.weapons];
     if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
     else this.setState({ weaponFilter: v });
     this.setState({ weaponsRead });
@@ -93,7 +43,7 @@ export default class Weapons extends Component {
   };
   handleOtherFilters = (v) => {
     this.setState({ loading: true });
-    let weaponsRead = [...this.state.weapons];
+    let weaponsRead = [...this.props.weapons];
     if (this.state.weaponFilter) {
       weaponsRead = weaponsRead.filter(
         (w) => w.type == this.state.weaponFilter
@@ -142,8 +92,7 @@ export default class Weapons extends Component {
     setTimeout(() => this.setState({ loading: false }));
   };
   handleAddWeapon = async () => {
-    const weapons = [...this.state.weapons];
-    this.setState({ weapons });
+    const weapons = [...this.props.weapons];
     weapons.push({
       craft: false,
       effects: "",
@@ -159,8 +108,8 @@ export default class Weapons extends Component {
   };
   handleAdd = (v) => {
     let tracker = [...this.props.tracker];
-    let num = this.state.weapons.findIndex((w) => w.name === v);
-    let toAdd = this.state.weapons.slice(num, num + 1);
+    let num = this.props.weapons.findIndex((w) => w.name === v);
+    let toAdd = this.props.weapons.slice(num, num + 1);
     if (!toAdd[0].craft) return;
     Alert.alert(
       "Adding weapon to craft list.",

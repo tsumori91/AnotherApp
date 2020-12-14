@@ -13,12 +13,10 @@ import {
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
 import colors from "../Config/colors";
-import Storage from "../Config/Storage";
 import DropDownPicker from "react-native-dropdown-picker";
 
 export default class Armors extends Component {
   state = {
-    armor: [{}],
     armorRead: [],
     armorFilter: "",
     sort: null,
@@ -26,60 +24,16 @@ export default class Armors extends Component {
     date: "",
   };
   componentDidMount() {
-    if (this.checkDate() === true) {
-      this.getArmor();
-    } else this.getArmorLocal();
+    this.setPage();
   }
-  checkDate = async () => {
-    let today = new Date();
-    let date = String(today.getDate()) + String(today.getMonth());
-    let oldDate = await Storage.getItem("armordate");
-    if (date === oldDate) {
-      return false;
-    } else return true;
-  };
-  getArmorLocal = async () => {
-    this.setState({ loading: true });
-    try {
-      let armor = await Storage.getItem("armor");
-      if (armor != null && armor) {
-        this.setState({ armor, armorRead: armor });
-      } else {
-        this.getArmor();
-      }
-    } catch (error) {
-      this.getArmor();
-    }
-    setTimeout(() => this.setState({ loading: false }));
-  };
-  getArmor = async () => {
-    this.setState({ loading: true });
-    if (firebase.database().ref("armor")) {
-      firebase
-        .database()
-        .ref("armor")
-        .on("value", (snapshot) =>
-          this.setState({
-            armor: snapshot.val().armor,
-            armorRead: snapshot.val().armor,
-          })
-        );
-      let today = new Date();
-      let date = String(today.getDate()) + String(today.getMonth());
-      this.setState({ date });
-      Storage.setItem("armordate", date);
-      Storage.setItem("armor", this.state.armor);
-      setTimeout(() => this.setState({ loading: false }));
-    } else {
-      let armor = await Storage.getItem("armor");
-      if (armor != null && armor) this.setState({ armor, armorRead: armor });
-      setTimeout(() => this.setState({ loading: false }));
-    }
+  setPage = () => {
+    let armorRead = [...this.props.armor];
+    this.setState({ armorRead });
   };
   handleFilterArmor = (v) => {
     this.setState({ loading: true });
-    let armorRead = this.state.armor.filter((w) => w.type == v);
-    if (v === this.state.armorFilter) armorRead = this.state.armor;
+    let armorRead = this.props.armor.filter((w) => w.type == v);
+    if (v === this.state.armorFilter) armorRead = [...this.props.armor];
     if (v === this.state.armorFilter) this.setState({ armorFilter: "" });
     else this.setState({ armorFilter: v });
     this.setState({ armorRead });
@@ -87,7 +41,7 @@ export default class Armors extends Component {
   };
   handleOtherFilters = (v) => {
     this.setState({ loading: true });
-    let armorRead = [...this.state.armor];
+    let armorRead = [...this.props.armor];
     if (this.state.armorFilter) {
       armorRead = armorRead.filter((w) => w.type == this.state.armorFilter);
     }
@@ -132,7 +86,7 @@ export default class Armors extends Component {
     this.setState({ armorRead });
   };
   handleAddArmor = async () => {
-    const armor = [...this.state.armor];
+    const armor = [...this.props.armor];
     armor.push({
       craft: false,
       effects: "",
@@ -147,8 +101,8 @@ export default class Armors extends Component {
   };
   handleAdd = (v) => {
     let tracker = [...this.props.tracker];
-    let num = this.state.armor.findIndex((w) => w.name === v);
-    let toAdd = this.state.armor.slice(num, num + 1);
+    let num = this.props.armor.findIndex((w) => w.name === v);
+    let toAdd = this.props.armor.slice(num, num + 1);
     if (!toAdd[0].craft) return;
     Alert.alert(
       "Adding armor to craft list.",
