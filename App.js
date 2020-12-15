@@ -114,7 +114,16 @@ export default class AnotherApp extends Component {
     this.setState({ tracker });
     await Storage.setItem("tracker", tracker);
   };
-
+  backup = async () => {
+    let charactersBack = [...this.state.characters];
+    let bannersBack = [...this.state.banners];
+    let weaponsBack = [...this.state.weapons];
+    let armorBack = [...this.state.armor];
+    await firebase.database().ref("charactersBack").set({ charactersBack });
+    await firebase.database().ref("bannersBack").set({ bannersBack });
+    await firebase.database().ref("weaponsBack").set({ weaponsBack });
+    await firebase.database().ref("armorBack").set({ armorBack });
+  };
   render() {
     return (
       <ImageBackground
@@ -213,7 +222,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   buttons: {
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 45,
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 50,
     marginBottom: 10,
     backgroundColor: "#fff",
     width: "100%",

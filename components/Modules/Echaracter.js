@@ -733,6 +733,8 @@ const styles = StyleSheet.create({
   main: {
     flex: 5,
     height: "100%",
+    justifyContent: "space-evenly",
+    paddingBottom: "4%",
   },
   mainPage: {
     alignItems: "flex-start",
@@ -741,8 +743,7 @@ const styles = StyleSheet.create({
   pic: {
     height: 20,
     width: 20,
-    marginTop: 0,
-    position: "absolute",
+    flex: 1,
   },
   showButton: {
     paddingHorizontal: 10,
