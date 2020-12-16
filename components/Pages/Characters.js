@@ -35,8 +35,8 @@ class CPage extends Component {
     this.setState({ charactersRead });
   };
   handleAdd = async () => {
-    const characters = [...this.props.characters];
-    characters.push({
+    let characters = [...this.props.characters];
+    const newChar = {
       id: characters[characters.length - 1].id + 1,
       name: "",
       vc: "",
@@ -53,6 +53,19 @@ class CPage extends Component {
       tomeLocationAs: "VH/Garulea dungeons",
       tomeLocation: "",
       element: "",
+      LStats: [
+        { stat: "", value: 5 },
+        { stat: "", value: 10 },
+        { stat: "", value: 10 },
+        { stat: "", value: 15 },
+        { stat: "", value: 15 },
+        { stat: "", value: 20 },
+        { stat: "", value: 20 },
+        { stat: "", value: 25 },
+        { stat: "", value: 25 },
+        { stat: "", value: 30 },
+      ],
+      score: 0,
       stats: [
         { stat: "HP", value: 0 },
         { stat: "MP", value: 0 },
@@ -119,8 +132,9 @@ class CPage extends Component {
           skillEffectManifest: "",
         },
       ],
-    });
-    await firebase.database().ref("characters").set({ characters });
+    };
+    characters.splice(80, 0, newChar);
+    /*await firebase.database().ref("characters").set({ characters });*/
   };
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });

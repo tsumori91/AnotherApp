@@ -16,6 +16,7 @@ import Armors from "./components/Pages/Armors";
 import colors from "./components/Config/colors";
 import MyEquips from "./components/Pages/MyEquips";
 import Storage from "./components/Config/Storage";
+import CharTrack from "./components/Pages/CharTrack";
 
 if (!firebase.apps.length) {
   firebase.initializeApp(ApiKeys.firebaseConfig);
@@ -133,6 +134,12 @@ export default class AnotherApp extends Component {
       >
         <View style={styles.buttons}>
           <Tab
+            title={"MyChars"}
+            color={this.state.display === "myChars" ? "gold" : "primary"}
+            onPress={() => this.handlePages("myChars")}
+            style={styles.button}
+          />
+          <Tab
             title={"Characters"}
             color={this.state.display === "characters" ? "gold" : "primary"}
             onPress={() => this.handlePages("characters")}
@@ -190,6 +197,8 @@ export default class AnotherApp extends Component {
               />
             ) : this.state.display === "myEquips" ? (
               <MyEquips tracker={this.state.tracker} addEquip={this.addEquip} />
+            ) : this.state.display === "myChars" ? (
+              <CharTrack characters={this.state.characters} />
             ) : (
               <CPage characters={this.state.characters} />
             )}
