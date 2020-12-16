@@ -11,9 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Char from "../Modules/Echaracter";
-import * as firebase from "firebase";
 import Storage from "../Config/Storage";
-import Tab from "../Modules/Tab";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../Config/colors";
 

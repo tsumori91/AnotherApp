@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ScrollView, Text } from "react-native";
+import { View, StyleSheet, ScrollView, Text, Alert } from "react-native";
+import MySwitch from "../Config/MySwitch";
 import CTrack from "../Modules/CTrack";
 export default class CharTrack extends Component {
   state = {
+    switchOn: false,
     charactersTotal: [],
     myFreeCharacters: [],
     freeCharacters: [],
@@ -59,9 +61,34 @@ export default class CharTrack extends Component {
     });
     this.setState({ gachaCharacters });
   };
+  handleSwitch = () => {
+    if (!this.state.switchOn) {
+      Alert.alert(
+        "Do you want to turn on multi-add?",
+        "With multi-add you can select the characters, rather than pressing and holding to add, and it will add them without conformation.",
+        [
+          {
+            text: "Yes",
+            onPress: () => this.setState({ switchOn: !this.state.switchOn }),
+          },
+          { text: "No" },
+        ],
+        { cancelable: true }
+      );
+    } else this.setState({ switchOn: !this.state.switchOn });
+  };
   render() {
     return (
       <View style={styles.container}>
+        <View style={{ flexDirection: "row", marginVertical: 10 }}>
+          <Text style={{ flex: 1 }}>
+            Turn on to add multiple characters without confirmation
+          </Text>
+          <MySwitch
+            onPress={() => this.handleSwitch()}
+            switchOn={this.state.switchOn}
+          />
+        </View>
         <ScrollView>
           <Text style={styles.heading}>Free Characters</Text>
           <View style={styles.main}>
@@ -167,5 +194,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginBottom: 20,
   },
-  eachChar: { width: "23%", paddingBottom: 10 },
+  eachChar: { width: "22.5%", paddingBottom: 10 },
 });
