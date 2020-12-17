@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ScrollView, Text, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  Alert,
+  Button,
+} from "react-native";
 import MySwitch from "../Config/MySwitch";
 import CTrack from "../Modules/CTrack";
 export default class CharTrack extends Component {
@@ -33,6 +40,9 @@ export default class CharTrack extends Component {
       "Milla",
       "Deirdre",
       "Levia",
+      "Azami",
+      "Gariyu",
+      "Cerrine",
     ],
   };
   componentDidMount() {
@@ -61,6 +71,25 @@ export default class CharTrack extends Component {
     });
     this.setState({ gachaCharacters });
   };
+  selectFreeChar = (name) => {
+    let myFreeCharacters = [...this.state.myFreeCharacters];
+    if (myFreeCharacters.indexOf(name) !== -1) {
+      myFreeCharacters = myFreeCharacters.filter((c) => c !== name);
+      this.setState({ myFreeCharacters });
+    } else myFreeCharacters.push(name);
+    this.setState({ myFreeCharacters });
+  };
+  selectGachaChar = (name) => {
+    let myGachaCharacters = [...this.state.myGachaCharacters];
+    if (myGachaCharacters.indexOf(name) !== -1) {
+      myGachaCharacters = myGachaCharacters.filter((c) => c !== name);
+      this.setState({ myGachaCharacters });
+    } else myGachaCharacters.push(name);
+    this.setState({ myGachaCharacters });
+  };
+  handleReset = () => {
+    this.setState({ myFreeCharacters: [], myGachaCharacters: [] });
+  };
   handleSwitch = () => {
     if (!this.state.switchOn) {
       Alert.alert(
@@ -81,16 +110,20 @@ export default class CharTrack extends Component {
     return (
       <View style={styles.container}>
         <View style={{ flexDirection: "row", marginVertical: 10 }}>
-          <Text style={{ flex: 1 }}>
-            Turn on to add multiple characters without confirmation
-          </Text>
           <MySwitch
             onPress={() => this.handleSwitch()}
             switchOn={this.state.switchOn}
           />
+          <Text style={{ flex: 1, fontSize: 18, marginHorizontal: 8 }}>
+            Multi-add
+          </Text>
+          <Button title={"Reset"} onPress={() => this.handleReset()} />
         </View>
         <ScrollView>
-          <Text style={styles.heading}>Free Characters</Text>
+          <Text style={styles.heading}>
+            Free Characters {this.state.myFreeCharacters.length}/
+            {this.state.freeCharacters.length}
+          </Text>
           <View style={styles.main}>
             {this.state.freeCharacters.map(
               (characters, i) => (
@@ -99,6 +132,7 @@ export default class CharTrack extends Component {
                   <View style={styles.eachChar} key={i}>
                     {characters.name !== "" ? (
                       <CTrack
+                        onSelect={this.selectFreeChar}
                         key={characters.id}
                         id={characters.id}
                         name={characters.name}
@@ -133,7 +167,10 @@ export default class CharTrack extends Component {
               )
             )}
           </View>
-          <Text style={styles.heading}>Gacha Characters</Text>
+          <Text style={styles.heading}>
+            Gacha Characters {this.state.myGachaCharacters.length}/
+            {this.state.gachaCharacters.length}
+          </Text>
           <View style={styles.main}>
             {this.state.gachaCharacters.map(
               (characters, i) => (
@@ -142,6 +179,7 @@ export default class CharTrack extends Component {
                   <View style={styles.eachChar} key={i}>
                     {characters.name !== "" ? (
                       <CTrack
+                        onSelect={this.selectGachaChar}
                         key={characters.id}
                         id={characters.id}
                         name={characters.name}

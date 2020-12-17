@@ -4,6 +4,10 @@ import colors from "../Config/colors";
 
 export default class CTrack extends Component {
   state = { show: false };
+  handlePress = () => {
+    this.setState({ show: !this.state.show });
+    this.props.onSelect(this.props.name);
+  };
   render() {
     return (
       <View
@@ -14,7 +18,7 @@ export default class CTrack extends Component {
       >
         <TouchableOpacity
           onPress={() => {
-            this.setState({ show: !this.state.show });
+            this.handlePress();
           }}
         >
           <Image
@@ -45,7 +49,7 @@ const styles = StyleSheet.create({
   notSelected: { borderWidth: 4, borderColor: colors.white, borderRadius: 33 },
   selected: {
     borderWidth: 4,
-    borderColor: colors.gold,
+    borderColor: colors.water,
     borderRadius: 33,
   },
 });
