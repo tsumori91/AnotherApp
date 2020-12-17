@@ -134,24 +134,6 @@ export default class AnotherApp extends Component {
       >
         <View style={styles.buttons}>
           <Tab
-            title={"MyChars"}
-            color={this.state.display === "myChars" ? "gold" : "primary"}
-            onPress={() => this.handlePages("myChars")}
-            style={styles.button}
-          />
-          <Tab
-            title={"Characters"}
-            color={this.state.display === "characters" ? "gold" : "primary"}
-            onPress={() => this.handlePages("characters")}
-            style={styles.button}
-          />
-          <Tab
-            title={"My Equips"}
-            color={this.state.display === "myEquips" ? "gold" : "primary"}
-            style={styles.button}
-            onPress={() => this.handlePages("myEquips")}
-          />
-          <Tab
             title={"Weapons"}
             color={this.state.display === "weapons" ? "gold" : "primary"}
             style={styles.button}
@@ -164,10 +146,10 @@ export default class AnotherApp extends Component {
             onPress={() => this.handlePages("armor")}
           />
           <Tab
-            title={"Pullsim"}
-            color={this.state.display === "puller" ? "gold" : "primary"}
+            title={"My Equips"}
+            color={this.state.display === "myEquips" ? "gold" : "primary"}
             style={styles.button}
-            onPress={() => this.handlePages("puller")}
+            onPress={() => this.handlePages("myEquips")}
           />
         </View>
         {this.state.loading ? (
@@ -204,6 +186,26 @@ export default class AnotherApp extends Component {
             )}
           </View>
         )}
+        <View style={styles.buttonsBottom}>
+          <Tab
+            title={"Pullsim"}
+            color={this.state.display === "puller" ? "gold" : "primary"}
+            style={styles.button}
+            onPress={() => this.handlePages("puller")}
+          />
+          <Tab
+            title={"MyChars"}
+            color={this.state.display === "myChars" ? "gold" : "primary"}
+            onPress={() => this.handlePages("myChars")}
+            style={styles.button}
+          />
+          <Tab
+            title={"Characters"}
+            color={this.state.display === "characters" ? "gold" : "primary"}
+            onPress={() => this.handlePages("characters")}
+            style={styles.button}
+          />
+        </View>
       </ImageBackground>
     );
   }
@@ -233,6 +235,15 @@ const styles = StyleSheet.create({
   buttons: {
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 50,
     marginBottom: 10,
+    backgroundColor: "#fff",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    marginHorizontal: "1%",
+    flexDirection: "row",
+  },
+  buttonsBottom: {
+    marginVertical: 10,
     backgroundColor: "#fff",
     width: "100%",
     alignItems: "center",

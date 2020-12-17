@@ -8,6 +8,7 @@ import {
   Button,
 } from "react-native";
 import MySwitch from "../Config/MySwitch";
+import Storage from "../Config/Storage";
 import CTrack from "../Modules/CTrack";
 export default class CharTrack extends Component {
   state = {
@@ -47,6 +48,7 @@ export default class CharTrack extends Component {
   };
   componentDidMount() {
     this.getCharactersTotal();
+    this.loadLists();
   }
   getCharactersTotal = () => {
     let charactersTotal = [...this.props.characters];
@@ -71,24 +73,46 @@ export default class CharTrack extends Component {
     });
     this.setState({ gachaCharacters });
   };
-  selectFreeChar = (name) => {
+  selectFreeChar = async (name) => {
     let myFreeCharacters = [...this.state.myFreeCharacters];
     if (myFreeCharacters.indexOf(name) !== -1) {
       myFreeCharacters = myFreeCharacters.filter((c) => c !== name);
       this.setState({ myFreeCharacters });
     } else myFreeCharacters.push(name);
     this.setState({ myFreeCharacters });
+    await Storage.setItem("myFreeChars", myFreeCharacters);
   };
-  selectGachaChar = (name) => {
+  selectGachaChar = async (name) => {
     let myGachaCharacters = [...this.state.myGachaCharacters];
     if (myGachaCharacters.indexOf(name) !== -1) {
       myGachaCharacters = myGachaCharacters.filter((c) => c !== name);
       this.setState({ myGachaCharacters });
     } else myGachaCharacters.push(name);
     this.setState({ myGachaCharacters });
+    await Storage.setItem("myGachaChars", myGachaCharacters);
+  };
+  loadLists = async () => {
+    let myFreeCharacters = await Storage.getItem("myFreeChars");
+    let myGachaCharacters = await Storage.getItem("myGachaChars");
+    if (myFreeCharacters !== null) {
+      this.setState({ myFreeCharacters });
+    }
+    if (myGachaCharacters !== null) {
+      this.setState({ myGachaCharacters });
+    }
   };
   handleReset = () => {
+    Alert.alert(
+      "Do you want to reset this page?",
+      "You will loose all the saved information for both lists.",
+      [{ text: "Yes", onPress: () => this.confirmReset() }, { text: "No" }],
+      { cancelable: true }
+    );
+  };
+  confirmReset = async () => {
     this.setState({ myFreeCharacters: [], myGachaCharacters: [] });
+    await Storage.setItem("myFreeChars", []);
+    await Storage.setItem("myGachaChars", []);
   };
   handleSwitch = () => {
     if (!this.state.switchOn) {
@@ -132,6 +156,8 @@ export default class CharTrack extends Component {
                   <View style={styles.eachChar} key={i}>
                     {characters.name !== "" ? (
                       <CTrack
+                        easySelect={this.state.switchOn}
+                        charList={this.state.myFreeCharacters}
                         onSelect={this.selectFreeChar}
                         key={characters.id}
                         id={characters.id}
@@ -179,6 +205,8 @@ export default class CharTrack extends Component {
                   <View style={styles.eachChar} key={i}>
                     {characters.name !== "" ? (
                       <CTrack
+                        easySelect={this.state.switchOn}
+                        charList={this.state.myGachaCharacters}
                         onSelect={this.selectGachaChar}
                         key={characters.id}
                         id={characters.id}

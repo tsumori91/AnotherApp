@@ -1,20 +1,38 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import colors from "../Config/colors";
 
 export default class CTrack extends Component {
-  state = { show: false };
+  state = {};
   handlePress = () => {
-    this.setState({ show: !this.state.show });
-    this.props.onSelect(this.props.name);
+    if (this.props.easySelect) {
+      this.props.onSelect(this.props.name);
+    } else
+      Alert.alert(
+        "Do you want to add/remove " + this.props.name + "?",
+        "Turn on Multi-add to skip this confirmation.",
+        [
+          { text: "Yes", onPress: () => this.props.onSelect(this.props.name) },
+          { text: "No" },
+        ],
+        { cancelable: true }
+      );
   };
   render() {
+    let show = false;
+    if (this.props.charList.indexOf(this.props.name) !== -1) {
+      show = true;
+    }
     return (
       <View
-        style={[
-          styles.container,
-          this.state.show ? styles.selected : styles.notSelected,
-        ]}
+        style={[styles.container, show ? styles.selected : styles.notSelected]}
       >
         <TouchableOpacity
           onPress={() => {
@@ -23,7 +41,7 @@ export default class CTrack extends Component {
         >
           <Image
             style={styles.image}
-            blurRadius={this.state.show ? 0 : 0.4}
+            blurRadius={show ? 0 : 0.4}
             source={
               this.props.uri
                 ? {
