@@ -502,7 +502,7 @@ export default class Char extends Component {
               <ScrollView
                 nestedScrollEnabled={true}
                 style={[
-                  styles.main,
+                  styles.scroll,
                   statusColour,
                   { height: 300, borderRadius: 8 },
                 ]}
@@ -744,6 +744,11 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     flex: 1,
+  },
+  scroll: {
+    flex: 5,
+    height: "100%",
+    paddingBottom: "4%",
   },
   showButton: {
     paddingHorizontal: 10,
