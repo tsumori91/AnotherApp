@@ -10,8 +10,10 @@ import {
 import MySwitch from "../Config/MySwitch";
 import Storage from "../Config/Storage";
 import CTrack from "../Modules/CTrack";
+import MyTeam from "./MyTeam";
 export default class CharTrack extends Component {
   state = {
+    listEdit: false,
     switchOn: false,
     charactersTotal: [],
     myFreeCharacters: [],
@@ -132,117 +134,135 @@ export default class CharTrack extends Component {
   };
   render() {
     return (
-      <View style={styles.container}>
-        <View style={{ flexDirection: "row", marginVertical: 10 }}>
-          <MySwitch
-            onPress={() => this.handleSwitch()}
-            switchOn={this.state.switchOn}
-          />
-          <Text style={{ flex: 1, fontSize: 18, marginHorizontal: 8 }}>
-            Multi-add
-          </Text>
-          <Button title={"Reset"} onPress={() => this.handleReset()} />
-        </View>
-        <ScrollView>
-          <Text style={styles.heading}>
-            Free Characters {this.state.myFreeCharacters.length}/
-            {this.state.freeCharacters.length}
-          </Text>
-          <View style={styles.main}>
-            {this.state.freeCharacters.map(
-              (characters, i) => (
-                i++,
-                (
-                  <View style={styles.eachChar} key={i}>
-                    {characters.name !== "" ? (
-                      <CTrack
-                        easySelect={this.state.switchOn}
-                        charList={this.state.myFreeCharacters}
-                        onSelect={this.selectFreeChar}
-                        key={characters.id}
-                        id={characters.id}
-                        name={characters.name}
-                        skills={characters.skills}
-                        weapon={characters.weapon}
-                        shadow={characters.shadow}
-                        element={characters.element}
-                        vc={characters.vc}
-                        vcAS={characters.vcAS}
-                        uri={characters.uri}
-                        tomeName={characters.tomeName}
-                        tomeNameAs={characters.tomeNameAs}
-                        tomeLocation={characters.tomeLocation}
-                        tomeLocationAs={characters.tomeLocationAs}
-                        as={characters.as}
-                        stats={characters.stats}
-                        statsAs={characters.statsAs}
-                        uriAs={characters.uriAs}
-                        manifest={characters.manifest}
-                        manifestAs={characters.manifestAs}
-                        LStats={characters.LStats}
-                        vcStats={characters.vcStats}
-                        vcStatsAs={characters.vcStatsAs}
-                        poison={characters.poison}
-                        pain={characters.pain}
-                        score={characters.score}
-                        scoreAs={characters.scoreAs}
-                      />
-                    ) : null}
-                  </View>
-                )
-              )
-            )}
+      <View>
+        <Button
+          title={this.state.listEdit ? "Edit Teams" : "Add characters"}
+          onPress={() => {
+            this.setState({ listEdit: !this.state.listEdit });
+          }}
+        />
+        {!this.state.listEdit ? (
+          <View>
+            <MyTeam
+              characters={this.state.charactersTotal}
+              myFreeCharacters={this.state.myFreeCharacters}
+              myGachaCharacters={this.state.myGachaCharacters}
+            />
           </View>
-          <Text style={styles.heading}>
-            Gacha Characters {this.state.myGachaCharacters.length}/
-            {this.state.gachaCharacters.length}
-          </Text>
-          <View style={styles.main}>
-            {this.state.gachaCharacters.map(
-              (characters, i) => (
-                i++,
-                (
-                  <View style={styles.eachChar} key={i}>
-                    {characters.name !== "" ? (
-                      <CTrack
-                        easySelect={this.state.switchOn}
-                        charList={this.state.myGachaCharacters}
-                        onSelect={this.selectGachaChar}
-                        key={characters.id}
-                        id={characters.id}
-                        name={characters.name}
-                        skills={characters.skills}
-                        weapon={characters.weapon}
-                        shadow={characters.shadow}
-                        element={characters.element}
-                        vc={characters.vc}
-                        vcAS={characters.vcAS}
-                        uri={characters.uri}
-                        tomeName={characters.tomeName}
-                        tomeNameAs={characters.tomeNameAs}
-                        tomeLocation={characters.tomeLocation}
-                        tomeLocationAs={characters.tomeLocationAs}
-                        as={characters.as}
-                        stats={characters.stats}
-                        statsAs={characters.statsAs}
-                        uriAs={characters.uriAs}
-                        manifest={characters.manifest}
-                        manifestAs={characters.manifestAs}
-                        LStats={characters.LStats}
-                        vcStats={characters.vcStats}
-                        vcStatsAs={characters.vcStatsAs}
-                        poison={characters.poison}
-                        pain={characters.pain}
-                        score={characters.score}
-                        scoreAs={characters.scoreAs}
-                      />
-                    ) : null}
-                  </View>
-                )
-              )
-            )}
+        ) : (
+          <View style={styles.container}>
+            <View style={{ flexDirection: "row", marginVertical: 10 }}>
+              <MySwitch
+                onPress={() => this.handleSwitch()}
+                switchOn={this.state.switchOn}
+              />
+              <Text style={{ flex: 1, fontSize: 18, marginHorizontal: 8 }}>
+                Multi-add
+              </Text>
+              <Button title={"Reset"} onPress={() => this.handleReset()} />
+            </View>
+            <ScrollView>
+              <Text style={styles.heading}>
+                Free Characters {this.state.myFreeCharacters.length}/
+                {this.state.freeCharacters.length}
+              </Text>
+              <View style={styles.main}>
+                {this.state.freeCharacters.map(
+                  (characters, i) => (
+                    i++,
+                    (
+                      <View style={styles.eachChar} key={i}>
+                        {characters.name !== "" ? (
+                          <CTrack
+                            easySelect={this.state.switchOn}
+                            charList={this.state.myFreeCharacters}
+                            onSelect={this.selectFreeChar}
+                            key={characters.id}
+                            id={characters.id}
+                            name={characters.name}
+                            skills={characters.skills}
+                            weapon={characters.weapon}
+                            shadow={characters.shadow}
+                            element={characters.element}
+                            vc={characters.vc}
+                            vcAS={characters.vcAS}
+                            uri={characters.uri}
+                            tomeName={characters.tomeName}
+                            tomeNameAs={characters.tomeNameAs}
+                            tomeLocation={characters.tomeLocation}
+                            tomeLocationAs={characters.tomeLocationAs}
+                            as={characters.as}
+                            stats={characters.stats}
+                            statsAs={characters.statsAs}
+                            uriAs={characters.uriAs}
+                            manifest={characters.manifest}
+                            manifestAs={characters.manifestAs}
+                            LStats={characters.LStats}
+                            vcStats={characters.vcStats}
+                            vcStatsAs={characters.vcStatsAs}
+                            poison={characters.poison}
+                            pain={characters.pain}
+                            score={characters.score}
+                            scoreAs={characters.scoreAs}
+                          />
+                        ) : null}
+                      </View>
+                    )
+                  )
+                )}
+              </View>
+              <Text style={styles.heading}>
+                Gacha Characters {this.state.myGachaCharacters.length}/
+                {this.state.gachaCharacters.length}
+              </Text>
+              <View style={styles.main}>
+                {this.state.gachaCharacters.map(
+                  (characters, i) => (
+                    i++,
+                    (
+                      <View style={styles.eachChar} key={i}>
+                        {characters.name !== "" ? (
+                          <CTrack
+                            easySelect={this.state.switchOn}
+                            charList={this.state.myGachaCharacters}
+                            onSelect={this.selectGachaChar}
+                            key={characters.id}
+                            id={characters.id}
+                            name={characters.name}
+                            skills={characters.skills}
+                            weapon={characters.weapon}
+                            shadow={characters.shadow}
+                            element={characters.element}
+                            vc={characters.vc}
+                            vcAS={characters.vcAS}
+                            uri={characters.uri}
+                            tomeName={characters.tomeName}
+                            tomeNameAs={characters.tomeNameAs}
+                            tomeLocation={characters.tomeLocation}
+                            tomeLocationAs={characters.tomeLocationAs}
+                            as={characters.as}
+                            stats={characters.stats}
+                            statsAs={characters.statsAs}
+                            uriAs={characters.uriAs}
+                            manifest={characters.manifest}
+                            manifestAs={characters.manifestAs}
+                            LStats={characters.LStats}
+                            vcStats={characters.vcStats}
+                            vcStatsAs={characters.vcStatsAs}
+                            poison={characters.poison}
+                            pain={characters.pain}
+                            score={characters.score}
+                            scoreAs={characters.scoreAs}
+                          />
+                        ) : null}
+                      </View>
+                    )
+                  )
+                )}
+              </View>
+            </ScrollView>
           </View>
-        </ScrollView>
+        )}
       </View>
     );
   }
