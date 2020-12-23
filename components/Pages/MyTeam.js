@@ -82,9 +82,16 @@ export default class MyTeam extends Component {
   sortChars = (i) => {
     this.setState({ loading: true });
     let charactersRead = [...this.state.charactersRead];
-    charactersRead = charactersRead.sort((a, b) => {
-      return b.score - a.score;
-    });
+    if (i == 0) {
+      charactersRead = charactersRead.sort((a, b) => {
+        return b.score - a.score;
+      });
+    }
+    if (i > 0) {
+      charactersRead = charactersRead.sort((a, b) => {
+        return b.stats[i].value - a.stats[i].value;
+      });
+    }
     this.setState({ charactersRead });
     this.setState({ loading: false });
   };
@@ -241,18 +248,24 @@ export default class MyTeam extends Component {
                 source={require("../pics/Crystal.png")}
               />
             </TouchableOpacity>
-            <DropDownPicker
-              items={[
-                { label: "ATK", value: 0 },
-                { label: "M.ATK", value: 1 },
-              ]}
-              placeholder={"Sort"}
-              defaultValue={""}
-              containerStyle={styles.picker}
-              dropDownStyle={{ height: 80, flex: 1 }}
-              onChangeItem={(i) => this.sortChars(i.value)}
-            />
           </View>
+        </View>
+        <View style={styles.sort}>
+          <DropDownPicker
+            items={[
+              { label: "Score", value: 0 },
+              { label: "PWR", value: 2 },
+              { label: "INT", value: 3 },
+              { label: "SPD", value: 4 },
+              { label: "END", value: 6 },
+              { label: "SPR", value: 7 },
+            ]}
+            placeholder={"Sort"}
+            defaultValue={""}
+            containerStyle={styles.picker}
+            dropDownStyle={{ height: 120, flex: 1 }}
+            onChangeItem={(i) => this.sortChars(i.value)}
+          />
         </View>
         <ScrollView nestedScrollEnabled={true}>
           <View style={styles.characterList}>
@@ -281,7 +294,6 @@ export default class MyTeam extends Component {
                         tomeLocationAs={characters.tomeLocationAs}
                         as={characters.as}
                         stats={characters.stats}
-                        statsAs={characters.statsAs}
                         uriAs={characters.uriAs}
                         manifest={characters.manifest}
                         manifestAs={characters.manifestAs}
@@ -291,7 +303,6 @@ export default class MyTeam extends Component {
                         poison={characters.poison}
                         pain={characters.pain}
                         score={characters.score}
-                        scoreAs={characters.scoreAs}
                       />
                     )
                   )
@@ -333,6 +344,12 @@ const styles = StyleSheet.create({
     height: 43,
     marginVertical: 4,
     marginHorizontal: 9,
+  },
+  sort: {
+    flexDirection: "row",
+    width: "100%",
+    flexWrap: "wrap",
+    justifyContent: "center",
   },
   weaponIcon: {
     height: 40,

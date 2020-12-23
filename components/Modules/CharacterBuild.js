@@ -25,10 +25,7 @@ export default class CharacterBuild extends Component {
     if (this.props.LStats) {
       let LStats = [...this.state.LStats];
       LStats = LStats.slice(0, v);
-      let statsTotal =
-        this.props.as === false
-          ? [...this.props.stats]
-          : [...this.props.statsAs];
+      let statsTotal = [...this.props.stats];
       LStats.forEach((a, i) => {
         let pos = statsTotal.map((x) => x.stat).indexOf(LStats[i].stat);
         statsTotal.splice(pos, 1, {
@@ -205,10 +202,7 @@ export default class CharacterBuild extends Component {
                 textStyle={styles.tabsBottomText}
                 color={this.state.stats === true ? "gold" : "primary"}
                 onPress={() => {
-                  let statsTotal =
-                    this.props.as === false
-                      ? [...this.props.stats]
-                      : [...this.props.statsAs];
+                  let statsTotal = [...this.props.stats];
                   let LStats = this.props.LStats ? [...this.props.LStats] : [];
                   this.setState({
                     main: false,
@@ -255,7 +249,7 @@ export default class CharacterBuild extends Component {
                     width: "20%",
                   }}
                 >
-                  {this.props.as ? this.props.scoreAs : this.props.score}
+                  {this.props.score}
                 </Text>
               </View>
               <View style={[styles.inLine]}>
@@ -303,7 +297,7 @@ export default class CharacterBuild extends Component {
               <View style={styles.inLine}>
                 <Text style={{ fontWeight: "bold" }}>VC: </Text>
                 <Text style={styles.descriptions}>
-                  {this.props.as ? this.props.vcAs : this.props.vc}
+                  {this.props.as ? this.props.vcAS : this.props.vc}
                 </Text>
               </View>
             </View>
@@ -348,25 +342,15 @@ export default class CharacterBuild extends Component {
                         <Text
                           style={[
                             styles.descriptions,
-                            this.props.as === false
-                              ? stats.value === this.props.stats[i - 1].value
-                                ? styles.textBlack
-                                : styles.textPink
-                              : stats.value === this.props.statsAs[i - 1].value
+                            stats.value === this.props.stats[i - 1].value
                               ? styles.textBlack
                               : styles.textPink,
                           ]}
                         >
                           {stats.value}{" "}
-                          {this.props.as === false
-                            ? stats.value !== this.props.stats[i - 1].value
-                              ? `(+${
-                                  stats.value - this.props.stats[i - 1].value
-                                })`
-                              : null
-                            : stats.value !== this.props.statsAs[i - 1].value
+                          {stats.value !== this.props.stats[i - 1].value
                             ? `(+${
-                                stats.value - this.props.statsAs[i - 1].value
+                                stats.value - this.props.stats[i - 1].value
                               })`
                             : null}
                         </Text>
