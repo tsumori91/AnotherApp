@@ -21,7 +21,6 @@ export default class MyTeam extends Component {
     poisonFilter: false,
     loading: true,
     asChars: [],
-    asCharsRead: [],
   };
   componentDidMount() {
     this.getCharacters();
@@ -32,67 +31,64 @@ export default class MyTeam extends Component {
     let myFreeCharacters = [...this.props.myFreeCharacters];
     let gachaCharacters = [...this.props.myGachaCharacters];
     let myCharacters = myFreeCharacters.concat(gachaCharacters);
-    let myAsCharacters = myCharacters.filter((c) => c.includes("AS"));
+    let myAsCharacters = [...myCharacters.filter((c) => c.includes("AS"))];
     myAsCharacters.forEach(
       (value, index, array) =>
         (array[index] = value.substring(0, value.length - 3))
     );
-    let characters = chars.filter((c) => myCharacters.indexOf(c.name) !== -1);
-    let asChars = chars.filter((c) => myAsCharacters.indexOf(c.name) !== -1);
-    this.setState({
-      charactersRead: characters,
-      characters,
-      asChars,
-      asCharsRead: asChars,
-    });
+    let characters = chars.map((a) => ({ ...a }));
+    characters = characters.filter((c) => myCharacters.indexOf(c.name) !== -1);
+    let asChars = chars.map((a) => ({ ...a }));
+    asChars = asChars.filter((c) => myAsCharacters.indexOf(c.name) !== -1);
+    characters.forEach((val, ind, arr) => (arr[ind].as = false));
+    asChars.forEach((val, ind, arr) => (arr[ind].score = val.scoreAs));
+    asChars.forEach((val, ind, arr) => (arr[ind].stats = val.statsAs));
+    characters = characters.concat(asChars);
+    this.setState({ charactersRead: characters, characters });
     this.setState({ loading: false });
   };
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });
     let charactersRead = this.state.characters.filter((w) => w.weapon == v);
-    let asCharsRead = this.state.asChars.filter((w) => w.weapon == v);
     if (v === this.state.weaponFilter) {
       charactersRead = this.state.characters;
-      asCharsRead = this.state.asChars;
     }
     if (this.state.elementFilter !== "") {
       charactersRead = charactersRead.filter(
         (e) => e.element == this.state.elementFilter
       );
-      asCharsRead = asCharsRead.filter(
-        (e) => e.element == this.state.elementFilter
-      );
     }
     if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
     else this.setState({ weaponFilter: v });
-    this.setState({ charactersRead, asCharsRead });
+    this.setState({ charactersRead });
     setTimeout(() => this.setState({ loading: false }));
   };
   handleFilterElement = (v) => {
     this.setState({ loading: true });
     let charactersRead = this.state.characters.filter((e) => e.element == v);
-    let asCharsRead = this.state.asCharsRead.filter((e) => e.element == v);
     if (v === this.state.elementFilter) {
       charactersRead = this.state.characters;
-      asCharsRead = this.state.asCharsRead;
     }
     if (this.state.weaponFilter !== "") {
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter
       );
-      asCharsRead = asCharsRead.filter(
-        (w) => w.weapon == this.state.weaponFilter
-      );
     }
     if (v === this.state.elementFilter) this.setState({ elementFilter: "" });
     else this.setState({ elementFilter: v });
-    this.setState({ charactersRead, asCharsRead });
-    setTimeout(() => this.setState({ loading: false }));
+    this.setState({ charactersRead });
+    this.setState({ loading: false });
+  };
+  sortChars = (i) => {
+    this.setState({ loading: true });
+    let charactersRead = [...this.state.charactersRead];
+    charactersRead = charactersRead.sort((a, b) => {
+      return b.score - a.score;
+    });
+    this.setState({ charactersRead });
+    this.setState({ loading: false });
   };
   render() {
-    let charactersRead = [...this.state.charactersRead];
-    let asCharsRead = [...this.state.asCharsRead];
-    let allCharsRead = charactersRead.concat(asCharsRead);
     return (
       <View style={styles.container}>
         <View style={styles.allButtons}>
@@ -174,7 +170,7 @@ export default class MyTeam extends Component {
             <TouchableOpacity onPress={() => this.handleFilterElement("Fire")}>
               <Image
                 style={[
-                  styles.weaponIcon,
+                  styles.elementIcon,
                   this.state.elementFilter === "Fire" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
@@ -184,7 +180,7 @@ export default class MyTeam extends Component {
             <TouchableOpacity onPress={() => this.handleFilterElement("Wind")}>
               <Image
                 style={[
-                  styles.weaponIcon,
+                  styles.elementIcon,
                   this.state.elementFilter === "Wind" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
@@ -194,7 +190,7 @@ export default class MyTeam extends Component {
             <TouchableOpacity onPress={() => this.handleFilterElement("Water")}>
               <Image
                 style={[
-                  styles.weaponIcon,
+                  styles.elementIcon,
                   this.state.elementFilter === "Water" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
@@ -204,7 +200,7 @@ export default class MyTeam extends Component {
             <TouchableOpacity onPress={() => this.handleFilterElement("Earth")}>
               <Image
                 style={[
-                  styles.weaponIcon,
+                  styles.elementIcon,
                   this.state.elementFilter === "Earth" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
@@ -214,7 +210,7 @@ export default class MyTeam extends Component {
             <TouchableOpacity onPress={() => this.handleFilterElement("Shade")}>
               <Image
                 style={[
-                  styles.weaponIcon,
+                  styles.elementIcon,
                   this.state.elementFilter === "Shade" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
@@ -226,7 +222,7 @@ export default class MyTeam extends Component {
             >
               <Image
                 style={[
-                  styles.weaponIcon,
+                  styles.elementIcon,
                   this.state.elementFilter === "Thunder" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
@@ -238,24 +234,24 @@ export default class MyTeam extends Component {
             >
               <Image
                 style={[
-                  styles.weaponIcon,
+                  styles.elementIcon,
                   this.state.elementFilter === "Crystal" ? styles.fade : null,
                   { marginHorizontal: 3 },
                 ]}
                 source={require("../pics/Crystal.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterPain()}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  styles.debuff,
-                  this.state.painFilter ? styles.fade : null,
-                  { marginHorizontal: 3 },
-                ]}
-                source={require("../pics/Pain.png")}
-              />
-            </TouchableOpacity>
+            <DropDownPicker
+              items={[
+                { label: "ATK", value: 0 },
+                { label: "M.ATK", value: 1 },
+              ]}
+              placeholder={"Sort"}
+              defaultValue={""}
+              containerStyle={styles.picker}
+              dropDownStyle={{ height: 80, flex: 1 }}
+              onChangeItem={(i) => this.sortChars(i.value)}
+            />
           </View>
         </View>
         <ScrollView nestedScrollEnabled={true}>
@@ -264,7 +260,7 @@ export default class MyTeam extends Component {
               <ActivityIndicator size={"large"} color={"black"} />
             ) : (
               <View>
-                {allCharsRead.map(
+                {this.state.charactersRead.map(
                   (characters, i) => (
                     i++,
                     (
@@ -283,7 +279,7 @@ export default class MyTeam extends Component {
                         tomeNameAs={characters.tomeNameAs}
                         tomeLocation={characters.tomeLocation}
                         tomeLocationAs={characters.tomeLocationAs}
-                        as={i > this.state.charactersRead.length ? true : false}
+                        as={characters.as}
                         stats={characters.stats}
                         statsAs={characters.statsAs}
                         uriAs={characters.uriAs}
@@ -332,10 +328,22 @@ const styles = StyleSheet.create({
   fade: {
     opacity: 0.65,
   },
+  picker: {
+    flex: 1,
+    height: 43,
+    marginVertical: 4,
+    marginHorizontal: 9,
+  },
   weaponIcon: {
     height: 40,
     width: 40,
     marginHorizontal: 1,
+    marginVertical: 2,
+  },
+  elementIcon: {
+    height: 35,
+    width: 35,
+    marginHorizontal: 0.8,
     marginVertical: 2,
   },
 });
