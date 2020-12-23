@@ -6,11 +6,15 @@ import {
   Text,
   Alert,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import MySwitch from "../Config/MySwitch";
 import Storage from "../Config/Storage";
 import CTrack from "../Modules/CTrack";
 import MyTeam from "./MyTeam";
+import * as firebase from "firebase";
+
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 export default class CharTrack extends Component {
   state = {
     listEdit: false,
@@ -20,33 +24,9 @@ export default class CharTrack extends Component {
     freeCharacters: [],
     myGachaCharacters: [],
     gachaCharacters: [],
-    freeList: [
-      "Aldo",
-      "Riica",
-      "Cyrus",
-      "Amy",
-      "Helena",
-      "Guildna",
-      "Altena",
-      "Jade",
-      "Saki",
-      "Mana",
-      "Joker",
-      "Morgana",
-      "Violet",
-      "Skull",
-      "Clarte",
-      "Sophia",
-      "Cress",
-      "Yuri",
-      "Velvet",
-      "Milla",
-      "Deirdre",
-      "Levia",
-      "Azami",
-      "Gariyu",
-      "Cerrine",
-    ],
+    freeAsList: [],
+    gachaAsList: [],
+    loading: false,
   };
   componentDidMount() {
     this.getCharactersTotal();
@@ -59,12 +39,13 @@ export default class CharTrack extends Component {
     this.setState({ charactersTotal });
     this.getFreeCharacters(charactersTotal);
   };
-  getFreeCharacters = (charactersTotal) => {
-    let freeList = [...this.state.freeList];
+  getFreeCharacters = async (charactersTotal) => {
+    let freeList = [...this.props.freeList];
     let freeCharacters = charactersTotal.filter(
       (character) => freeList.indexOf(character.name) + 1
     );
-    this.setState({ freeCharacters });
+    let freeAsList = freeCharacters.filter((character) => character.as);
+    this.setState({ freeCharacters, freeAsList });
     this.getGachaCharacters(charactersTotal, freeCharacters);
   };
   getGachaCharacters = (charactersTotal, freeCharacters) => {
@@ -73,6 +54,14 @@ export default class CharTrack extends Component {
         return false;
       } else return true;
     });
+    let gachaAsList = gachaCharacters.filter((character) => character.as);
+    gachaAsList = gachaAsList.filter(
+      (character) => character.tomeNameAs.indexOf("?") == -1
+    );
+    this.setState({ gachaAsList });
+    gachaCharacters = gachaCharacters.filter(
+      (character) => character.score > 74
+    );
     this.setState({ gachaCharacters });
   };
   selectFreeChar = async (name) => {
@@ -82,7 +71,7 @@ export default class CharTrack extends Component {
       this.setState({ myFreeCharacters });
     } else myFreeCharacters.push(name);
     this.setState({ myFreeCharacters });
-    await Storage.setItem("myFreeChars", myFreeCharacters);
+    await Storage.setItem("myFreeChar", myFreeCharacters);
   };
   selectGachaChar = async (name) => {
     let myGachaCharacters = [...this.state.myGachaCharacters];
@@ -91,17 +80,21 @@ export default class CharTrack extends Component {
       this.setState({ myGachaCharacters });
     } else myGachaCharacters.push(name);
     this.setState({ myGachaCharacters });
-    await Storage.setItem("myGachaChars", myGachaCharacters);
+    await Storage.setItem("myGachaChar", myGachaCharacters);
+    let freeList = [...this.props.freeList];
+    await firebase.database().ref("freeList").set({ freeList });
   };
   loadLists = async () => {
-    let myFreeCharacters = await Storage.getItem("myFreeChars");
-    let myGachaCharacters = await Storage.getItem("myGachaChars");
+    this.setState({ loading: true });
+    let myFreeCharacters = await Storage.getItem("myFreeChar");
+    let myGachaCharacters = await Storage.getItem("myGachaChar");
     if (myFreeCharacters !== null) {
       this.setState({ myFreeCharacters });
     }
     if (myGachaCharacters !== null) {
       this.setState({ myGachaCharacters });
     }
+    this.setState({ loading: false });
   };
   handleReset = () => {
     Alert.alert(
@@ -113,8 +106,8 @@ export default class CharTrack extends Component {
   };
   confirmReset = async () => {
     this.setState({ myFreeCharacters: [], myGachaCharacters: [] });
-    await Storage.setItem("myFreeChars", []);
-    await Storage.setItem("myGachaChars", []);
+    await Storage.setItem("myFreeChar", []);
+    await Storage.setItem("myGachaChar", []);
   };
   handleSwitch = () => {
     if (!this.state.switchOn) {
@@ -132,21 +125,31 @@ export default class CharTrack extends Component {
       );
     } else this.setState({ switchOn: !this.state.switchOn });
   };
+  handlePages = async () => {
+    this.setState({ loading: true });
+    this.setState({ listEdit: !this.state.listEdit });
+    await delay(200);
+    this.setState({ loading: false });
+  };
   render() {
     return (
       <View>
         <Button
-          title={this.state.listEdit ? "Edit Teams" : "Add characters"}
+          title={this.state.listEdit ? "My Character List" : "Add characters"}
           onPress={() => {
-            this.setState({ listEdit: !this.state.listEdit });
+            this.handlePages();
           }}
         />
-        {!this.state.listEdit ? (
+        {this.state.loading ? (
+          <ActivityIndicator size={"large"} color={"black"} />
+        ) : !this.state.listEdit ? (
           <View>
             <MyTeam
               characters={this.state.charactersTotal}
               myFreeCharacters={this.state.myFreeCharacters}
               myGachaCharacters={this.state.myGachaCharacters}
+              asFreeList={this.state.freeAsList}
+              asGachaList={this.state.gachaAsList}
             />
           </View>
         ) : (
@@ -164,7 +167,8 @@ export default class CharTrack extends Component {
             <ScrollView>
               <Text style={styles.heading}>
                 Free Characters {this.state.myFreeCharacters.length}/
-                {this.state.freeCharacters.length}
+                {this.state.freeCharacters.length +
+                  this.state.freeAsList.length}
               </Text>
               <View style={styles.main}>
                 {this.state.freeCharacters.map(
@@ -210,10 +214,54 @@ export default class CharTrack extends Component {
                     )
                   )
                 )}
+                {this.state.freeAsList.map(
+                  (characters, i) => (
+                    i++,
+                    (
+                      <View style={styles.eachChar} key={i}>
+                        {characters.name !== "" ? (
+                          <CTrack
+                            easySelect={this.state.switchOn}
+                            charList={this.state.myFreeCharacters}
+                            onSelect={this.selectFreeChar}
+                            key={characters.id}
+                            id={characters.id * 1000}
+                            name={characters.name + " AS"}
+                            skills={characters.skills}
+                            weapon={characters.weapon}
+                            shadow={characters.shadow}
+                            element={characters.element}
+                            vc={characters.vc}
+                            vcAS={characters.vcAS}
+                            uri={characters.uriAs}
+                            tomeName={characters.tomeName}
+                            tomeNameAs={characters.tomeNameAs}
+                            tomeLocation={characters.tomeLocation}
+                            tomeLocationAs={characters.tomeLocationAs}
+                            as={characters.as}
+                            stats={characters.stats}
+                            statsAs={characters.statsAs}
+                            uriAs={characters.uriAs}
+                            manifest={characters.manifest}
+                            manifestAs={characters.manifestAs}
+                            LStats={characters.LStats}
+                            vcStats={characters.vcStats}
+                            vcStatsAs={characters.vcStatsAs}
+                            poison={characters.poison}
+                            pain={characters.pain}
+                            score={characters.score}
+                            scoreAs={characters.scoreAs}
+                          />
+                        ) : null}
+                      </View>
+                    )
+                  )
+                )}
               </View>
               <Text style={styles.heading}>
                 Gacha Characters {this.state.myGachaCharacters.length}/
-                {this.state.gachaCharacters.length}
+                {this.state.gachaCharacters.length +
+                  this.state.gachaAsList.length}
               </Text>
               <View style={styles.main}>
                 {this.state.gachaCharacters.map(
@@ -236,6 +284,49 @@ export default class CharTrack extends Component {
                             vc={characters.vc}
                             vcAS={characters.vcAS}
                             uri={characters.uri}
+                            tomeName={characters.tomeName}
+                            tomeNameAs={characters.tomeNameAs}
+                            tomeLocation={characters.tomeLocation}
+                            tomeLocationAs={characters.tomeLocationAs}
+                            as={characters.as}
+                            stats={characters.stats}
+                            statsAs={characters.statsAs}
+                            uriAs={characters.uriAs}
+                            manifest={characters.manifest}
+                            manifestAs={characters.manifestAs}
+                            LStats={characters.LStats}
+                            vcStats={characters.vcStats}
+                            vcStatsAs={characters.vcStatsAs}
+                            poison={characters.poison}
+                            pain={characters.pain}
+                            score={characters.score}
+                            scoreAs={characters.scoreAs}
+                          />
+                        ) : null}
+                      </View>
+                    )
+                  )
+                )}
+                {this.state.gachaAsList.map(
+                  (characters, i) => (
+                    i++,
+                    (
+                      <View style={styles.eachChar} key={i}>
+                        {characters.name !== "" ? (
+                          <CTrack
+                            easySelect={this.state.switchOn}
+                            charList={this.state.myGachaCharacters}
+                            onSelect={this.selectGachaChar}
+                            key={characters.id}
+                            id={characters.id * 1000}
+                            name={characters.name + " AS"}
+                            skills={characters.skills}
+                            weapon={characters.weapon}
+                            shadow={characters.shadow}
+                            element={characters.element}
+                            vc={characters.vc}
+                            vcAS={characters.vcAS}
+                            uri={characters.uriAs}
                             tomeName={characters.tomeName}
                             tomeNameAs={characters.tomeNameAs}
                             tomeLocation={characters.tomeLocation}

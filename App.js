@@ -17,6 +17,7 @@ import colors from "./components/Config/colors";
 import MyEquips from "./components/Pages/MyEquips";
 import Storage from "./components/Config/Storage";
 import CharTrack from "./components/Pages/CharTrack";
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 if (!firebase.apps.length) {
   firebase.initializeApp(ApiKeys.firebaseConfig);
@@ -32,11 +33,41 @@ export default class AnotherApp extends Component {
     weapons: [],
     armor: [],
     dates: "",
+    freeList: [
+      "Aldo",
+      "Feinne",
+      "Sheila",
+      "Riica",
+      "Cyrus",
+      "Amy",
+      "Helena",
+      "Guildna",
+      "Altena",
+      "Galliard",
+      "Jade",
+      "Saki",
+      "Mana",
+      "Joker",
+      "Morgana",
+      "Violet",
+      "Skull",
+      "Clarte",
+      "Sophia",
+      "Cress",
+      "Yuri",
+      "Velvet",
+      "Milla",
+      "Deirdre",
+      "Levia",
+      "Azami",
+      "Gariyu",
+      "Cerrine",
+    ],
   };
   componentDidMount() {
     this.checkDate();
   }
-  loadData = () => {
+  loadData = async () => {
     this.setState({ loading: true });
     firebase
       .database()
@@ -74,10 +105,20 @@ export default class AnotherApp extends Component {
           banners: snapshot.val().banners,
         });
       });
+    firebase
+      .database()
+      .ref("freeList")
+      .once("value", async (snapshot) => {
+        await Storage.setItem("freeList", snapshot.val().freeList);
+        this.setState({
+          freeList: snapshot.val().freeList,
+        });
+      });
     if (firebase.apps.length) {
       this.setDate();
     }
-    setTimeout(() => this.setState({ loading: false }));
+    await delay(1000);
+    this.setState({ loading: false });
   };
   loadDataLocal = async () => {
     this.setState({ loading: true });
@@ -85,7 +126,9 @@ export default class AnotherApp extends Component {
     let weapons = await Storage.getItem("weapons");
     let armor = await Storage.getItem("armor");
     let banners = await Storage.getItem("banners");
+    let freeList = await Storage.getItem("freeList");
     this.setState({ characters, weapons, armor, banners });
+    await delay(200);
     this.setState({ loading: false });
   };
   setDate = async () => {
@@ -98,11 +141,13 @@ export default class AnotherApp extends Component {
     let today = new Date();
     let dates = String(today.getDate()) + String(today.getMonth());
     let oldDate = await Storage.getItem("dates");
-    if (dates === oldDate) this.loadDataLocal();
+    await delay(50);
+    if (dates == oldDate) this.loadDataLocal();
     else this.loadData();
   };
   handlePages = async (v) => {
     this.setState({ loading: true });
+    this.checkDate();
     this.setState({ display: v });
     let tracker = await Storage.getItem("tracker");
     if (tracker == null || !tracker) {
@@ -180,7 +225,10 @@ export default class AnotherApp extends Component {
             ) : this.state.display === "myEquips" ? (
               <MyEquips tracker={this.state.tracker} addEquip={this.addEquip} />
             ) : this.state.display === "myChars" ? (
-              <CharTrack characters={this.state.characters} />
+              <CharTrack
+                characters={this.state.characters}
+                freeList={this.state.freeList}
+              />
             ) : (
               <CPage characters={this.state.characters} />
             )}

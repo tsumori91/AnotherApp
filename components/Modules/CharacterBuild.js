@@ -26,7 +26,7 @@ export default class CharacterBuild extends Component {
       let LStats = [...this.state.LStats];
       LStats = LStats.slice(0, v);
       let statsTotal =
-        this.state.showAs === false
+        this.props.as === false
           ? [...this.props.stats]
           : [...this.props.statsAs];
       LStats.forEach((a, i) => {
@@ -156,103 +156,79 @@ export default class CharacterBuild extends Component {
       <View style={styles.all}>
         <View style={styles.inLine}>
           <Tab
-            title={this.props.name}
+            title={this.props.as ? this.props.name + " AS" : this.props.name}
             style={[
               styles.topTab,
               styles.topLeftTab,
               this.tabColor(!this.state.showAs),
-              this.props.as === false ? { borderTopRightRadius: 10 } : null,
+              { borderTopRightRadius: 10 },
             ]}
-            onPress={() => {
-              this.setState({
-                showAs: false,
-                statsTotal: [...this.props.stats],
-                light: 0,
-              });
-            }}
           />
-          {this.props.as === true ? (
-            <Tab
-              title={`${this.props.name} (AS)`}
-              style={[
-                styles.topTab,
-                styles.topRightTab,
-                this.tabColor(this.state.showAs),
-              ]}
-              onPress={() => {
-                this.setState({
-                  showAs: true,
-                  statsTotal: [...this.props.statsAs],
-                  light: 0,
-                });
-              }}
-            />
-          ) : null}
         </View>
         <View style={[styles.inLine, styles.mainPage]}>
-          {this.state.showAs === false ? (
-            <View style={[styles.deLine, { flex: 2 }]}>
-              <Image
-                source={
-                  this.props.uri
-                    ? {
-                        uri: this.props.uri,
-                      }
-                    : require("../pics/no_photo_available.jpg")
+          <View style={[styles.deLine, { flex: 2 }]}>
+            <Image
+              source={
+                this.props.uriAs && this.props.as
+                  ? {
+                      uri: this.props.uriAs,
+                    }
+                  : this.props.uri
+                  ? {
+                      uri: this.props.uri,
+                    }
+                  : require("../pics/no_photo_available.jpg")
+              }
+              style={styles.image}
+            />
+            <View style={styles.inLine}>
+              <Tab
+                style={[styles.tabsBottom, { borderBottomEndRadius: 0 }]}
+                textStyle={styles.tabsBottomText}
+                color={this.state.main === true ? "gold" : "primary"}
+                onPress={() =>
+                  this.setState({ main: true, skills: false, stats: false })
                 }
-                style={styles.image}
+                title={"Main"}
               />
-              <View style={styles.inLine}>
-                <Tab
-                  style={[styles.tabsBottom, { borderBottomEndRadius: 0 }]}
-                  textStyle={styles.tabsBottomText}
-                  color={this.state.main === true ? "gold" : "primary"}
-                  onPress={() =>
-                    this.setState({ main: true, skills: false, stats: false })
-                  }
-                  title={"Main"}
-                />
-                <Tab
-                  style={[styles.tabsBottom, { borderRadius: 0 }]}
-                  textStyle={styles.tabsBottomText}
-                  color={this.state.skills === true ? "gold" : "primary"}
-                  onPress={() =>
-                    this.setState({ main: false, skills: true, stats: false })
-                  }
-                  title={"Skills"}
-                />
-                <Tab
-                  style={[styles.tabsBottom, { borderRadius: 0 }]}
-                  textStyle={styles.tabsBottomText}
-                  color={this.state.stats === true ? "gold" : "primary"}
-                  onPress={() => {
-                    let statsTotal =
-                      this.state.showAs === false
-                        ? [...this.props.stats]
-                        : [...this.props.statsAs];
-                    let LStats = this.props.LStats
-                      ? [...this.props.LStats]
-                      : [];
-                    this.setState({
-                      main: false,
-                      skills: false,
-                      stats: true,
-                      statsTotal,
-                      LStats,
-                    });
-                  }}
-                  title={"Stats"}
-                />
-              </View>
+              <Tab
+                style={[styles.tabsBottom, { borderRadius: 0 }]}
+                textStyle={styles.tabsBottomText}
+                color={this.state.skills === true ? "gold" : "primary"}
+                onPress={() =>
+                  this.setState({ main: false, skills: true, stats: false })
+                }
+                title={"Skills"}
+              />
+              <Tab
+                style={[styles.tabsBottom, { borderRadius: 0 }]}
+                textStyle={styles.tabsBottomText}
+                color={this.state.stats === true ? "gold" : "primary"}
+                onPress={() => {
+                  let statsTotal =
+                    this.props.as === false
+                      ? [...this.props.stats]
+                      : [...this.props.statsAs];
+                  let LStats = this.props.LStats ? [...this.props.LStats] : [];
+                  this.setState({
+                    main: false,
+                    skills: false,
+                    stats: true,
+                    statsTotal,
+                    LStats,
+                  });
+                }}
+                title={"Stats"}
+              />
             </View>
-          ) : null}
+          </View>
           {this.state.main === true ? (
             <View
               style={[
                 styles.main,
                 { paddingHorizontal: 7 },
                 statusColour,
-                this.state.showAs === false ? styles.borderOg : styles.borderAs,
+                styles.borderOg,
               ]}
             >
               <View style={styles.inLine}>
@@ -279,7 +255,7 @@ export default class CharacterBuild extends Component {
                     width: "20%",
                   }}
                 >
-                  {this.state.showAs ? this.props.scoreAs : this.props.score}
+                  {this.props.as ? this.props.scoreAs : this.props.score}
                 </Text>
               </View>
               <View style={[styles.inLine]}>
@@ -300,7 +276,7 @@ export default class CharacterBuild extends Component {
               <View style={styles.inLine}>
                 <Text style={{ fontWeight: "bold" }}>Tome Name: </Text>
                 <Text>
-                  {this.state.showAs === true
+                  {this.props.as === true
                     ? this.props.tomeNameAs
                     : this.props.tomeName}
                 </Text>
@@ -308,51 +284,36 @@ export default class CharacterBuild extends Component {
               <View style={styles.inLine}>
                 <Text style={{ fontWeight: "bold" }}>Location: </Text>
                 <Text>
-                  {this.state.showAs === true
+                  {this.props.as === true
                     ? this.props.tomeLocationAs
                     : this.props.tomeLocation}
                 </Text>
               </View>
             </View>
           ) : this.state.skills === true ? (
-            this.state.showAs === false ? (
-              <View
-                style={[
-                  styles.main,
-                  { paddingHorizontal: 7 },
-                  statusColour,
-                  styles.borderOg,
-                ]}
-              >
-                <Text style={styles.stats}>Skills </Text>
-                <View style={styles.inLine}>
-                  <Text style={{ fontWeight: "bold" }}>VC: </Text>
-                  <Text style={styles.descriptions}>{this.props.vc}</Text>
-                </View>
+            <View
+              style={[
+                styles.main,
+                { paddingHorizontal: 7 },
+                statusColour,
+                styles.borderOg,
+              ]}
+            >
+              <Text style={styles.stats}>Skills </Text>
+              <View style={styles.inLine}>
+                <Text style={{ fontWeight: "bold" }}>VC: </Text>
+                <Text style={styles.descriptions}>
+                  {this.props.as ? this.props.vcAs : this.props.vc}
+                </Text>
               </View>
-            ) : this.state.showAs === true ? (
-              <View
-                style={[
-                  styles.main,
-                  { paddingHorizontal: 7 },
-                  statusColour,
-                  styles.borderAs,
-                ]}
-              >
-                <Text style={styles.stats}>Skills </Text>
-                <View style={styles.inLine}>
-                  <Text style={{ fontWeight: "bold" }}>VC: </Text>
-                  <Text style={styles.descriptions}>{this.props.vcAS}</Text>
-                </View>
-              </View>
-            ) : null
+            </View>
           ) : this.state.stats === true ? (
             <View
               style={[
                 styles.main,
                 { paddingHorizontal: 7 },
                 statusColour,
-                this.state.showAs ? styles.borderAs : styles.borderOg,
+                styles.borderOg,
               ]}
             >
               <Text style={styles.stats}>
@@ -387,7 +348,7 @@ export default class CharacterBuild extends Component {
                         <Text
                           style={[
                             styles.descriptions,
-                            this.state.showAs === false
+                            this.props.as === false
                               ? stats.value === this.props.stats[i - 1].value
                                 ? styles.textBlack
                                 : styles.textPink
@@ -397,7 +358,7 @@ export default class CharacterBuild extends Component {
                           ]}
                         >
                           {stats.value}{" "}
-                          {this.state.showAs === false
+                          {this.props.as === false
                             ? stats.value !== this.props.stats[i - 1].value
                               ? `(+${
                                   stats.value - this.props.stats[i - 1].value
@@ -422,76 +383,10 @@ export default class CharacterBuild extends Component {
                     { fontSize: 12.5, textTransform: "uppercase" },
                   ]}
                 >
-                  {this.state.showAs && this.props.vcStatsAs
+                  {this.props.as && this.props.vcStatsAs
                     ? this.props.vcStatsAs
                     : this.props.vcStats}
                 </Text>
-              </View>
-            </View>
-          ) : null}
-
-          {this.state.showAs === true ? (
-            <View style={[styles.deLine, { flex: 2 }]}>
-              <Image
-                source={
-                  this.props.uriAs
-                    ? {
-                        uri: this.props.uriAs,
-                      }
-                    : require("../pics/no_photo_available.jpg")
-                }
-                style={styles.image}
-              />
-              <View style={styles.inLine}>
-                <Tab
-                  style={[
-                    styles.tabsBottom,
-                    { borderBottomEndRadius: 0 },
-                    this.state.showAs === true ? { borderRadius: 0 } : null,
-                  ]}
-                  textStyle={styles.tabsBottomText}
-                  color={this.state.main === true ? "gold" : "primary"}
-                  onPress={() =>
-                    this.setState({ main: true, skills: false, stats: false })
-                  }
-                  title={"Main"}
-                />
-                <Tab
-                  style={[styles.tabsBottom, { borderRadius: 0 }]}
-                  textStyle={styles.tabsBottomText}
-                  onPress={() =>
-                    this.setState({ main: false, skills: true, stats: false })
-                  }
-                  color={this.state.skills === true ? "gold" : "primary"}
-                  title={"Skills"}
-                />
-                <Tab
-                  style={[
-                    styles.tabsBottom,
-                    this.state.showAs === false
-                      ? { borderRadius: 0 }
-                      : { borderBottomStartRadius: 0 },
-                  ]}
-                  textStyle={styles.tabsBottomText}
-                  onPress={() => {
-                    let statsTotal =
-                      this.state.showAs === false
-                        ? [...this.props.stats]
-                        : [...this.props.statsAs];
-                    let LStats = this.props.LStats
-                      ? [...this.props.LStats]
-                      : [];
-                    this.setState({
-                      main: false,
-                      skills: false,
-                      stats: true,
-                      statsTotal,
-                      LStats,
-                    });
-                  }}
-                  color={this.state.stats === true ? "gold" : "primary"}
-                  title={"Stats"}
-                />
               </View>
             </View>
           ) : null}
@@ -577,7 +472,7 @@ export default class CharacterBuild extends Component {
                     )
                   )
                 )}
-                {this.state.showAs === true
+                {this.props.as === true
                   ? this.props.skills.slice(8).map(
                       (skills, i) => (
                         i++,

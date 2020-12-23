@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import CharacterBuild from "../Modules/CharacterBuild";
 import colors from "../Config/colors";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default class MyTeam extends Component {
   state = {
@@ -19,99 +20,79 @@ export default class MyTeam extends Component {
     painFilter: false,
     poisonFilter: false,
     loading: true,
+    asChars: [],
+    asCharsRead: [],
   };
   componentDidMount() {
-    this.getCharacters();
-    setTimeout(() => {}, 1000);
     this.getCharacters();
   }
   getCharacters = () => {
     this.setState({ loading: true });
-    let characters = [...this.props.characters];
+    let chars = [...this.props.characters];
     let myFreeCharacters = [...this.props.myFreeCharacters];
     let gachaCharacters = [...this.props.myGachaCharacters];
     let myCharacters = myFreeCharacters.concat(gachaCharacters);
-    characters = characters.filter((c) => myCharacters.indexOf(c.name) !== -1);
-    this.setState({ characters, charactersRead: characters });
+    let myAsCharacters = myCharacters.filter((c) => c.includes("AS"));
+    myAsCharacters.forEach(
+      (value, index, array) =>
+        (array[index] = value.substring(0, value.length - 3))
+    );
+    let characters = chars.filter((c) => myCharacters.indexOf(c.name) !== -1);
+    let asChars = chars.filter((c) => myAsCharacters.indexOf(c.name) !== -1);
+    this.setState({
+      charactersRead: characters,
+      characters,
+      asChars,
+      asCharsRead: asChars,
+    });
     this.setState({ loading: false });
   };
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });
     let charactersRead = this.state.characters.filter((w) => w.weapon == v);
-    if (v === this.state.weaponFilter) charactersRead = this.state.characters;
-    if (this.state.elementFilter !== "")
+    let asCharsRead = this.state.asChars.filter((w) => w.weapon == v);
+    if (v === this.state.weaponFilter) {
+      charactersRead = this.state.characters;
+      asCharsRead = this.state.asChars;
+    }
+    if (this.state.elementFilter !== "") {
       charactersRead = charactersRead.filter(
         (e) => e.element == this.state.elementFilter
       );
-    if (this.state.painFilter) {
-      charactersRead = charactersRead.filter((w) => w.pain == true);
-    }
-    if (this.state.poisonFilter) {
-      charactersRead = charactersRead.filter((w) => w.poison == true);
+      asCharsRead = asCharsRead.filter(
+        (e) => e.element == this.state.elementFilter
+      );
     }
     if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
     else this.setState({ weaponFilter: v });
-    this.setState({ charactersRead });
+    this.setState({ charactersRead, asCharsRead });
     setTimeout(() => this.setState({ loading: false }));
   };
   handleFilterElement = (v) => {
     this.setState({ loading: true });
     let charactersRead = this.state.characters.filter((e) => e.element == v);
-    if (v === this.state.elementFilter) charactersRead = this.state.characters;
-    if (this.state.weaponFilter !== "")
+    let asCharsRead = this.state.asCharsRead.filter((e) => e.element == v);
+    if (v === this.state.elementFilter) {
+      charactersRead = this.state.characters;
+      asCharsRead = this.state.asCharsRead;
+    }
+    if (this.state.weaponFilter !== "") {
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter
       );
-    if (this.state.painFilter) {
-      charactersRead = charactersRead.filter((w) => w.pain == true);
-    }
-    if (this.state.poisonFilter) {
-      charactersRead = charactersRead.filter((w) => w.poison == true);
+      asCharsRead = asCharsRead.filter(
+        (w) => w.weapon == this.state.weaponFilter
+      );
     }
     if (v === this.state.elementFilter) this.setState({ elementFilter: "" });
     else this.setState({ elementFilter: v });
-    this.setState({ charactersRead });
-    setTimeout(() => this.setState({ loading: false }));
-  };
-  handleFilterPain = () => {
-    this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((e) => e.pain == true);
-    if (this.state.painFilter) charactersRead = [...this.state.characters];
-    if (this.state.weaponFilter !== "")
-      charactersRead = charactersRead.filter(
-        (w) => w.weapon == this.state.weaponFilter
-      );
-    if (this.state.elementFilter !== "")
-      charactersRead = charactersRead.filter(
-        (e) => e.element == this.state.elementFilter
-      );
-    if (this.state.poisonFilter) {
-      charactersRead = charactersRead.filter((w) => w.poison == true);
-    }
-    this.setState({ painFilter: !this.state.painFilter });
-    this.setState({ charactersRead });
-    setTimeout(() => this.setState({ loading: false }));
-  };
-  handleFilterPoison = () => {
-    this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((e) => e.poison == true);
-    if (this.state.poisonFilter) charactersRead = [...this.state.characters];
-    if (this.state.weaponFilter !== "")
-      charactersRead = charactersRead.filter(
-        (w) => w.weapon == this.state.weaponFilter
-      );
-    if (this.state.elementFilter !== "")
-      charactersRead = charactersRead.filter(
-        (e) => e.element == this.state.elementFilter
-      );
-    if (this.state.painFilter) {
-      charactersRead = charactersRead.filter((w) => w.pain == true);
-    }
-    this.setState({ poisonFilter: !this.state.poisonFilter });
-    this.setState({ charactersRead });
+    this.setState({ charactersRead, asCharsRead });
     setTimeout(() => this.setState({ loading: false }));
   };
   render() {
+    let charactersRead = [...this.state.charactersRead];
+    let asCharsRead = [...this.state.asCharsRead];
+    let allCharsRead = charactersRead.concat(asCharsRead);
     return (
       <View style={styles.container}>
         <View style={styles.allButtons}>
@@ -186,16 +167,6 @@ export default class MyTeam extends Component {
                   this.state.weaponFilter === "Hammer" ? styles.fade : null,
                 ]}
                 source={require("../pics/Hammer.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterPoison()}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  styles.debuff,
-                  this.state.poisonFilter ? styles.fade : null,
-                ]}
-                source={require("../pics/Poison.png")}
               />
             </TouchableOpacity>
           </View>
@@ -292,37 +263,44 @@ export default class MyTeam extends Component {
             {this.state.loading ? (
               <ActivityIndicator size={"large"} color={"black"} />
             ) : (
-              this.state.charactersRead.map((characters) => (
-                <CharacterBuild
-                  key={characters.id}
-                  id={characters.id}
-                  name={characters.name}
-                  skills={characters.skills}
-                  weapon={characters.weapon}
-                  shadow={characters.shadow}
-                  element={characters.element}
-                  vc={characters.vc}
-                  vcAS={characters.vcAS}
-                  uri={characters.uri}
-                  tomeName={characters.tomeName}
-                  tomeNameAs={characters.tomeNameAs}
-                  tomeLocation={characters.tomeLocation}
-                  tomeLocationAs={characters.tomeLocationAs}
-                  as={characters.as}
-                  stats={characters.stats}
-                  statsAs={characters.statsAs}
-                  uriAs={characters.uriAs}
-                  manifest={characters.manifest}
-                  manifestAs={characters.manifestAs}
-                  LStats={characters.LStats}
-                  vcStats={characters.vcStats}
-                  vcStatsAs={characters.vcStatsAs}
-                  poison={characters.poison}
-                  pain={characters.pain}
-                  score={characters.score}
-                  scoreAs={characters.scoreAs}
-                />
-              ))
+              <View>
+                {allCharsRead.map(
+                  (characters, i) => (
+                    i++,
+                    (
+                      <CharacterBuild
+                        key={i}
+                        id={i}
+                        name={characters.name}
+                        skills={characters.skills}
+                        weapon={characters.weapon}
+                        shadow={characters.shadow}
+                        element={characters.element}
+                        vc={characters.vc}
+                        vcAS={characters.vcAS}
+                        uri={characters.uri}
+                        tomeName={characters.tomeName}
+                        tomeNameAs={characters.tomeNameAs}
+                        tomeLocation={characters.tomeLocation}
+                        tomeLocationAs={characters.tomeLocationAs}
+                        as={i > this.state.charactersRead.length ? true : false}
+                        stats={characters.stats}
+                        statsAs={characters.statsAs}
+                        uriAs={characters.uriAs}
+                        manifest={characters.manifest}
+                        manifestAs={characters.manifestAs}
+                        LStats={characters.LStats}
+                        vcStats={characters.vcStats}
+                        vcStatsAs={characters.vcStatsAs}
+                        poison={characters.poison}
+                        pain={characters.pain}
+                        score={characters.score}
+                        scoreAs={characters.scoreAs}
+                      />
+                    )
+                  )
+                )}
+              </View>
             )}
           </View>
         </ScrollView>
@@ -344,6 +322,13 @@ const styles = StyleSheet.create({
   },
   characterList: { flexDirection: "column-reverse" },
   container: { flex: 1, marginBottom: 70 },
+  debuff: {
+    resizeMode: "cover",
+    height: 34,
+    width: 34,
+    alignSelf: "center",
+    marginVertical: 5,
+  },
   fade: {
     opacity: 0.65,
   },
