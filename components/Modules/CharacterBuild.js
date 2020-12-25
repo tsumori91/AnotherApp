@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import Slider from "@react-native-community/slider";
 import colors from "../Config/colors";
 import Tab from "./Tab";
@@ -14,6 +21,7 @@ export default class CharacterBuild extends Component {
     light: 0,
     LStats: [],
     statsTotalAs: [],
+    gotManifest: false,
   };
 
   tabColor = (a) => {
@@ -283,6 +291,28 @@ export default class CharacterBuild extends Component {
                     : this.props.tomeLocation}
                 </Text>
               </View>
+              {(!this.props.as && this.props.manifest) ||
+              (this.props.as && this.props.manifestAs) ? (
+                <View style={styles.inLine}>
+                  <Text style={{ fontWeight: "bold" }}>
+                    Manifest recieved?
+                    <Text style={{ fontWeight: "normal" }}>
+                      {this.props.gotManifest ? " Gottem!" : " Not yet.."}
+                      {"         "}
+                    </Text>
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.checkBox}
+                    onPress={() =>
+                      this.props.handleManifest(this.props.name, this.props.as)
+                    }
+                  >
+                    {this.props.gotManifest ? (
+                      <Image style={styles.pic} source={weapon} />
+                    ) : null}
+                  </TouchableOpacity>
+                </View>
+              ) : null}
             </View>
           ) : this.state.skills === true ? (
             <View
@@ -569,6 +599,7 @@ const styles = StyleSheet.create({
     minHeight: 80,
     borderColor: colors.white,
   },
+  checkBox: { height: 20, width: 20, backgroundColor: colors.grey },
   containerC: {
     backgroundColor: colors.crystal,
   },

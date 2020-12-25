@@ -10,6 +10,7 @@ import {
 import CharacterBuild from "../Modules/CharacterBuild";
 import colors from "../Config/colors";
 import DropDownPicker from "react-native-dropdown-picker";
+import Storage from "../Config/Storage";
 
 export default class MyTeam extends Component {
   state = {
@@ -21,9 +22,11 @@ export default class MyTeam extends Component {
     poisonFilter: false,
     loading: true,
     asChars: [],
+    manifestList: [],
   };
   componentDidMount() {
     this.getCharacters();
+    this.getManifestList();
   }
   getCharacters = () => {
     this.setState({ loading: true });
@@ -94,6 +97,47 @@ export default class MyTeam extends Component {
     }
     this.setState({ charactersRead });
     this.setState({ loading: false });
+  };
+  handleManifest = async (name, as) => {
+    let manifestList = [...this.state.manifestList];
+    /*If the selected character is another style*/
+    if (as) {
+      if (manifestList.indexOf(name + "AS") !== -1) {
+        manifestList = manifestList.filter((n) => {
+          n !== name + "AS";
+        });
+      } else {
+        manifestList.push(name + "AS");
+      }
+    } else {
+      /*If the selected character is NOT another style*/
+      if (manifestList.indexOf(name) !== -1) {
+        manifestList = manifestList.filter((n) => {
+          n !== name;
+        });
+      } else {
+        manifestList.push(name);
+      }
+    }
+    await Storage.setItem("manifestList", manifestList);
+    this.setState({ manifestList });
+  };
+  findManifest = (name, as) => {
+    let manifestList = [...this.state.manifestList];
+    if (as) {
+      if (manifestList.indexOf(name + "AS") !== -1) return true;
+      else return false;
+    } else {
+      if (manifestList.indexOf(name) !== -1) return true;
+      else return false;
+    }
+  };
+  getManifestList = async () => {
+    let manifestList = await Storage.getItem("manifestList");
+    if (manifestList == null) {
+      return;
+    }
+    this.setState({ manifestList });
   };
   render() {
     return (
@@ -303,6 +347,11 @@ export default class MyTeam extends Component {
                         poison={characters.poison}
                         pain={characters.pain}
                         score={characters.score}
+                        handleManifest={this.handleManifest}
+                        gotManifest={this.findManifest(
+                          characters.name,
+                          characters.as
+                        )}
                       />
                     )
                   )
