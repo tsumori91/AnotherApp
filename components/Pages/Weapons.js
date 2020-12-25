@@ -72,6 +72,22 @@ export default class Weapons extends Component {
           (w) => w.getHow.toLowerCase().indexOf("defeat") !== -1
         );
         break;
+      case 5:
+        weaponsRead = weaponsRead.filter((w) => w.materialsLocation);
+        weaponsRead = weaponsRead.filter(
+          (w) => w.materialsLocation.toLowerCase().indexOf("fishing") !== -1
+        );
+        break;
+      case 6:
+        weaponsRead = weaponsRead.filter(
+          (w) => w.getHow.toLowerCase().indexOf("marks exchange") !== -1
+        );
+        break;
+      case 7:
+        weaponsRead = weaponsRead.filter(
+          (w) => w.getHow.toLowerCase().indexOf("konium tavern") !== -1
+        );
+        break;
     }
     this.setState({ weaponsRead });
     setTimeout(() => this.setState({ loading: false }));
@@ -139,7 +155,6 @@ export default class Weapons extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.filter}>
-          <Button title={"Add"} onPress={() => this.handleAddWeapon()} />
           <TouchableOpacity onPress={() => this.handleFilterWeapon("Staff")}>
             <Image
               style={[
@@ -232,6 +247,9 @@ export default class Weapons extends Component {
               { label: "Auction House", value: 2 },
               { label: "Otherlands", value: 3 },
               { label: "Boss reward", value: 4 },
+              { label: "Fishing", value: 5 },
+              { label: "Toto Weapons", value: 6 },
+              { label: "Cruel Angel", value: 7 },
             ]}
             placeholder={"Filter"}
             defaultValue={""}
