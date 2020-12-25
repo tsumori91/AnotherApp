@@ -75,14 +75,16 @@ export default class Armors extends Component {
   sortArm = (i) => {
     let armorRead = [...this.state.armorRead];
     if (this.state.sort === i) {
+      this.setState({ sort: i + 3 });
       armorRead = armorRead.sort((a, b) => {
         return a.stats[i] - b.stats[i];
       });
-    } else
+    } else {
+      this.setState({ sort: i });
       armorRead = armorRead.sort((a, b) => {
         return b.stats[i] - a.stats[i];
       });
-    this.setState({ sort: i });
+    }
     this.setState({ armorRead });
   };
   handleAddArmor = async () => {
@@ -160,8 +162,8 @@ export default class Armors extends Component {
         <View style={styles.filter}>
           <DropDownPicker
             items={[
-              { label: "ATK", value: 0 },
-              { label: "M.ATK", value: 1 },
+              { label: "DEF", value: 0 },
+              { label: "M.DEF", value: 1 },
             ]}
             placeholder={"Sort"}
             defaultValue={""}

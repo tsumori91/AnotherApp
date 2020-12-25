@@ -81,13 +81,14 @@ export default class Weapons extends Component {
     let weaponsRead = [...this.state.weaponsRead];
     if (this.state.sort === i) {
       weaponsRead = weaponsRead.sort((a, b) => {
+        this.setState({ sort: i + 3 });
         return a.stats[i] - b.stats[i];
       });
     } else
       weaponsRead = weaponsRead.sort((a, b) => {
+        this.setState({ sort: i });
         return b.stats[i] - a.stats[i];
       });
-    this.setState({ sort: i });
     this.setState({ weaponsRead });
     setTimeout(() => this.setState({ loading: false }));
   };
@@ -95,14 +96,16 @@ export default class Weapons extends Component {
     const weapons = [...this.props.weapons];
     weapons.push({
       craft: false,
-      effects: "",
-      getHow: "Purchased from Blacksmith",
-      materials: ["1", "2", "3"],
+      effects: "Yuri only:\nSPD+ 20",
+      getHow: "Citadel of Time ruins Road to Wind Spirit's trial",
+      /*materials: ["1", "2", "3"],
       materialsLocation: "",
-      materialsLocation2: 0,
-      name: "",
-      stats: [1, 1],
-      type: "",
+      materialsLocation2: 0,*/
+      name: "Second Star",
+      stats: [161, 27],
+      uri:
+        "https://static.miraheze.org/anotheredenwiki/thumb/7/70/211020421_ui.png/160px-211020421_ui.png",
+      type: "Katana",
     });
     await firebase.database().ref("weapons").set({ weapons });
   };
@@ -136,6 +139,7 @@ export default class Weapons extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.filter}>
+          <Button title={"Add"} onPress={() => this.handleAddWeapon()} />
           <TouchableOpacity onPress={() => this.handleFilterWeapon("Staff")}>
             <Image
               style={[
