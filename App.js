@@ -127,7 +127,7 @@ export default class AnotherApp extends Component {
     let armor = await Storage.getItem("armor");
     let banners = await Storage.getItem("banners");
     let freeList = await Storage.getItem("freeList");
-    this.setState({ characters, weapons, armor, banners });
+    this.setState({ characters, weapons, armor, banners, freeList });
     await delay(200);
     this.setState({ loading: false });
   };
@@ -223,7 +223,12 @@ export default class AnotherApp extends Component {
                 armor={this.state.armor}
               />
             ) : this.state.display === "myEquips" ? (
-              <MyEquips tracker={this.state.tracker} addEquip={this.addEquip} />
+              <MyEquips
+                tracker={this.state.tracker}
+                weapons={this.state.weapons}
+                armor={this.state.armor}
+                addEquip={this.addEquip}
+              />
             ) : this.state.display === "myChars" ? (
               <CharTrack
                 characters={this.state.characters}

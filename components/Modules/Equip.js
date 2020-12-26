@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import colors from "../Config/colors";
+import { Entypo } from "@expo/vector-icons";
 
 export default class Weapon extends Component {
   state = {
@@ -53,7 +54,9 @@ export default class Weapon extends Component {
       <View style={[styles.container, this.getBackground()]}>
         <TouchableOpacity
           onPress={() => this.setState({ expand: !this.state.expand })}
-          onLongPress={() => this.props.onAdd(this.props.name)}
+          onLongPress={() =>
+            !this.props.toDo ? this.props.onAdd(this.props.name) : null
+          }
         >
           <View style={styles.row}>
             <Image
@@ -64,7 +67,18 @@ export default class Weapon extends Component {
             <View style={styles.name}>
               <Text style={styles.text}>{this.props.name}</Text>
             </View>
-            {
+            {this.props.toDo ? (
+              <View style={styles.stats}>
+                <TouchableOpacity
+                  style={styles.checkBox}
+                  onPress={() => this.props.handleGot(this.props.name)}
+                >
+                  {this.props.got ? (
+                    <Entypo name="check" size={40} color={"green"} />
+                  ) : null}
+                </TouchableOpacity>
+              </View>
+            ) : (
               <View style={styles.stats}>
                 <Text style={styles.text}>
                   {this.props.armor === true ? "Def: " : "Atk: "}
@@ -75,9 +89,11 @@ export default class Weapon extends Component {
                   {this.props.stats[1]}
                 </Text>
               </View>
-            }
+            )}
             <View style={styles.effects}>
-              <Text style={styles.text}>{this.props.effects}</Text>
+              <Text style={styles.text}>
+                {this.props.toDo ? this.props.getHow : this.props.effects}
+              </Text>
             </View>
           </View>
           {this.state.expand === true ? (
@@ -88,12 +104,31 @@ export default class Weapon extends Component {
               <View
                 style={[
                   styles.name,
-                  !this.props.craft ? { flex: 7, borderRightWidth: 0 } : null,
+                  !this.props.craft && !this.props.toDo
+                    ? { flex: 7, borderRightWidth: 0 }
+                    : null,
                 ]}
               >
-                <Text style={styles.text}>{this.props.getHow}</Text>
+                {this.props.toDo ? (
+                  <View>
+                    <Text style={styles.text}>
+                      {this.props.armor === true ? "Def: " : "Atk: "}
+                      {this.props.stats[0]}
+                    </Text>
+                    <Text style={styles.text}>
+                      {this.props.armor === true ? "M.Def: " : "M.Atk: "}
+                      {this.props.stats[1]}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.text}>{this.props.getHow}</Text>
+                )}
               </View>
-              {this.props.craft === true ? (
+              {this.props.toDo ? (
+                <View style={[styles.materials, this.getBackground()]}>
+                  <Text style={styles.text}>{this.props.effects}</Text>
+                </View>
+              ) : this.props.craft === true ? (
                 <View style={[styles.materials, this.getBackground()]}>
                   <Text
                     style={[
@@ -167,6 +202,14 @@ const styles = StyleSheet.create({
   backgroundLight: {
     backgroundColor: "grey",
     borderRightColor: "grey",
+  },
+  checkBox: {
+    marginVertical: "5%",
+    height: 40,
+    maxHeight: 40,
+    width: 40,
+    flex: 1,
+    backgroundColor: colors.crystal,
   },
   container: {
     borderTopWidth: 2,

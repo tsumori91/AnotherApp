@@ -1,9 +1,16 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ScrollView, Text, Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  Alert,
+  Button,
+} from "react-native";
 import TrackEquip from "../Modules/TrackEquip";
+import EquipsToDo from "./EquipsToDo";
 export default class MyEquips extends Component {
-  state = { dungeons: [] };
+  state = { dungeons: [], toDo: false };
   componentDidMount() {
     this.updateDungeon();
   }
@@ -103,68 +110,83 @@ export default class MyEquips extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.props.tracker.length ? (
-          <ScrollView nestedScrollEnabled={true}>
-            <View style={styles.dungeonList}>
-              <Text
+        <Button
+          title={
+            this.state.toDo
+              ? "Craftable 'To-Farm' List"
+              : "Non-Craftable 'To-Get' List"
+          }
+          onPress={() => this.setState({ toDo: !this.state.toDo })}
+        />
+        {this.state.toDo ? (
+          <EquipsToDo weapons={this.props.weapons} armor={this.props.armor} />
+        ) : (
+          <View>
+            {this.props.tracker.length ? (
+              <ScrollView nestedScrollEnabled={true}>
+                <View style={styles.dungeonList}>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 18,
+                      flex: 1,
+                      alignSelf: "center",
+                    }}
+                  >
+                    Dungeons to run or places to go:
+                  </Text>
+                  {this.state.dungeons.map((d, i) => {
+                    i++;
+                    return (
+                      <View key={i}>
+                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                          {"\n" + d}
+                        </Text>
+                        {this.findMats(d)}
+                      </View>
+                    );
+                  })}
+                </View>
+                {this.props.tracker.map((u, i) => {
+                  i++;
+                  return (
+                    <TrackEquip
+                      key={i}
+                      id={i}
+                      name={u.name}
+                      stats={u.stats}
+                      effects={u.effects}
+                      materials={u.materials}
+                      materialsLocation={u.materialsLocation}
+                      materialsLocation2={u.materialsLocation2}
+                      materialsLocation3={u.materialsLocation3}
+                      uri={u.uri}
+                      type={u.type}
+                      onAdd={this.handleDelete}
+                    />
+                  );
+                })}
+              </ScrollView>
+            ) : (
+              <View
                 style={{
-                  fontWeight: "bold",
-                  fontSize: 18,
-                  flex: 1,
+                  justifyContent: "center",
                   alignSelf: "center",
+                  flex: 1,
+                  marginBottom: 50,
                 }}
               >
-                Dungeons to run or places to go:
-              </Text>
-              {this.state.dungeons.map((d, i) => {
-                i++;
-                return (
-                  <View key={i}>
-                    <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                      {"\n" + d}
-                    </Text>
-                    {this.findMats(d)}
-                  </View>
-                );
-              })}
-            </View>
-            {this.props.tracker.map((u, i) => {
-              i++;
-              return (
-                <TrackEquip
-                  key={i}
-                  id={i}
-                  name={u.name}
-                  stats={u.stats}
-                  effects={u.effects}
-                  materials={u.materials}
-                  materialsLocation={u.materialsLocation}
-                  materialsLocation2={u.materialsLocation2}
-                  materialsLocation3={u.materialsLocation3}
-                  uri={u.uri}
-                  type={u.type}
-                  onAdd={this.handleDelete}
-                />
-              );
-            })}
-          </ScrollView>
-        ) : (
-          <View
-            style={{
-              justifyContent: "center",
-              alignSelf: "center",
-              flex: 1,
-              marginBottom: 50,
-            }}
-          >
-            <Text style={{ fontSize: 20 }}>
-              You can add <Text style={{ fontWeight: "bold" }}>craftable</Text>{" "}
-              weapons and armor to this list by{" "}
-              <Text style={{ fontWeight: "bold" }}>
-                clicking and holding them{" "}
-              </Text>
-              in their respective tabs.
-            </Text>
+                <Text style={{ fontSize: 20 }}>
+                  You can add{" "}
+                  <Text style={{ fontWeight: "bold" }}>craftable</Text> weapons
+                  and armor to this list by{" "}
+                  <Text style={{ fontWeight: "bold" }}>
+                    clicking and holding them{" "}
+                  </Text>
+                  in their respective tabs.
+                </Text>
+              </View>
+            )}
           </View>
         )}
       </View>
