@@ -25,7 +25,6 @@ export default class MyTeam extends Component {
     manifestList: [],
   };
   componentDidMount() {
-    this.getCharacters();
     this.getManifestList();
   }
   getCharacters = () => {
@@ -81,6 +80,78 @@ export default class MyTeam extends Component {
     else this.setState({ elementFilter: v });
     this.setState({ charactersRead });
     this.setState({ loading: false });
+  };
+  dropFilterChars = (i) => {
+    this.setState({ loading: true });
+    let charactersRead = [...this.state.charactersRead];
+    let manifestList = [...this.state.manifestList];
+    switch (i) {
+      case 0:
+        charactersRead = charactersRead.filter((char) => {
+          if (char.as) {
+            if (char.manifestAs) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            if (char.manifest) {
+              return true;
+            } else return false;
+          }
+        });
+
+        break;
+      case 1:
+        charactersRead = charactersRead.filter((char) => {
+          if (char.as) {
+            if (manifestList.indexOf(char.name + "AS") !== -1) {
+              return true;
+            } else return false;
+          } else {
+            if (manifestList.indexOf(char.name) !== -1) {
+              return true;
+            } else return false;
+          }
+        });
+
+        break;
+      case 2:
+        charactersRead = charactersRead.filter((char) => {
+          if (char.as) {
+            if (char.manifestAs) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            if (char.manifest) {
+              return true;
+            } else return false;
+          }
+        });
+        charactersRead = charactersRead.filter((char) => {
+          if (char.as) {
+            if (manifestList.indexOf(char.name + "AS") == -1) {
+              return true;
+            } else return false;
+          } else {
+            if (manifestList.indexOf(char.name) == -1) {
+              return true;
+            } else return false;
+          }
+        });
+
+        break;
+      case 3:
+        charactersRead = [...this.state.characters];
+        let weaponFilter = "";
+        let elementFilter = "";
+        this.setState({ weaponFilter, elementFilter });
+        break;
+    }
+    this.setState({ charactersRead });
+    setTimeout(() => this.setState({ loading: false }));
   };
   sortChars = (i) => {
     this.setState({ loading: true });
@@ -138,6 +209,7 @@ export default class MyTeam extends Component {
       return;
     }
     this.setState({ manifestList });
+    this.getCharacters();
   };
   render() {
     return (
@@ -295,6 +367,19 @@ export default class MyTeam extends Component {
           </View>
         </View>
         <View style={styles.sort}>
+          <DropDownPicker
+            items={[
+              { label: "Manifest available", value: 0 },
+              { label: "Got Manifest", value: 1 },
+              { label: "Need Manifest", value: 2 },
+              { label: "Clear filters", value: 3 },
+            ]}
+            placeholder={"Filter"}
+            defaultValue={""}
+            containerStyle={styles.picker}
+            dropDownStyle={{ height: 120, flex: 1 }}
+            onChangeItem={(i) => this.dropFilterChars(i.value)}
+          />
           <DropDownPicker
             items={[
               { label: "Score", value: 0 },
