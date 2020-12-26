@@ -20,8 +20,6 @@ export default class CharacterBuild extends Component {
     statsTotal: [],
     light: 0,
     LStats: [],
-    statsTotalAs: [],
-    gotManifest: false,
   };
 
   tabColor = (a) => {
@@ -245,6 +243,13 @@ export default class CharacterBuild extends Component {
                   }}
                 >
                   {this.props.name}
+                  <Text style={styles.weaponLine}>
+                    <Image style={styles.pic} source={weapon} />
+                    <Image
+                      style={styles.pic}
+                      source={this.props.shadow === true ? shadow : light}
+                    />
+                  </Text>
                 </Text>
                 <Text
                   style={{
@@ -260,17 +265,20 @@ export default class CharacterBuild extends Component {
                   {this.props.score}
                 </Text>
               </View>
-              <View style={[styles.inLine]}>
-                <Text style={{ fontWeight: "bold" }}>Weapon type: </Text>
-                <Text style={styles.weaponLine}>
-                  {this.props.weapon}
-                  <Image style={styles.pic} source={weapon} />
-                  <Image
-                    style={styles.pic}
-                    source={this.props.shadow === true ? shadow : light}
-                  />
-                </Text>
-              </View>
+              {this.props.bonusDungeon ? (
+                <View style={styles.inLine}>
+                  <Text style={(styles.weaponLine, { fontWeight: "bold" })}>
+                    <Image
+                      style={[styles.pic, { height: 16.8, width: 20 }]}
+                      source={this.props.shadow === true ? shadow : light}
+                    />{" "}
+                    Farm:{" "}
+                    <Text style={{ fontWeight: "normal" }}>
+                      {this.props.bonusDungeon}
+                    </Text>
+                  </Text>
+                </View>
+              ) : null}
               <View style={styles.inLine}>
                 <Text style={{ fontWeight: "bold" }}>Element type: </Text>
                 <Text>{this.props.element}</Text>
@@ -297,7 +305,7 @@ export default class CharacterBuild extends Component {
                   <Text style={{ fontWeight: "bold" }}>
                     Manifest recieved?
                     <Text style={{ fontWeight: "normal" }}>
-                      {this.props.gotManifest ? " Gottem!" : " Not yet.."}
+                      {this.props.gotManifest ? " Got it!! " : " Not yet"}
                       {"         "}
                     </Text>
                   </Text>
@@ -308,7 +316,10 @@ export default class CharacterBuild extends Component {
                     }
                   >
                     {this.props.gotManifest ? (
-                      <Image style={styles.pic} source={weapon} />
+                      <Image
+                        style={[styles.pic, { height: 20, width: 20 }]}
+                        source={weapon}
+                      />
                     ) : null}
                   </TouchableOpacity>
                 </View>
@@ -347,7 +358,7 @@ export default class CharacterBuild extends Component {
               {this.props.LStats[8].stat !== "" &&
               this.props.LStats[1].stat !== "" ? (
                 <Slider
-                  tapToSeek={false}
+                  tapToSeek={true}
                   style={styles.slider}
                   minimumValue={0}
                   maximumValue={10}
@@ -644,15 +655,15 @@ const styles = StyleSheet.create({
     flex: 5,
     height: "100%",
     justifyContent: "space-evenly",
-    paddingBottom: "4%",
+    paddingBottom: "2%",
   },
   mainPage: {
     alignItems: "flex-start",
     height: 145,
   },
   pic: {
-    height: 20,
-    width: 20,
+    height: 25,
+    width: 25,
     flex: 1,
   },
   scroll: {
@@ -702,7 +713,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0,
   },
   weaponLine: {
-    lineHeight: 19,
+    lineHeight: 5,
     paddingBottom: 1,
+    paddingVertical: 0,
+    marginVertical: 0,
   },
 });

@@ -432,6 +432,7 @@ export default class MyTeam extends Component {
                         poison={characters.poison}
                         pain={characters.pain}
                         score={characters.score}
+                        bonusDungeon={characters.bonusDungeon}
                         handleManifest={this.handleManifest}
                         gotManifest={this.findManifest(
                           characters.name,
