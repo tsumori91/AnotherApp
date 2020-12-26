@@ -64,9 +64,9 @@ const styles = StyleSheet.create({
     resizeMode: "stretch",
     borderRadius: 15,
   },
-  notSelected: { borderWidth: 4, borderColor: colors.white, borderRadius: 33 },
+  notSelected: { borderWidth: 4.5, borderColor: colors.fire, borderRadius: 33 },
   selected: {
-    borderWidth: 4,
+    borderWidth: 4.5,
     borderColor: colors.water,
     borderRadius: 33,
   },

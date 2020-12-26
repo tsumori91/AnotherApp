@@ -81,8 +81,6 @@ export default class CharTrack extends Component {
     } else myGachaCharacters.push(name);
     this.setState({ myGachaCharacters });
     await Storage.setItem("myGachaChar", myGachaCharacters);
-    let freeList = [...this.props.freeList];
-    await firebase.database().ref("freeList").set({ freeList });
   };
   loadLists = async () => {
     this.setState({ loading: true });
