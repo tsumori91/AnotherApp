@@ -12,14 +12,16 @@ import Storage from "../Config/Storage";
 import Equip from "../Modules/Equip";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../Config/colors";
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class EquipsToDo extends Component {
   state = {
-    weapons: [],
+    weapons: [1, 2, 3, 4, 5],
     weaponsRead: [],
     myWeapons: [],
     loading: true,
     gotList: [],
+    weaponFilter: "",
   };
   componentDidMount() {
     this.loadWeapons();
@@ -37,23 +39,43 @@ export default class EquipsToDo extends Component {
     }
     this.setState({ loading: false });
   };
-  handleFilterWeapon = (v) => {
-    this.setState({ loading: true });
-    let weaponsRead = this.state.weapons.filter((w) => w.type == v);
-    if (v === this.state.weaponFilter) weaponsRead = [...this.props.weapons];
+  handleFilterWeapon = async (v) => {
+    this.setState({ loading: true, filtering: true });
     if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
     else this.setState({ weaponFilter: v });
-    this.setState({ weaponsRead });
-    setTimeout(() => this.setState({ loading: false }));
+    await delay(50);
+    if (this.state.otherFilters == 8) {
+      let weaponsRead = [...this.state.weapons];
+      if (this.state.weaponFilter) {
+        if (this.state.weaponFilter === "Armor") {
+          weaponsRead = weaponsRead.filter(
+            (w) =>
+              w.type == "Bangle" || w.type == "Ring" || w.type == "Necklace"
+          );
+          this.setState({ weaponsRead });
+        } else {
+          weaponsRead = weaponsRead.filter(
+            (w) => w.type == this.state.weaponFilter
+          );
+          this.setState({ weaponsRead });
+        }
+      }
+    } else this.handleOtherFilters(this.state.otherFilters);
+    setTimeout(() => this.setState({ loading: false, filtering: false }));
   };
   handleOtherFilters = (v) => {
     this.setState({ loading: true });
     let weaponsRead = [...this.state.weapons];
     let gotList = [...this.state.gotList];
     if (this.state.weaponFilter) {
-      weaponsRead = weaponsRead.filter(
-        (w) => w.type == this.state.weaponFilter
-      );
+      if (this.state.weaponFilter === "Armor")
+        weaponsRead = weaponsRead.filter(
+          (w) => w.type == "Bangle" || w.type == "Ring" || w.type == "Necklace"
+        );
+      else
+        weaponsRead = weaponsRead.filter(
+          (w) => w.type == this.state.weaponFilter
+        );
     }
     switch (v) {
       case 0:
@@ -87,8 +109,9 @@ export default class EquipsToDo extends Component {
         this.setState({ weaponFilter: "" });
         break;
     }
-    this.setState({ weaponsRead });
-    setTimeout(() => this.setState({ loading: false }));
+    this.setState({ weaponsRead, otherFilters: v });
+    if (!this.state.filterng)
+      setTimeout(() => this.setState({ loading: false }));
   };
   handleGot = (name) => {
     let gotList = [...this.state.gotList];
@@ -174,6 +197,15 @@ export default class EquipsToDo extends Component {
               source={require("../pics/Hammer.png")}
             />
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.handleFilterWeapon("Armor")}>
+            <Image
+              style={[
+                styles.weaponIcon,
+                this.state.weaponFilter === "Armor" ? styles.fade : null,
+              ]}
+              source={require("../pics/Bangle.png")}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.filter}>
           <Text
@@ -188,21 +220,22 @@ export default class EquipsToDo extends Component {
             <Text
               style={{
                 color:
-                  this.state.gotList.length < this.state.weapons.length / 4
+                  this.state.gotList.length <
+                  (this.state.weapons.length - 5) / 4
                     ? colors.fire
                     : this.state.gotList.length <
-                      this.state.weapons.length / 1.33
+                      (this.state.weapons.length - 5) / 1.33
                     ? colors.shadow
-                    : this.state.gotList.length < this.state.weapons.length
+                    : this.state.gotList.length < this.state.weapons.length - 5
                     ? colors.water
-                    : this.state.gotList.length == this.state.weapons.length
+                    : this.state.gotList.length == this.state.weapons.length - 5
                     ? "green"
-                    : null,
+                    : colors.fire,
               }}
             >
               {this.state.gotList.length}
             </Text>
-            /{this.state.weapons.length}
+            /{this.state.weapons.length - 5}
           </Text>
           <DropDownPicker
             items={[
