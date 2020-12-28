@@ -610,7 +610,7 @@ const styles = StyleSheet.create({
     minHeight: 80,
     borderColor: colors.white,
   },
-  checkBox: { height: 20, width: 20, backgroundColor: colors.grey },
+  checkBox: { height: 20, width: 20, backgroundColor: colors.grey, flex: 1 },
   containerC: {
     backgroundColor: colors.crystal,
   },
@@ -664,7 +664,6 @@ const styles = StyleSheet.create({
   pic: {
     height: 25,
     width: 25,
-    flex: 1,
   },
   scroll: {
     flex: 5,
@@ -715,7 +714,5 @@ const styles = StyleSheet.create({
   weaponLine: {
     lineHeight: 5,
     paddingBottom: 1,
-    paddingVertical: 0,
-    marginVertical: 0,
   },
 });

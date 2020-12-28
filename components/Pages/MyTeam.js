@@ -205,10 +205,9 @@ export default class MyTeam extends Component {
   };
   getManifestList = async () => {
     let manifestList = await Storage.getItem("manifestList");
-    if (manifestList == null) {
-      return;
+    if (manifestList !== null) {
+      this.setState({ manifestList });
     }
-    this.setState({ manifestList });
     this.getCharacters();
   };
   render() {
@@ -366,7 +365,16 @@ export default class MyTeam extends Component {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.sort}>
+        <View
+          style={[
+            styles.sort,
+            {
+              ...(Platform.OS !== "android" && {
+                zIndex: 999,
+              }),
+            },
+          ]}
+        >
           <DropDownPicker
             items={[
               { label: "Manifest available", value: 0 },

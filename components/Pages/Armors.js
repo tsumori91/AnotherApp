@@ -9,6 +9,7 @@ import {
   Button,
   Alert,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
@@ -159,7 +160,16 @@ export default class Armors extends Component {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.filter}>
+        <View
+          style={[
+            styles.filter,
+            {
+              ...(Platform.OS !== "android" && {
+                zIndex: 999,
+              }),
+            },
+          ]}
+        >
           <DropDownPicker
             items={[
               { label: "DEF", value: 0 },
@@ -168,7 +178,11 @@ export default class Armors extends Component {
             placeholder={"Sort"}
             defaultValue={""}
             containerStyle={styles.picker}
-            dropDownStyle={{ height: 80, flex: 1 }}
+            dropDownStyle={{
+              height: 80,
+              flex: 1,
+              marginTop: 2,
+            }}
             onChangeItem={(i) => this.sortArm(i.value)}
           />
           <DropDownPicker
@@ -187,7 +201,7 @@ export default class Armors extends Component {
             }}
           />
         </View>
-        <View style={styles.row}>
+        <View style={[styles.row]}>
           <View style={styles.type}>
             <Text>ARM</Text>
           </View>
@@ -197,7 +211,7 @@ export default class Armors extends Component {
           <View style={styles.stats}>
             <Text>Stats</Text>
           </View>
-          <View style={styles.effect}>
+          <View style={[styles.effect]}>
             <Text>Effect (max)</Text>
           </View>
         </View>

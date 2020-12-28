@@ -228,7 +228,16 @@ export default class Weapons extends Component {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.filter}>
+        <View
+          style={[
+            styles.filter,
+            {
+              ...(Platform.OS !== "android" && {
+                zIndex: 999,
+              }),
+            },
+          ]}
+        >
           <DropDownPicker
             items={[
               { label: "ATK", value: 0 },

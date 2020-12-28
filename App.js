@@ -5,6 +5,7 @@ import {
   StatusBar,
   ActivityIndicator,
   ImageBackground,
+  SafeAreaView,
 } from "react-native";
 import CPage from "./components/Pages/Characters";
 import Puller from "./components/Pages/Puller";
@@ -177,7 +178,7 @@ export default class AnotherApp extends Component {
         style={styles.allContainer}
         source={require("./components/pics/Background.png")}
       >
-        <View style={styles.buttons}>
+        <SafeAreaView style={styles.buttons}>
           <Tab
             title={"Weapons"}
             color={this.state.display === "weapons" ? "gold" : "primary"}
@@ -196,7 +197,7 @@ export default class AnotherApp extends Component {
             style={styles.button}
             onPress={() => this.handlePages("myEquips")}
           />
-        </View>
+        </SafeAreaView>
         {this.state.loading ? (
           <ActivityIndicator
             size={"large"}
@@ -239,7 +240,7 @@ export default class AnotherApp extends Component {
             )}
           </View>
         )}
-        <View style={styles.buttonsBottom}>
+        <SafeAreaView style={styles.buttonsBottom}>
           <Tab
             title={"Pullsim"}
             color={this.state.display === "puller" ? "gold" : "primary"}
@@ -258,7 +259,7 @@ export default class AnotherApp extends Component {
             onPress={() => this.handlePages("characters")}
             style={styles.button}
           />
-        </View>
+        </SafeAreaView>
       </ImageBackground>
     );
   }
@@ -286,9 +287,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   buttons: {
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 50,
-    marginBottom: 10,
-    backgroundColor: "#fff",
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 0,
+    marginBottom: Platform.OS === "android" ? 10 : 0,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-evenly",

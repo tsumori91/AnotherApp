@@ -31,26 +31,39 @@ export default class CTrack extends Component {
       show = true;
     }
     return (
-      <View
-        style={[styles.container, show ? styles.selected : styles.notSelected]}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            this.handlePress();
+      <View>
+        <View
+          style={[
+            styles.container,
+            show ? styles.selected : styles.notSelected,
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              this.handlePress();
+            }}
+          >
+            <Image
+              style={styles.image}
+              blurRadius={show ? 0 : 0.4}
+              source={
+                this.props.uri
+                  ? {
+                      uri: this.props.uri,
+                    }
+                  : require("../pics/no_photo_available.jpg")
+              }
+            />
+          </TouchableOpacity>
+        </View>
+        <Text
+          style={{
+            alignSelf: "center",
+            color: show ? colors.black : colors.fire,
           }}
         >
-          <Image
-            style={styles.image}
-            blurRadius={show ? 0 : 0.4}
-            source={
-              this.props.uri
-                ? {
-                    uri: this.props.uri,
-                  }
-                : require("../pics/no_photo_available.jpg")
-            }
-          />
-        </TouchableOpacity>
+          {this.props.name}
+        </Text>
       </View>
     );
   }
@@ -62,9 +75,15 @@ const styles = StyleSheet.create({
     height: 85,
     flex: 1,
     resizeMode: "stretch",
-    borderRadius: 15,
+    borderRadius: Platform.OS === "android" ? 16 : 29,
+    overflow: "hidden",
   },
-  notSelected: { borderWidth: 4.5, borderColor: colors.fire, borderRadius: 33 },
+  notSelected: {
+    borderWidth: 4.5,
+    borderColor: colors.fire,
+    borderRadius: 33,
+    opacity: 0.65,
+  },
   selected: {
     borderWidth: 4.5,
     borderColor: colors.water,

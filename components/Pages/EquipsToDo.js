@@ -207,7 +207,16 @@ export default class EquipsToDo extends Component {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.filter}>
+        <View
+          style={[
+            styles.filter,
+            {
+              ...(Platform.OS !== "android" && {
+                zIndex: 999,
+              }),
+            },
+          ]}
+        >
           <Text
             style={{
               fontWeight: "bold",

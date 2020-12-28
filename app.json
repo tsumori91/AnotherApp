@@ -2,7 +2,7 @@
   "expo": {
     "name": "another-app",
     "slug": "another-app",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 5,
+      "versionCode": 7,
       "permissions": [],
       "package": "com.tsumori.anotherapp"
     },
