@@ -317,7 +317,7 @@ export default class CharacterBuild extends Component {
                   >
                     {this.props.gotManifest ? (
                       <Image
-                        style={[styles.pic, { height: 20, width: 20 }]}
+                        style={[styles.pic, { height: 22, width: 22 }]}
                         source={weapon}
                       />
                     ) : null}
@@ -610,7 +610,7 @@ const styles = StyleSheet.create({
     minHeight: 80,
     borderColor: colors.white,
   },
-  checkBox: { height: 20, width: 20, backgroundColor: colors.grey, flex: 1 },
+  checkBox: { height: 22, width: 22, backgroundColor: colors.grey },
   containerC: {
     backgroundColor: colors.crystal,
   },

@@ -385,7 +385,7 @@ export default class MyTeam extends Component {
             placeholder={"Filter"}
             defaultValue={""}
             containerStyle={styles.picker}
-            dropDownStyle={{ height: 120, flex: 1 }}
+            dropDownStyle={{ height: 135, flex: 1 }}
             onChangeItem={(i) => this.dropFilterChars(i.value)}
           />
           <DropDownPicker
@@ -400,7 +400,7 @@ export default class MyTeam extends Component {
             placeholder={"Sort"}
             defaultValue={""}
             containerStyle={styles.picker}
-            dropDownStyle={{ height: 120, flex: 1 }}
+            dropDownStyle={{ height: 135, flex: 1 }}
             onChangeItem={(i) => this.sortChars(i.value)}
           />
         </View>
@@ -488,6 +488,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     marginHorizontal: 9,
   },
+  dropscroll: {},
   sort: {
     flexDirection: "row",
     width: "100%",
