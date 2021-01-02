@@ -298,19 +298,31 @@ export default class Char extends Component {
                 <Text>{this.props.element}</Text>
               </View>
               <View style={styles.inLine}>
-                <Text style={{ fontWeight: "bold" }}>Tome Name: </Text>
-                <Text>
-                  {this.state.showAs === true
-                    ? this.props.tomeNameAs
-                    : this.props.tomeName}
+                <Text style={{ fontWeight: "bold" }}>
+                  <Image
+                    style={styles.pic}
+                    source={require("../pics/Tome.png")}
+                  />
+                  Name:{" "}
+                  <Text style={{ fontWeight: "normal" }}>
+                    {this.state.showAs === true
+                      ? this.props.tomeNameAs
+                      : this.props.tomeName}
+                  </Text>
                 </Text>
               </View>
               <View style={styles.inLine}>
-                <Text style={{ fontWeight: "bold" }}>Location: </Text>
-                <Text>
-                  {this.state.showAs === true
-                    ? this.props.tomeLocationAs
-                    : this.props.tomeLocation}
+                <Text style={{ fontWeight: "bold" }}>
+                  <Image
+                    style={styles.pic}
+                    source={require("../pics/Tome.png")}
+                  />
+                  Location:{" "}
+                  <Text style={{ fontWeight: "normal" }}>
+                    {this.state.showAs === true
+                      ? this.props.tomeLocationAs
+                      : this.props.tomeLocation}
+                  </Text>
                 </Text>
               </View>
             </View>
