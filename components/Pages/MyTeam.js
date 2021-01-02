@@ -11,6 +11,7 @@ import CharacterBuild from "../Modules/CharacterBuild";
 import colors from "../Config/colors";
 import DropDownPicker from "react-native-dropdown-picker";
 import Storage from "../Config/Storage";
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class MyTeam extends Component {
   state = {
@@ -204,6 +205,13 @@ export default class MyTeam extends Component {
     }
   };
   getManifestList = async () => {
+    let timeout1 = async () => {
+      setTimeout(() => {
+        if (this.state.characters === []) this.setState({ manifestList: [] });
+        this.getCharacters();
+      }, 4 * 1000);
+    };
+    timeout1();
     let manifestList = await Storage.getItem("manifestList");
     if (manifestList !== null) {
       this.setState({ manifestList });
