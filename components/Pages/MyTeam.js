@@ -29,7 +29,6 @@ export default class MyTeam extends Component {
     this.getManifestList();
   }
   getCharacters = () => {
-    this.setState({ loading: true });
     let chars = [...this.props.characters];
     let myFreeCharacters = [...this.props.myFreeCharacters];
     let gachaCharacters = [...this.props.myGachaCharacters];
@@ -209,7 +208,7 @@ export default class MyTeam extends Component {
       setTimeout(() => {
         if (this.state.characters === []) this.setState({ manifestList: [] });
         this.getCharacters();
-      }, 4 * 1000);
+      }, 5 * 1000);
     };
     timeout1();
     let manifestList = await Storage.getItem("manifestList");
@@ -496,7 +495,6 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     marginHorizontal: 9,
   },
-  dropscroll: {},
   sort: {
     flexDirection: "row",
     width: "100%",
