@@ -303,7 +303,7 @@ export default class CharacterBuild extends Component {
               (this.props.as && this.props.manifestAs) ? (
                 <View style={styles.inLine}>
                   <Text style={{ fontWeight: "bold" }}>
-                    Manifest recieved?
+                    Manifest received?
                     <Text style={{ fontWeight: "normal" }}>
                       {this.props.gotManifest ? " Got it!! " : " Not yet"}
                       {"         "}
@@ -317,7 +317,7 @@ export default class CharacterBuild extends Component {
                   >
                     {this.props.gotManifest ? (
                       <Image
-                        style={[styles.pic, { height: 22, width: 22 }]}
+                        style={[styles.pic, { height: 20, width: 20 }]}
                         source={weapon}
                       />
                     ) : null}
@@ -610,7 +610,7 @@ const styles = StyleSheet.create({
     minHeight: 80,
     borderColor: colors.white,
   },
-  checkBox: { height: 22, width: 22, backgroundColor: colors.grey },
+  checkBox: { height: 20, width: 20, backgroundColor: colors.grey, flex: 1 },
   containerC: {
     backgroundColor: colors.crystal,
   },
