@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import colors from "../Config/colors";
+import { AntDesign } from "@expo/vector-icons";
 
 export default class TrackEquip extends Component {
   state = {
     expand: false,
+    plus: 0,
   };
   getBackground = () => {
     let background = styles.backgroundLight;
@@ -47,6 +49,14 @@ export default class TrackEquip extends Component {
     if (this.props.type === "Ring") {
       return require("../pics/Ring.png");
     }
+  };
+  handleUp = () => {
+    if (this.state.plus > 9) return;
+    else this.setState({ plus: this.state.plus + 1 });
+  };
+  handleDown = () => {
+    if (this.state.plus < 1) return;
+    else this.setState({ plus: this.state.plus - 1 });
   };
   render() {
     return (
@@ -155,6 +165,46 @@ export default class TrackEquip extends Component {
             </View>
           ) : null}
         </TouchableOpacity>
+        {this.state.expand && this.props.enhance ? (
+          <View style={[styles.row, styles.container, { borderTopWidth: 2 }]}>
+            <View style={styles.type}>
+              <Text style={styles.text}>
+                {this.state.plus !== 10 ? "+" : null}
+                <Text
+                  style={{
+                    color:
+                      this.state.plus > 9
+                        ? "green"
+                        : this.state.plus > 5
+                        ? colors.black
+                        : this.state.plus > 0
+                        ? colors.water
+                        : colors.fire,
+                    fontWeight: "bold",
+                    fontSize: 17,
+                  }}
+                >
+                  {this.state.plus}
+                </Text>
+              </Text>
+            </View>
+            <View style={[styles.name, { paddingVertical: 7 }]}>
+              <TouchableOpacity onPress={() => this.handleUp()}>
+                <AntDesign name="caretup" size={24} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.handleDown()}>
+                <AntDesign name="caretdown" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => this.setState({ expand: !this.state.expand })}
+              onLongPress={() => this.props.onAdd(this.props.name)}
+              style={[styles.materials, this.getBackground()]}
+            >
+              <Text style={styles.text}></Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
     );
   }

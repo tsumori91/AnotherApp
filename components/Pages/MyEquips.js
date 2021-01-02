@@ -163,6 +163,7 @@ export default class MyEquips extends Component {
                       uri={u.uri}
                       type={u.type}
                       onAdd={this.handleDelete}
+                      enhance={u.enhance}
                     />
                   );
                 })}
