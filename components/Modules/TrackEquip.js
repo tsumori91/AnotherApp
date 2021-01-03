@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import colors from "../Config/colors";
 import { AntDesign } from "@expo/vector-icons";
+import Storage from "../Config/Storage";
 
 export default class TrackEquip extends Component {
   state = {
     expand: false,
-    plus: 0,
   };
   getBackground = () => {
     let background = styles.backgroundLight;
@@ -51,14 +51,24 @@ export default class TrackEquip extends Component {
     }
   };
   handleUp = () => {
-    if (this.state.plus > 9) return;
-    else this.setState({ plus: this.state.plus + 1 });
+    if (this.props.plus > 9) return;
+    let id = this.props.idCraft;
+    this.props.handlePlus(id, 1);
   };
   handleDown = () => {
-    if (this.state.plus < 1) return;
-    else this.setState({ plus: this.state.plus - 1 });
+    if (this.props.plus < 0) return;
+    let id = this.props.idCraft;
+    this.props.handlePlus(id, -1);
   };
   render() {
+    let plus = this.props.plus;
+    let location =
+      plus >= 0 && 10 - plus ? this.props.enhanceMats[plus].location : false;
+    let location2 =
+      plus >= 0 && 10 - plus ? this.props.enhanceMats[plus].location2 : false;
+    let location3 =
+      plus >= 0 && 10 - plus ? this.props.enhanceMats[plus].location3 : false;
+
     return (
       <View style={[styles.container, this.getBackground()]}>
         <TouchableOpacity
@@ -169,22 +179,28 @@ export default class TrackEquip extends Component {
           <View style={[styles.row, styles.container, { borderTopWidth: 2 }]}>
             <View style={styles.type}>
               <Text style={styles.text}>
-                {this.state.plus !== 10 ? "+" : null}
+                {this.props.plus >= 0 ? "+" : null}
                 <Text
                   style={{
                     color:
-                      this.state.plus > 9
+                      this.props.plus > 9
                         ? "green"
-                        : this.state.plus > 5
+                        : this.props.plus > 5
                         ? colors.black
-                        : this.state.plus > 0
+                        : this.props.plus > 0
                         ? colors.water
                         : colors.fire,
                     fontWeight: "bold",
                     fontSize: 17,
                   }}
                 >
-                  {this.state.plus}
+                  {this.props.plus >= 0 ? (
+                    this.props.plus
+                  ) : (
+                    <Text style={{ fontWeight: "normal", fontSize: 15 }}>
+                      Not Got
+                    </Text>
+                  )}
                 </Text>
               </Text>
             </View>
@@ -201,7 +217,78 @@ export default class TrackEquip extends Component {
               onLongPress={() => this.props.onAdd(this.props.name)}
               style={[styles.materials, this.getBackground()]}
             >
-              <Text style={styles.text}></Text>
+              <Text style={styles.text}>
+                {this.props.plus == 10 ? (
+                  "All Finished!"
+                ) : this.props.plus < 0 ? (
+                  "<-Push the up button to 'Craft'"
+                ) : (
+                  <Text>
+                    Next up:{" "}
+                    <Text style={{ fontWeight: "bold" }}>
+                      {"\n  "}
+                      {location
+                        ? location.name
+                        : "That's strange, something should be here...Try removing/readding this item."}
+                    </Text>
+                    {location
+                      ? location.mats.map(
+                          (material, i) => (
+                            i++,
+                            (
+                              <Text key={i}>
+                                {"\n"}
+                                {material}
+                              </Text>
+                            )
+                          )
+                        )
+                      : null}
+                    {location2 ? (
+                      <Text>
+                        <Text style={{ fontWeight: "bold" }}>
+                          {"\n  "}
+                          {location2 ? location2.name : null}
+                        </Text>
+                        {location2
+                          ? location2.mats.map(
+                              (material, i) => (
+                                i++,
+                                (
+                                  <Text key={i}>
+                                    {"\n"}
+                                    {material}
+                                  </Text>
+                                )
+                              )
+                            )
+                          : null}
+                      </Text>
+                    ) : null}
+                    {location3 ? (
+                      <Text>
+                        <Text style={{ fontWeight: "bold" }}>
+                          {"\n  "}
+                          {location3 ? location3.name : null}
+                        </Text>
+                        {location3
+                          ? location3.mats.map(
+                              (material, i) => (
+                                i++,
+                                (
+                                  <Text key={i}>
+                                    {"\n"}
+                                    {material}
+                                  </Text>
+                                )
+                              )
+                            )
+                          : null}
+                      </Text>
+                    ) : null}
+                  </Text>
+                )}
+              </Text>
             </TouchableOpacity>
           </View>
         ) : null}

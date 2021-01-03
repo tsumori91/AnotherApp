@@ -107,6 +107,16 @@ export default class MyEquips extends Component {
     });
     return finishedList;
   };
+  handlePlus = (id, value) => {
+    let tracker = [...this.props.tracker];
+    let index = tracker.findIndex((t) => t.idCraft === id);
+    if (tracker[index].plus || tracker[index].plus == 0) {
+      tracker[index].plus = tracker[index].plus + value;
+    } else tracker[index].plus = 0;
+    this.setState({ tracker });
+    this.props.addEquip(tracker);
+    this.updateDungeon();
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -164,6 +174,10 @@ export default class MyEquips extends Component {
                       type={u.type}
                       onAdd={this.handleDelete}
                       enhance={u.enhance}
+                      enhanceMats={u.enhanceMats}
+                      plus={u.plus || u.plus == 0 ? u.plus : -1}
+                      idCraft={u.idCraft}
+                      handlePlus={this.handlePlus}
                     />
                   );
                 })}

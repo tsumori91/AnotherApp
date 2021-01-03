@@ -34,36 +34,7 @@ export default class AnotherApp extends Component {
     weapons: [],
     armor: [],
     dates: "",
-    freeList: [
-      "Aldo",
-      "Feinne",
-      "Sheila",
-      "Riica",
-      "Cyrus",
-      "Amy",
-      "Helena",
-      "Guildna",
-      "Altena",
-      "Galliard",
-      "Jade",
-      "Saki",
-      "Mana",
-      "Joker",
-      "Morgana",
-      "Violet",
-      "Skull",
-      "Clarte",
-      "Sophia",
-      "Cress",
-      "Yuri",
-      "Velvet",
-      "Milla",
-      "Deirdre",
-      "Levia",
-      "Azami",
-      "Gariyu",
-      "Cerrine",
-    ],
+    freeList: [],
   };
   componentDidMount() {
     this.checkDate();
@@ -159,6 +130,13 @@ export default class AnotherApp extends Component {
   };
   addEquip = async (tracker) => {
     this.setState({ tracker });
+    tracker.forEach((t, i) =>
+      !tracker[i].idCraft
+        ? (tracker[i].idCraft = Math.floor(
+            Math.random() * 9999 * 9999 * 9999 * 9999
+          ))
+        : null
+    );
     await Storage.setItem("tracker", tracker);
   };
   backup = async () => {
