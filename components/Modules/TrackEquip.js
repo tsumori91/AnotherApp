@@ -68,6 +68,8 @@ export default class TrackEquip extends Component {
       plus >= 0 && 10 - plus ? this.props.enhanceMats[plus].location2 : false;
     let location3 =
       plus >= 0 && 10 - plus ? this.props.enhanceMats[plus].location3 : false;
+    let location4 =
+      plus >= 0 && 10 - plus ? this.props.enhanceMats[plus].location4 : false;
 
     return (
       <View style={[styles.container, this.getBackground()]}>
@@ -221,7 +223,20 @@ export default class TrackEquip extends Component {
                 {this.props.plus == 10 ? (
                   "All Finished!"
                 ) : this.props.plus < 0 ? (
-                  "<-Push the up button to 'Craft'"
+                  <Text>
+                    <Text style={{ fontWeight: "bold" }}>
+                      {"<-"}Push the up button to 'Craft'
+                    </Text>
+                    {"\n\n"}Once you 'Craft', all items required to hit +10 will
+                    add to your list. As you increase the +, the list will
+                    adjust to match the remaining items needed.{"\n\n"}The
+                    initial cost of crafting will be removed, to re-add simply
+                    press down after
+                    <Text style={{ fontWeight: "bold" }}>
+                      {" "}
+                      and all cost to craft/+10 will be added.
+                    </Text>
+                  </Text>
                 ) : (
                   <Text>
                     Next up:{" "}
@@ -273,6 +288,27 @@ export default class TrackEquip extends Component {
                         </Text>
                         {location3
                           ? location3.mats.map(
+                              (material, i) => (
+                                i++,
+                                (
+                                  <Text key={i}>
+                                    {"\n"}
+                                    {material}
+                                  </Text>
+                                )
+                              )
+                            )
+                          : null}
+                      </Text>
+                    ) : null}
+                    {location4 ? (
+                      <Text>
+                        <Text style={{ fontWeight: "bold" }}>
+                          {"\n  "}
+                          {location4 ? location4.name : null}
+                        </Text>
+                        {location4
+                          ? location4.mats.map(
                               (material, i) => (
                                 i++,
                                 (
