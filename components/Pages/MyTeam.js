@@ -24,6 +24,7 @@ export default class MyTeam extends Component {
     loading: true,
     asChars: [],
     manifestList: [],
+    dropFilter: 3,
   };
   componentDidMount() {
     this.getManifestList();
@@ -49,41 +50,61 @@ export default class MyTeam extends Component {
     this.setState({ charactersRead: characters, characters });
     this.setState({ loading: false });
   };
-  handleFilterWeapon = (v) => {
+  handleFilterWeapon = async (v) => {
     this.setState({ loading: true });
     let charactersRead = this.state.characters.filter((w) => w.weapon == v);
     if (v === this.state.weaponFilter) {
       charactersRead = this.state.characters;
+    }
+    if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
+    else this.setState({ weaponFilter: v });
+    await delay(10);
+    if (this.state.dropFilter !== 3) {
+      this.dropFilterChars(this.state.dropFilter);
+    } else {
+      if (this.state.elementFilter !== "") {
+        charactersRead = charactersRead.filter(
+          (e) => e.element == this.state.elementFilter
+        );
+      }
+      this.setState({ charactersRead });
+      setTimeout(() => this.setState({ loading: false }));
+    }
+  };
+  handleFilterElement = async (v) => {
+    this.setState({ loading: true });
+    let charactersRead = this.state.characters.filter((e) => e.element == v);
+    if (v === this.state.elementFilter) {
+      charactersRead = this.state.characters;
+    }
+    if (v === this.state.elementFilter) this.setState({ elementFilter: "" });
+    else this.setState({ elementFilter: v });
+    await delay(10);
+    if (this.state.dropFilter !== 3) {
+      this.dropFilterChars(this.state.dropFilter);
+    } else {
+      if (this.state.weaponFilter !== "") {
+        charactersRead = charactersRead.filter(
+          (w) => w.weapon == this.state.weaponFilter
+        );
+      }
+      this.setState({ charactersRead });
+      this.setState({ loading: false });
+    }
+  };
+  dropFilterChars = (i) => {
+    this.setState({ loading: true });
+    let charactersRead = [...this.state.characters];
+    if (this.state.weaponFilter !== "") {
+      charactersRead = charactersRead.filter(
+        (w) => w.weapon == this.state.weaponFilter
+      );
     }
     if (this.state.elementFilter !== "") {
       charactersRead = charactersRead.filter(
         (e) => e.element == this.state.elementFilter
       );
     }
-    if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
-    else this.setState({ weaponFilter: v });
-    this.setState({ charactersRead });
-    setTimeout(() => this.setState({ loading: false }));
-  };
-  handleFilterElement = (v) => {
-    this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((e) => e.element == v);
-    if (v === this.state.elementFilter) {
-      charactersRead = this.state.characters;
-    }
-    if (this.state.weaponFilter !== "") {
-      charactersRead = charactersRead.filter(
-        (w) => w.weapon == this.state.weaponFilter
-      );
-    }
-    if (v === this.state.elementFilter) this.setState({ elementFilter: "" });
-    else this.setState({ elementFilter: v });
-    this.setState({ charactersRead });
-    this.setState({ loading: false });
-  };
-  dropFilterChars = (i) => {
-    this.setState({ loading: true });
-    let charactersRead = [...this.state.charactersRead];
     let manifestList = [...this.state.manifestList];
     switch (i) {
       case 0:
@@ -150,7 +171,7 @@ export default class MyTeam extends Component {
         this.setState({ weaponFilter, elementFilter });
         break;
     }
-    this.setState({ charactersRead });
+    this.setState({ charactersRead, dropFilter: i });
     setTimeout(() => this.setState({ loading: false }));
   };
   sortChars = (i) => {
@@ -222,7 +243,11 @@ export default class MyTeam extends Component {
       <View style={styles.container}>
         <View style={styles.allButtons}>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Staff")}>
+            <TouchableOpacity
+              onPress={() => {
+                this.handleFilterWeapon("Staff");
+              }}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
