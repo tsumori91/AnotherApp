@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
-import Storage from "../Config/Storage";
 import colors from "../Config/colors";
 import DropDownPicker from "react-native-dropdown-picker";
 

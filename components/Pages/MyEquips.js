@@ -100,25 +100,26 @@ export default class MyEquips extends Component {
           : null;
         t.materialsLocation3 === d ? matList.push(t.materials[2]) : null;
       }
-      t.enhanceMats.forEach((enhance, index) => {
-        if (index >= t.plus) {
-          enhance.location.name == d
-            ? matList.push(enhance.location.mats)
-            : enhance.location2
-            ? enhance.location2.name == d
-              ? matList.push(enhance.location2.mats)
-              : null
-            : enhance.location3
-            ? enhance.location3.name == d
-              ? matList.push(enhance.location3.mats)
-              : null
-            : enhance.location4
-            ? enhance.location4.name == d
-              ? matList.push(enhance.location4.mats)
-              : null
-            : null;
-        }
-      });
+      if (t.enhanceMats)
+        t.enhanceMats.forEach((enhance, index) => {
+          if (index >= t.plus) {
+            enhance.location.name == d
+              ? matList.push(enhance.location.mats)
+              : enhance.location2
+              ? enhance.location2.name == d
+                ? matList.push(enhance.location2.mats)
+                : null
+              : enhance.location3
+              ? enhance.location3.name == d
+                ? matList.push(enhance.location3.mats)
+                : null
+              : enhance.location4
+              ? enhance.location4.name == d
+                ? matList.push(enhance.location4.mats)
+                : null
+              : null;
+          }
+        });
     });
     matList = matList.flat();
     let cleanMatList = matList.flat().map((value) =>

@@ -6,11 +6,14 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  AppRegistry,
 } from "react-native";
 import CharacterBuild from "../Modules/CharacterBuild";
 import colors from "../Config/colors";
 import DropDownPicker from "react-native-dropdown-picker";
 import Storage from "../Config/Storage";
+import { AntDesign } from "@expo/vector-icons";
+import Swiper from "react-native-swiper";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class MyTeam extends Component {
@@ -19,6 +22,8 @@ export default class MyTeam extends Component {
     charactersRead: [],
     weaponFilter: "",
     elementFilter: "",
+    buffFilter: "",
+    debuffFilter: "",
     painFilter: false,
     poisonFilter: false,
     loading: true,
@@ -29,7 +34,7 @@ export default class MyTeam extends Component {
   componentDidMount() {
     this.getManifestList();
   }
-  getCharacters = () => {
+  getCharacters = async () => {
     let chars = [...this.props.characters];
     let myFreeCharacters = [...this.props.myFreeCharacters];
     let gachaCharacters = [...this.props.myGachaCharacters];
@@ -48,63 +53,59 @@ export default class MyTeam extends Component {
     asChars.forEach((val, ind, arr) => (arr[ind].stats = val.statsAs));
     characters = characters.concat(asChars);
     this.setState({ charactersRead: characters, characters });
+    await delay(50);
     this.setState({ loading: false });
+  };
+  basicFilters = (charactersRead) => {
+    if (this.state.weaponFilter !== "")
+      charactersRead = charactersRead.filter(
+        (w) => w.weapon == this.state.weaponFilter
+      );
+    if (this.state.elementFilter !== "")
+      charactersRead = charactersRead.filter(
+        (w) => w.element == this.state.elementFilter
+      );
+    if (this.state.debuffFilter !== "")
+      charactersRead = this.filterDebuff(charactersRead);
+    if (this.state.buffFilter !== "")
+      charactersRead = this.filterBuff(charactersRead);
+    return charactersRead;
   };
   handleFilterWeapon = async (v) => {
     this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((w) => w.weapon == v);
+    let charactersRead = this.state.characters;
     if (v === this.state.weaponFilter) {
-      charactersRead = this.state.characters;
-    }
-    if (v === this.state.weaponFilter) this.setState({ weaponFilter: "" });
-    else this.setState({ weaponFilter: v });
+      this.setState({ weaponFilter: "" });
+    } else this.setState({ weaponFilter: v });
     await delay(10);
     if (this.state.dropFilter !== 3) {
       this.dropFilterChars(this.state.dropFilter);
     } else {
-      if (this.state.elementFilter !== "") {
-        charactersRead = charactersRead.filter(
-          (e) => e.element == this.state.elementFilter
-        );
-      }
+      charactersRead = this.basicFilters(charactersRead);
       this.setState({ charactersRead });
       setTimeout(() => this.setState({ loading: false }));
     }
   };
   handleFilterElement = async (v) => {
     this.setState({ loading: true });
-    let charactersRead = this.state.characters.filter((e) => e.element == v);
+    let charactersRead = this.state.characters;
     if (v === this.state.elementFilter) {
-      charactersRead = this.state.characters;
-    }
-    if (v === this.state.elementFilter) this.setState({ elementFilter: "" });
-    else this.setState({ elementFilter: v });
+      this.setState({ elementFilter: "" });
+    } else this.setState({ elementFilter: v });
     await delay(10);
     if (this.state.dropFilter !== 3) {
       this.dropFilterChars(this.state.dropFilter);
     } else {
-      if (this.state.weaponFilter !== "") {
-        charactersRead = charactersRead.filter(
-          (w) => w.weapon == this.state.weaponFilter
-        );
-      }
+      charactersRead = this.basicFilters(charactersRead);
       this.setState({ charactersRead });
-      this.setState({ loading: false });
+      setTimeout(() => this.setState({ loading: false }));
     }
   };
-  dropFilterChars = (i) => {
+  dropFilterChars = async (i) => {
     this.setState({ loading: true });
     let charactersRead = [...this.state.characters];
-    if (this.state.weaponFilter !== "") {
-      charactersRead = charactersRead.filter(
-        (w) => w.weapon == this.state.weaponFilter
-      );
-    }
-    if (this.state.elementFilter !== "") {
-      charactersRead = charactersRead.filter(
-        (e) => e.element == this.state.elementFilter
-      );
-    }
+    charactersRead = this.basicFilters(charactersRead);
+    await delay(10);
     let manifestList = [...this.state.manifestList];
     switch (i) {
       case 0:
@@ -168,13 +169,86 @@ export default class MyTeam extends Component {
         charactersRead = [...this.state.characters];
         let weaponFilter = "";
         let elementFilter = "";
-        this.setState({ weaponFilter, elementFilter });
+        let debuffFilter = "";
+        let buffFilter = "";
+        this.setState({
+          weaponFilter,
+          elementFilter,
+          debuffFilter,
+          buffFilter,
+        });
         break;
     }
     this.setState({ charactersRead, dropFilter: i });
     setTimeout(() => this.setState({ loading: false }));
   };
-  sortChars = (i) => {
+  filterBuff = (charactersRead) => {
+    if (this.state.buffFilter !== "") {
+    }
+    switch (this.state.buffFilter) {
+      case "critRate":
+        charactersRead = charactersRead.filter((char) =>
+          char.as ? char.critRateAs : char.critRate
+        );
+        break;
+      case "critDamage":
+        charactersRead = charactersRead.filter((char) =>
+          char.as ? char.critDamageAs : char.critDamage
+        );
+        break;
+    }
+    return charactersRead;
+  };
+  filterDebuff = (charactersRead) => {
+    if (this.state.debuffFilter !== "") {
+      switch (this.state.debuffFilter) {
+        case "poison":
+          charactersRead = charactersRead.filter((char) =>
+            char.as ? char.poisonAs : char.poison && !char.poisonAs
+          );
+          break;
+        case "pain":
+          charactersRead = charactersRead.filter((char) =>
+            char.as ? char.painAs : char.pain && !char.painAs
+          );
+          break;
+      }
+      return charactersRead;
+    }
+  };
+  handleFilterDebuff = async (debuff) => {
+    this.setState({ loading: true });
+    let charactersRead = [...this.state.characters];
+    if (this.state.debuffFilter === debuff) {
+      this.setState({ debuffFilter: "" });
+    } else this.setState({ debuffFilter: debuff });
+    await delay(50);
+    if (this.state.dropFilter !== 3) {
+      this.dropFilterChars(this.state.dropFilter);
+    } else {
+      charactersRead = this.basicFilters(charactersRead);
+      this.setState({ charactersRead });
+      await delay(50);
+      setTimeout(() => this.setState({ loading: false }));
+    }
+  };
+  handleFilterBuff = async (buff) => {
+    this.setState({ loading: true });
+    let charactersRead = [...this.state.characters];
+    if (this.state.buffFilter === buff) {
+      this.setState({ buffFilter: "" });
+    } else this.setState({ buffFilter: buff });
+    await delay(50);
+    if (this.state.dropFilter !== 3) {
+      this.dropFilterChars(this.state.dropFilter);
+    } else {
+      charactersRead = this.basicFilters(charactersRead);
+      this.setState({ charactersRead });
+      await delay(50);
+      setTimeout(() => this.setState({ loading: false }));
+    }
+  };
+  sortChars = async (i) => {
     this.setState({ loading: true });
     let charactersRead = [...this.state.charactersRead];
     if (i == 0) {
@@ -188,6 +262,7 @@ export default class MyTeam extends Component {
       });
     }
     this.setState({ charactersRead });
+    await delay(50);
     this.setState({ loading: false });
   };
   handleManifest = async (name, as) => {
@@ -225,14 +300,8 @@ export default class MyTeam extends Component {
     }
   };
   getManifestList = async () => {
-    let timeout1 = async () => {
-      setTimeout(() => {
-        if (this.state.characters === []) this.setState({ manifestList: [] });
-        this.getCharacters();
-      }, 5 * 1000);
-    };
-    timeout1();
     let manifestList = await Storage.getItem("manifestList");
+    await delay(200);
     if (manifestList !== null) {
       this.setState({ manifestList });
     }
@@ -241,161 +310,253 @@ export default class MyTeam extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.allButtons}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                this.handleFilterWeapon("Staff");
-              }}
-            >
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  this.state.weaponFilter === "Staff" ? styles.fade : null,
-                ]}
-                source={require("../pics/Staff.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Sword")}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  this.state.weaponFilter === "Sword" ? styles.fade : null,
-                ]}
-                source={require("../pics/Sword.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Katana")}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  this.state.weaponFilter === "Katana" ? styles.fade : null,
-                ]}
-                source={require("../pics/Katana.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Axe")}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  this.state.weaponFilter === "Axe" ? styles.fade : null,
-                ]}
-                source={require("../pics/Axe.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Lance")}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  this.state.weaponFilter === "Lance" ? styles.fade : null,
-                ]}
-                source={require("../pics/Lance.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Bow")}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  this.state.weaponFilter === "Bow" ? styles.fade : null,
-                ]}
-                source={require("../pics/Bow.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Fists")}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  this.state.weaponFilter === "Fists" ? styles.fade : null,
-                ]}
-                source={require("../pics/Fists.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Hammer")}>
-              <Image
-                style={[
-                  styles.weaponIcon,
-                  this.state.weaponFilter === "Hammer" ? styles.fade : null,
-                ]}
-                source={require("../pics/Hammer.png")}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.buttonContainer]}>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Fire")}>
-              <Image
-                style={[
-                  styles.elementIcon,
-                  this.state.elementFilter === "Fire" ? styles.fade : null,
-                  { marginHorizontal: 3 },
-                ]}
-                source={require("../pics/Fire.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Wind")}>
-              <Image
-                style={[
-                  styles.elementIcon,
-                  this.state.elementFilter === "Wind" ? styles.fade : null,
-                  { marginHorizontal: 3 },
-                ]}
-                source={require("../pics/Wind.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Water")}>
-              <Image
-                style={[
-                  styles.elementIcon,
-                  this.state.elementFilter === "Water" ? styles.fade : null,
-                  { marginHorizontal: 3 },
-                ]}
-                source={require("../pics/Water.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Earth")}>
-              <Image
-                style={[
-                  styles.elementIcon,
-                  this.state.elementFilter === "Earth" ? styles.fade : null,
-                  { marginHorizontal: 3 },
-                ]}
-                source={require("../pics/Earth.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Shade")}>
-              <Image
-                style={[
-                  styles.elementIcon,
-                  this.state.elementFilter === "Shade" ? styles.fade : null,
-                  { marginHorizontal: 3 },
-                ]}
-                source={require("../pics/Shade.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.handleFilterElement("Thunder")}
-            >
-              <Image
-                style={[
-                  styles.elementIcon,
-                  this.state.elementFilter === "Thunder" ? styles.fade : null,
-                  { marginHorizontal: 3 },
-                ]}
-                source={require("../pics/Thunder.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.handleFilterElement("Crystal")}
-            >
-              <Image
-                style={[
-                  styles.elementIcon,
-                  this.state.elementFilter === "Crystal" ? styles.fade : null,
-                  { marginHorizontal: 3 },
-                ]}
-                source={require("../pics/Crystal.png")}
-              />
-            </TouchableOpacity>
-          </View>
+        <View style={styles.wrapper}>
+          <Swiper showsButtons={true} showsPagination={false}>
+            <View style={styles.slide1}>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterWeapon("Staff");
+                  }}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.weaponFilter === "Staff" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Staff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterWeapon("Sword")}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.weaponFilter === "Sword" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Sword.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterWeapon("Katana")}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.weaponFilter === "Katana" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Katana.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterWeapon("Axe")}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.weaponFilter === "Axe" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Axe.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterWeapon("Lance")}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.weaponFilter === "Lance" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Lance.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterWeapon("Bow")}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.weaponFilter === "Bow" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Bow.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterWeapon("Fists")}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.weaponFilter === "Fists" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Fists.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterWeapon("Hammer")}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.weaponFilter === "Hammer" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Hammer.png")}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.buttonContainer]}>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterElement("Fire")}
+                >
+                  <Image
+                    style={[
+                      styles.elementIcon,
+                      this.state.elementFilter === "Fire" ? styles.fade : null,
+                      { marginHorizontal: 3 },
+                    ]}
+                    source={require("../pics/Fire.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterElement("Wind")}
+                >
+                  <Image
+                    style={[
+                      styles.elementIcon,
+                      this.state.elementFilter === "Wind" ? styles.fade : null,
+                      { marginHorizontal: 3 },
+                    ]}
+                    source={require("../pics/Wind.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterElement("Water")}
+                >
+                  <Image
+                    style={[
+                      styles.elementIcon,
+                      this.state.elementFilter === "Water" ? styles.fade : null,
+                      { marginHorizontal: 3 },
+                    ]}
+                    source={require("../pics/Water.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterElement("Earth")}
+                >
+                  <Image
+                    style={[
+                      styles.elementIcon,
+                      this.state.elementFilter === "Earth" ? styles.fade : null,
+                      { marginHorizontal: 3 },
+                    ]}
+                    source={require("../pics/Earth.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterElement("Shade")}
+                >
+                  <Image
+                    style={[
+                      styles.elementIcon,
+                      this.state.elementFilter === "Shade" ? styles.fade : null,
+                      { marginHorizontal: 3 },
+                    ]}
+                    source={require("../pics/Shade.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterElement("Thunder")}
+                >
+                  <Image
+                    style={[
+                      styles.elementIcon,
+                      this.state.elementFilter === "Thunder"
+                        ? styles.fade
+                        : null,
+                      { marginHorizontal: 3 },
+                    ]}
+                    source={require("../pics/Thunder.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFilterElement("Crystal")}
+                >
+                  <Image
+                    style={[
+                      styles.elementIcon,
+                      this.state.elementFilter === "Crystal"
+                        ? styles.fade
+                        : null,
+                      { marginHorizontal: 3 },
+                    ]}
+                    source={require("../pics/Crystal.png")}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.slide2}>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("poison");
+                  }}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.debuffFilter === "poison" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Poison.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("pain");
+                  }}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.debuffFilter === "pain" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/Pain.png")}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterBuff("critRate");
+                  }}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.buffFilter === "critRate" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/CritRate.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterBuff("critDamage");
+                  }}
+                >
+                  <Image
+                    style={[
+                      styles.weaponIcon,
+                      this.state.buffFilter === "critDamage"
+                        ? styles.fade
+                        : null,
+                    ]}
+                    source={require("../pics/CritDamage.png")}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Swiper>
         </View>
         <View
           style={[
@@ -442,46 +603,48 @@ export default class MyTeam extends Component {
               <ActivityIndicator size={"large"} color={"black"} />
             ) : (
               <View>
-                {this.state.charactersRead.map(
-                  (characters, i) => (
-                    i++,
-                    (
-                      <CharacterBuild
-                        key={i}
-                        id={i}
-                        name={characters.name}
-                        skills={characters.skills}
-                        weapon={characters.weapon}
-                        shadow={characters.shadow}
-                        element={characters.element}
-                        vc={characters.vc}
-                        vcAS={characters.vcAS}
-                        uri={characters.uri}
-                        tomeName={characters.tomeName}
-                        tomeNameAs={characters.tomeNameAs}
-                        tomeLocation={characters.tomeLocation}
-                        tomeLocationAs={characters.tomeLocationAs}
-                        as={characters.as}
-                        stats={characters.stats}
-                        uriAs={characters.uriAs}
-                        manifest={characters.manifest}
-                        manifestAs={characters.manifestAs}
-                        LStats={characters.LStats}
-                        vcStats={characters.vcStats}
-                        vcStatsAs={characters.vcStatsAs}
-                        poison={characters.poison}
-                        pain={characters.pain}
-                        score={characters.score}
-                        bonusDungeon={characters.bonusDungeon}
-                        handleManifest={this.handleManifest}
-                        gotManifest={this.findManifest(
-                          characters.name,
-                          characters.as
-                        )}
-                      />
+                {this.state.charactersRead
+                  ? this.state.charactersRead.map(
+                      (characters, i) => (
+                        i++,
+                        (
+                          <CharacterBuild
+                            key={i}
+                            id={i}
+                            name={characters.name}
+                            skills={characters.skills}
+                            weapon={characters.weapon}
+                            shadow={characters.shadow}
+                            element={characters.element}
+                            vc={characters.vc}
+                            vcAS={characters.vcAS}
+                            uri={characters.uri}
+                            tomeName={characters.tomeName}
+                            tomeNameAs={characters.tomeNameAs}
+                            tomeLocation={characters.tomeLocation}
+                            tomeLocationAs={characters.tomeLocationAs}
+                            as={characters.as}
+                            stats={characters.stats}
+                            uriAs={characters.uriAs}
+                            manifest={characters.manifest}
+                            manifestAs={characters.manifestAs}
+                            LStats={characters.LStats}
+                            vcStats={characters.vcStats}
+                            vcStatsAs={characters.vcStatsAs}
+                            poison={characters.poison}
+                            pain={characters.pain}
+                            score={characters.score}
+                            bonusDungeon={characters.bonusDungeon}
+                            handleManifest={this.handleManifest}
+                            gotManifest={this.findManifest(
+                              characters.name,
+                              characters.as
+                            )}
+                          />
+                        )
+                      )
                     )
-                  )
-                )}
+                  : null}
               </View>
             )}
           </View>
@@ -491,8 +654,15 @@ export default class MyTeam extends Component {
   }
 }
 const styles = StyleSheet.create({
-  allButtons: {
-    backgroundColor: colors.grey,
+  slide1: {
+    flex: 1,
+    minWidth: "100%",
+    paddingVertical: 6,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  slide2: {
+    flex: 1,
     minWidth: "100%",
     paddingVertical: 6,
     justifyContent: "center",
@@ -510,6 +680,12 @@ const styles = StyleSheet.create({
     width: 34,
     alignSelf: "center",
     marginVertical: 5,
+  },
+  elementIcon: {
+    height: 35,
+    width: 35,
+    marginHorizontal: 0.8,
+    marginVertical: 2,
   },
   fade: {
     opacity: 0.65,
@@ -532,10 +708,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 1,
     marginVertical: 2,
   },
-  elementIcon: {
-    height: 35,
-    width: 35,
-    marginHorizontal: 0.8,
-    marginVertical: 2,
-  },
+  wrapper: { flex: 1, minHeight: 90, maxHeight: 90, minWidth: "100%" },
 });
+
+AppRegistry.registerComponent("myproject", () => SwiperComponent);
