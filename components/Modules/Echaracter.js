@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Platform,
+} from "react-native";
 import Slider from "@react-native-community/slider";
 import colors from "../Config/colors";
 import Tab from "./Tab";
@@ -189,7 +196,7 @@ export default class Char extends Component {
             />
           ) : null}
         </View>
-        <View style={[styles.inLine, styles.mainPage]}>
+        <View style={styles.mainPage}>
           {this.state.showAs === false ? (
             <View style={[styles.deLine, { flex: 2 }]}>
               <Image
@@ -255,7 +262,7 @@ export default class Char extends Component {
                 this.state.showAs === false ? styles.borderOg : styles.borderAs,
               ]}
             >
-              <View style={styles.inLine}>
+              <View style={[styles.inLine, styles.subMain]}>
                 <Text
                   style={{
                     fontSize: 23,
@@ -282,7 +289,7 @@ export default class Char extends Component {
                   {this.state.showAs ? this.props.scoreAs : this.props.score}
                 </Text>
               </View>
-              <View style={[styles.inLine]}>
+              <View style={[styles.inLine, styles.subMain]}>
                 <Text style={{ fontWeight: "bold" }}>Weapon type: </Text>
                 <Text style={styles.weaponLine}>
                   {this.props.weapon}
@@ -293,16 +300,16 @@ export default class Char extends Component {
                   />
                 </Text>
               </View>
-              <View style={styles.inLine}>
+              <View style={[styles.inLine, styles.subMain]}>
                 <Text style={{ fontWeight: "bold" }}>Element type: </Text>
                 <Text>{this.props.element}</Text>
               </View>
-              <View style={styles.inLine}>
+              <View style={[styles.inLine, styles.subMain]}>
+                <Image
+                  style={styles.pic}
+                  source={require("../pics/Tome.png")}
+                />
                 <Text style={{ fontWeight: "bold" }}>
-                  <Image
-                    style={styles.pic}
-                    source={require("../pics/Tome.png")}
-                  />
                   Name:{" "}
                   <Text style={{ fontWeight: "normal" }}>
                     {this.state.showAs === true
@@ -311,12 +318,16 @@ export default class Char extends Component {
                   </Text>
                 </Text>
               </View>
-              <View style={styles.inLine}>
-                <Text style={{ fontWeight: "bold" }}>
-                  <Image
-                    style={styles.pic}
-                    source={require("../pics/Tome.png")}
-                  />
+              <View style={[styles.inLine, styles.subMain]}>
+                <Image
+                  style={styles.pic}
+                  source={require("../pics/Tome.png")}
+                />
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
                   Location:{" "}
                   <Text style={{ fontWeight: "normal" }}>
                     {this.state.showAs === true
@@ -737,7 +748,6 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     flexGrow: 1,
   },
-
   inLine: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -746,16 +756,19 @@ const styles = StyleSheet.create({
     flex: 5,
     height: "100%",
     justifyContent: "space-evenly",
-    paddingBottom: "4%",
+    alignContent: "space-around",
+    paddingHorizontal: "1.5%",
   },
   mainPage: {
     alignItems: "flex-start",
+    flexDirection: "row",
     height: 145,
   },
   pic: {
     height: 20,
     width: 20,
     flex: 1,
+    maxWidth: 24,
   },
   scroll: {
     flex: 5,
@@ -779,6 +792,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     lineHeight: 28,
+  },
+  subMain: {
+    flex: 1,
+    lineHeight: 20,
   },
   tabsBottom: {
     flex: 1,

@@ -231,26 +231,23 @@ export default class CharacterBuild extends Component {
                 styles.borderOg,
               ]}
             >
-              <View style={styles.inLine}>
+              <View style={[styles.inLine, styles.weaponLine]}>
                 <Text
                   style={{
                     fontSize: 23,
                     fontWeight: "bold",
                     lineHeight: 5,
                     paddingTop: 22,
-                    flex: 4,
-                    width: "40%",
                   }}
                 >
                   {this.props.name}
-                  <Text style={styles.weaponLine}>
-                    <Image style={styles.pic} source={weapon} />
-                    <Image
-                      style={styles.pic}
-                      source={this.props.shadow === true ? shadow : light}
-                    />
-                  </Text>
                 </Text>
+                <Image style={styles.pic} source={weapon} />
+                <Image
+                  style={styles.pic}
+                  source={this.props.shadow === true ? shadow : light}
+                />
+                <View style={{ flex: 4 }}></View>
                 <Text
                   style={{
                     alignItems: "flex-end",
@@ -266,8 +263,8 @@ export default class CharacterBuild extends Component {
                 </Text>
               </View>
               {this.props.bonusDungeon ? (
-                <View style={styles.inLine}>
-                  <Text style={(styles.weaponLine, { fontWeight: "bold" })}>
+                <View style={[styles.inLine, styles.weaponLine]}>
+                  <Text style={{ fontWeight: "bold" }}>
                     <Image
                       style={[styles.pic, { height: 16.8, width: 20 }]}
                       source={this.props.shadow === true ? shadow : light}
@@ -279,29 +276,41 @@ export default class CharacterBuild extends Component {
                   </Text>
                 </View>
               ) : null}
-              <View style={styles.inLine}>
+              <View style={[styles.inLine, styles.weaponLine]}>
                 <Text style={{ fontWeight: "bold" }}>Element type: </Text>
                 <Text>{this.props.element}</Text>
               </View>
-              <View style={styles.inLine}>
-                <Text style={{ fontWeight: "bold" }}>Tome Name: </Text>
-                <Text>
-                  {this.props.as === true
-                    ? this.props.tomeNameAs
-                    : this.props.tomeName}
+              <View style={[styles.inLine, styles.weaponLine]}>
+                <Image
+                  style={styles.pic}
+                  source={require("../pics/Tome.png")}
+                />
+                <Text style={{ fontWeight: "bold" }}>
+                  Name:{" "}
+                  <Text style={{ fontWeight: "normal" }}>
+                    {this.props.as === true
+                      ? this.props.tomeNameAs
+                      : this.props.tomeName}
+                  </Text>
                 </Text>
               </View>
-              <View style={styles.inLine}>
-                <Text style={{ fontWeight: "bold" }}>Location: </Text>
-                <Text>
-                  {this.props.as === true
-                    ? this.props.tomeLocationAs
-                    : this.props.tomeLocation}
+              <View style={[styles.inLine, styles.weaponLine]}>
+                <Image
+                  style={styles.pic}
+                  source={require("../pics/Tome.png")}
+                />
+                <Text style={{ fontWeight: "bold" }}>
+                  Location:{" "}
+                  <Text style={{ fontWeight: "normal" }}>
+                    {this.props.as === true
+                      ? this.props.tomeLocationAs
+                      : this.props.tomeLocation}
+                  </Text>
                 </Text>
               </View>
               {(!this.props.as && this.props.manifest) ||
               (this.props.as && this.props.manifestAs) ? (
-                <View style={styles.inLine}>
+                <View style={[styles.inLine, styles.weaponLine]}>
                   <Text style={{ fontWeight: "bold" }}>
                     Manifest received?
                     <Text style={{ fontWeight: "normal" }}>
@@ -610,7 +619,7 @@ const styles = StyleSheet.create({
     minHeight: 80,
     borderColor: colors.white,
   },
-  checkBox: { height: 20, width: 20, backgroundColor: colors.grey, flex: 1 },
+  checkBox: { height: 20, maxWidth: 20, backgroundColor: colors.grey, flex: 1 },
   containerC: {
     backgroundColor: colors.crystal,
   },
@@ -655,15 +664,16 @@ const styles = StyleSheet.create({
     flex: 5,
     height: "100%",
     justifyContent: "space-evenly",
-    paddingBottom: "2%",
+    paddingVertical: "1.3%",
   },
   mainPage: {
     alignItems: "flex-start",
     height: 145,
   },
   pic: {
-    height: 25,
-    width: 25,
+    height: 22,
+    width: 22,
+    paddingVertical: 0,
   },
   scroll: {
     flex: 5,
@@ -711,8 +721,13 @@ const styles = StyleSheet.create({
   topRightTab: {
     borderTopLeftRadius: 0,
   },
-  weaponLine: {
+  tomeLine: {
     lineHeight: 5,
     paddingBottom: 1,
+    bottom: 8,
+  },
+  weaponLine: {
+    lineHeight: 5,
+    flex: 1,
   },
 });
