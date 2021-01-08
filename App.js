@@ -100,9 +100,20 @@ export default class AnotherApp extends Component {
     let armor = await Storage.getItem("armor");
     let banners = await Storage.getItem("banners");
     let freeList = await Storage.getItem("freeList");
-    this.setState({ characters, weapons, armor, banners, freeList });
-    await delay(200);
-    this.setState({ loading: false });
+    await delay(100);
+    if (
+      characters == null ||
+      weapons == null ||
+      armor == null ||
+      freeList == null ||
+      banners == null
+    ) {
+      this.loadData();
+    } else {
+      this.setState({ characters, weapons, armor, banners, freeList });
+      await delay(200);
+      this.setState({ loading: false });
+    }
   };
   setDate = async () => {
     let today = new Date();
@@ -115,7 +126,7 @@ export default class AnotherApp extends Component {
     let dates = String(today.getDate()) + String(today.getMonth());
     let oldDate = await Storage.getItem("dates");
     await delay(50);
-    if (dates !== oldDate) this.loadDataLocal();
+    if (dates == oldDate) this.loadDataLocal();
     else this.loadData();
   };
   handlePages = async (v) => {
