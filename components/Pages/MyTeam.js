@@ -7,6 +7,7 @@ import {
   Image,
   ActivityIndicator,
   AppRegistry,
+  Alert,
 } from "react-native";
 import CharacterBuild from "../Modules/CharacterBuild";
 import colors from "../Config/colors";
@@ -184,35 +185,60 @@ export default class MyTeam extends Component {
   };
   filterBuff = (charactersRead) => {
     if (this.state.buffFilter !== "") {
+      charactersRead = charactersRead.filter(
+        (char) => char.buffList || char.buffListAs
+      );
+      charactersRead = charactersRead.filter((char) => {
+        if (!char.as && char.buffList) {
+          if (
+            char.buffList.filter((buff) => buff == this.state.buffFilter).length
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        } else if (char.buffListAs) {
+          if (
+            char.buffListAs.filter((buff) => buff == this.state.buffFilter)
+              .length
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        } else return false;
+      });
+      return charactersRead;
     }
-    switch (this.state.buffFilter) {
-      case "critRate":
-        charactersRead = charactersRead.filter((char) =>
-          char.as ? char.critRateAs : char.critRate
-        );
-        break;
-      case "critDamage":
-        charactersRead = charactersRead.filter((char) =>
-          char.as ? char.critDamageAs : char.critDamage
-        );
-        break;
-    }
-    return charactersRead;
   };
   filterDebuff = (charactersRead) => {
     if (this.state.debuffFilter !== "") {
-      switch (this.state.debuffFilter) {
-        case "poison":
-          charactersRead = charactersRead.filter((char) =>
-            char.as ? char.poisonAs : char.poison && !char.poisonAs
-          );
-          break;
-        case "pain":
-          charactersRead = charactersRead.filter((char) =>
-            char.as ? char.painAs : char.pain && !char.painAs
-          );
-          break;
-      }
+      charactersRead = charactersRead.filter(
+        (char) => char.debuffList || char.debuffListAs
+      );
+      charactersRead = charactersRead.filter((char) => {
+        if (!char.as) {
+          if (
+            char.debuffList.filter(
+              (debuff) => debuff == this.state.debuffFilter
+            ).length
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        } else if (char.debuffListAs) {
+          if (
+            char.debuffListAs.filter(
+              (debuff) => debuff == this.state.debuffFilter
+            ).length
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      });
       return charactersRead;
     }
   };
@@ -502,10 +528,15 @@ export default class MyTeam extends Component {
                   onPress={() => {
                     this.handleFilterDebuff("poison");
                   }}
+                  onLongPress={() =>
+                    Alert.alert("Inflicts guaranteed poison", "", [], {
+                      cancelable: true,
+                    })
+                  }
                 >
                   <Image
                     style={[
-                      styles.weaponIcon,
+                      styles.buffIcon,
                       this.state.debuffFilter === "poison" ? styles.fade : null,
                     ]}
                     source={require("../pics/Poison.png")}
@@ -515,25 +546,193 @@ export default class MyTeam extends Component {
                   onPress={() => {
                     this.handleFilterDebuff("pain");
                   }}
+                  onLongPress={() =>
+                    Alert.alert("Inflicts guaranteed pain", "", [], {
+                      cancelable: true,
+                    })
+                  }
                 >
                   <Image
                     style={[
-                      styles.weaponIcon,
+                      styles.buffIcon,
                       this.state.debuffFilter === "pain" ? styles.fade : null,
                     ]}
                     source={require("../pics/Pain.png")}
                   />
                 </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("int");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Intelligence Debuff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.debuffFilter === "int" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/intDebuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("pwr");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Power Debuff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.debuffFilter === "pwr" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/pwrDebuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("spd");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Speed Debuff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.debuffFilter === "spd" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/spdDebuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("physical");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Physical Resistance Debuff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.debuffFilter === "physical"
+                        ? styles.fade
+                        : null,
+                    ]}
+                    source={require("../pics/physResDebuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("type");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert(
+                      "One/All Type (Element) Resistance Debuff",
+                      "",
+                      [],
+                      {
+                        cancelable: true,
+                      }
+                    )
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.debuffFilter === "type" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/typeResDebuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("pierce");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Piercing Resistance Debuff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.debuffFilter === "pierce" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/pierceDebuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("blunt");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Blunt Resistance Debuff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.debuffFilter === "blunt" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/bluntDebuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterDebuff("slash");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Slash Resistance Debuff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.debuffFilter === "slash" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/slashDebuff.png")}
+                  />
+                </TouchableOpacity>
               </View>
-              <View style={styles.buttonContainer}>
+              {/*Break between 
+              debuff/buff lines */}
+              <View
+                style={[
+                  styles.buttonContainer,
+                  { alignSelf: "flex-start", marginLeft: 20 },
+                ]}
+              >
                 <TouchableOpacity
                   onPress={() => {
                     this.handleFilterBuff("critRate");
                   }}
+                  onLongPress={() =>
+                    Alert.alert("Critical Rate Buff", "", [], {
+                      cancelable: true,
+                    })
+                  }
                 >
                   <Image
                     style={[
-                      styles.weaponIcon,
+                      styles.buffIcon,
                       this.state.buffFilter === "critRate" ? styles.fade : null,
                     ]}
                     source={require("../pics/CritRate.png")}
@@ -543,15 +742,128 @@ export default class MyTeam extends Component {
                   onPress={() => {
                     this.handleFilterBuff("critDamage");
                   }}
+                  onLongPress={() =>
+                    Alert.alert("Critical Damage Buff", "", [], {
+                      cancelable: true,
+                    })
+                  }
                 >
                   <Image
                     style={[
-                      styles.weaponIcon,
+                      styles.buffIcon,
                       this.state.buffFilter === "critDamage"
                         ? styles.fade
                         : null,
                     ]}
                     source={require("../pics/CritDamage.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterBuff("int");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Intelligence Buff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.buffFilter === "int" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/intBuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterBuff("pwr");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Power Buff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.buffFilter === "pwr" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/pwrBuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterBuff("spd");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Speed Buff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.buffFilter === "spd" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/SpdBuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterBuff("physRes");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("Physical Resistance Buff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.buffFilter === "physRes" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/physResBuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterBuff("typeRes");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("One/All Type Resistance Buff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.buffFilter === "typeRes" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/typeResBuff.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.handleFilterBuff("typeAtk");
+                  }}
+                  onLongPress={() =>
+                    Alert.alert("One/All Type (Element) Attack Buff", "", [], {
+                      cancelable: true,
+                    })
+                  }
+                >
+                  <Image
+                    style={[
+                      styles.buffIcon,
+                      this.state.buffFilter === "typeAtk" ? styles.fade : null,
+                    ]}
+                    source={require("../pics/typeAtkBuff.png")}
                   />
                 </TouchableOpacity>
               </View>
@@ -705,7 +1017,15 @@ const styles = StyleSheet.create({
   weaponIcon: {
     height: 40,
     width: 40,
+    resizeMode: "contain",
     marginHorizontal: 1,
+    marginVertical: 2,
+  },
+  buffIcon: {
+    height: 33,
+    width: 33,
+    resizeMode: "contain",
+    marginHorizontal: 2,
     marginVertical: 2,
   },
   wrapper: { flex: 1, minHeight: 90, maxHeight: 90, minWidth: "100%" },

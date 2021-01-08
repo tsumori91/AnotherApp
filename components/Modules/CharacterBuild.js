@@ -231,23 +231,24 @@ export default class CharacterBuild extends Component {
                 styles.borderOg,
               ]}
             >
-              <View style={[styles.inLine, styles.weaponLine]}>
-                <Text
-                  style={{
-                    fontSize: 23,
-                    fontWeight: "bold",
-                    lineHeight: 5,
-                    paddingTop: 22,
-                  }}
-                >
-                  {this.props.name}
-                </Text>
-                <Image style={styles.pic} source={weapon} />
-                <Image
-                  style={styles.pic}
-                  source={this.props.shadow === true ? shadow : light}
-                />
-                <View style={{ flex: 4 }}></View>
+              <View style={[styles.inLine]}>
+                <View style={[styles.inLine, styles.weaponLine, { flex: 3 }]}>
+                  <Text
+                    style={{
+                      fontSize: 23,
+                      fontWeight: "bold",
+                      lineHeight: 5,
+                      paddingTop: 22,
+                    }}
+                  >
+                    {this.props.name}
+                  </Text>
+                  <Image style={styles.pic} source={weapon} />
+                  <Image
+                    style={styles.pic}
+                    source={this.props.shadow === true ? shadow : light}
+                  />
+                </View>
                 <Text
                   style={{
                     alignItems: "flex-end",
