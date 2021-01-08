@@ -12,8 +12,10 @@ import {
 } from "react-native";
 import Char from "../Modules/Echaracter";
 import Storage from "../Config/Storage";
-import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../Config/colors";
+import * as firebase from "firebase";
+
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 class CPage extends Component {
   state = {
@@ -216,7 +218,44 @@ class CPage extends Component {
     this.setState({ date });
     Storage.setItem("charactersDate", date);
   }
-
+  checkChars = async () => {
+    let characters = [...this.props.characters];
+    let newList = [];
+    await delay(30);
+    /* characters.forEach((char) => {
+      if (char.skills) {
+        let skills = char.skills.slice(0, 8);
+        let skillsMani = char.skills.slice(6, 8);
+        if (
+          skills.filter(
+            (skill) =>
+              skill.skillEffect.toLowerCase().indexOf("type resistance -") !==
+              -1
+          ).length !== 0 ||
+          char.vc.toLowerCase().indexOf("type resistance -") !== -1
+        ) {
+          newList.push(char.name);
+          if (char.debuffList) {
+            char.debuffList.push("type");
+          } else char.debuffList = ["type"];
+        } else if (
+          skillsMani.filter(
+            (skill) =>
+              skill.skillEffectManifest
+                .toLowerCase()
+                .indexOf("type resistance -") !== -1
+          ).length !== 0
+        ) {
+          newList.push(char.name);
+          if (char.debuffList) {
+            char.debuffList.push("type");
+          } else char.debuffList = ["type"];
+        }
+      }
+    });
+    await firebase.database().ref("characters").set({ characters });*/
+    console.log(newList);
+  };
   render() {
     return (
       <View style={styles.container}>

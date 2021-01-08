@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet, Text } from "react-native";
+import { TouchableOpacity, StyleSheet, Text, Platform } from "react-native";
 import colors from "../Config/colors";
 
 export default function Tab({
@@ -30,5 +30,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "none",
+    fontFamily: Platform.OS == "android" ? "normal" : "Arial",
   },
 });

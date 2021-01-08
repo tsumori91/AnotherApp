@@ -16,7 +16,7 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class EquipsToDo extends Component {
   state = {
-    weapons: [1, 2, 3, 4, 5],
+    weapons: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     weaponsRead: [],
     myWeapons: [],
     loading: true,
@@ -230,21 +230,22 @@ export default class EquipsToDo extends Component {
               style={{
                 color:
                   this.state.gotList.length <
-                  (this.state.weapons.length - 5) / 4
+                  (this.state.weapons.length - 10) / 4
                     ? colors.fire
                     : this.state.gotList.length <
-                      (this.state.weapons.length - 5) / 1.33
+                      (this.state.weapons.length - 10) / 1.33
                     ? colors.shadow
-                    : this.state.gotList.length < this.state.weapons.length - 5
+                    : this.state.gotList.length < this.state.weapons.length - 10
                     ? colors.water
-                    : this.state.gotList.length == this.state.weapons.length - 5
+                    : this.state.gotList.length ==
+                      this.state.weapons.length - 10
                     ? "green"
                     : colors.fire,
               }}
             >
               {this.state.gotList.length}
             </Text>
-            /{this.state.weapons.length - 5}
+            /{this.state.weapons.length - 10}
           </Text>
           <DropDownPicker
             items={[

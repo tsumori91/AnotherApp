@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   ImageBackground,
   SafeAreaView,
+  Button,
 } from "react-native";
 import CPage from "./components/Pages/Characters";
 import Puller from "./components/Pages/Puller";
@@ -34,36 +35,7 @@ export default class AnotherApp extends Component {
     weapons: [],
     armor: [],
     dates: "",
-    freeList: [
-      "Aldo",
-      "Feinne",
-      "Sheila",
-      "Riica",
-      "Cyrus",
-      "Amy",
-      "Helena",
-      "Guildna",
-      "Altena",
-      "Galliard",
-      "Jade",
-      "Saki",
-      "Mana",
-      "Joker",
-      "Morgana",
-      "Violet",
-      "Skull",
-      "Clarte",
-      "Sophia",
-      "Cress",
-      "Yuri",
-      "Velvet",
-      "Milla",
-      "Deirdre",
-      "Levia",
-      "Azami",
-      "Gariyu",
-      "Cerrine",
-    ],
+    freeList: [],
   };
   componentDidMount() {
     this.checkDate();
@@ -128,9 +100,20 @@ export default class AnotherApp extends Component {
     let armor = await Storage.getItem("armor");
     let banners = await Storage.getItem("banners");
     let freeList = await Storage.getItem("freeList");
-    this.setState({ characters, weapons, armor, banners, freeList });
-    await delay(200);
-    this.setState({ loading: false });
+    await delay(100);
+    if (
+      characters == null ||
+      weapons == null ||
+      armor == null ||
+      freeList == null ||
+      banners == null
+    ) {
+      this.loadData();
+    } else {
+      this.setState({ characters, weapons, armor, banners, freeList });
+      await delay(200);
+      this.setState({ loading: false });
+    }
   };
   setDate = async () => {
     let today = new Date();
@@ -159,6 +142,13 @@ export default class AnotherApp extends Component {
   };
   addEquip = async (tracker) => {
     this.setState({ tracker });
+    tracker.forEach((t, i) =>
+      !tracker[i].idCraft
+        ? (tracker[i].idCraft = Math.floor(
+            Math.random() * 9999 * 9999 * 9999 * 9999
+          ))
+        : null
+    );
     await Storage.setItem("tracker", tracker);
   };
   backup = async () => {

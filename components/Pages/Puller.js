@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
-import colors from "../Config/colors";
 import Banner from "../Modules/Banner";
 import * as firebase from "firebase";
-import Tab from "../Modules/Tab";
 
 export default class Puller extends Component {
   state = {
