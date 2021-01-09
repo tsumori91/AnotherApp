@@ -122,21 +122,23 @@ export default class MyEquips extends Component {
         });
     });
     matList = matList.flat();
-    let cleanMatList = matList.flat().map((value) =>
+    let cleanMatList = matList.flat(3).map((value) =>
       value
-        .replace(/[0-9,(,)]/g, "")
-        .replace(/Horror/g, "(Horror) ")
-        .replace(/Sparkles/g, "(Sparkles) ")
-        .replace(/Chest/g, "(Chests) ")
-        .replace(/Shiny/g, "(Shiny) ")
-        .replace(/Boss/g, "(Boss) ")
-        .replace(/Area I/g, "(Area I) ")
-        .replace(/Area I\) II/g, "Area III) ")
-        .replace(/Area I\) I/g, "Area II) ")
-        .replace(/Area I\) V/g, "Area IV) ")
-        .replace(/Area I\) -III/g, "Area I-III) ")
-        .replace(/Area I\) -II/g, "Area I -II) ")
-        .replace(/Area II\) -III/g, "Area II -III) ")
+        ? value
+            .replace(/[0-9,(,)]/g, "")
+            .replace(/Horror/g, "(Horror) ")
+            .replace(/Sparkles/g, "(Sparkles) ")
+            .replace(/Chest/g, "(Chests) ")
+            .replace(/Shiny/g, "(Shiny) ")
+            .replace(/Boss/g, "(Boss) ")
+            .replace(/Area I/g, "(Area I) ")
+            .replace(/Area I\) II/g, "Area III) ")
+            .replace(/Area I\) I/g, "Area II) ")
+            .replace(/Area I\) V/g, "Area IV) ")
+            .replace(/Area I\) -III/g, "Area I-III) ")
+            .replace(/Area I\) -II/g, "Area I -II) ")
+            .replace(/Area II\) -III/g, "Area II -III) ")
+        : null
     );
     let uniqueList = [...new Set(cleanMatList)];
     const plzWork = this.addValues(uniqueList, cleanMatList, matList);
@@ -155,8 +157,10 @@ export default class MyEquips extends Component {
         if (a === element) indices.push(i);
       });
       let itemNumber = 0;
-      indices.forEach(
-        (index) => (itemNumber += Number(matList[index].replace(/[^0-9]/g, "")))
+      indices.forEach((index) =>
+        index
+          ? (itemNumber += Number(matList[index].replace(/[^0-9]/g, "")))
+          : null
       );
       finishedList.push(element + itemNumber);
     });
