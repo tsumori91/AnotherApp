@@ -714,12 +714,7 @@ export default class MyTeam extends Component {
               </View>
               {/*Break between 
               debuff/buff lines */}
-              <View
-                style={[
-                  styles.buttonContainer,
-                  { alignSelf: "flex-start", marginLeft: 20 },
-                ]}
-              >
+              <View style={[styles.buttonContainer, { right: 38 }]}>
                 <TouchableOpacity
                   onPress={() => {
                     this.handleFilterBuff("critRate");

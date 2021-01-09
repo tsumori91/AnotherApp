@@ -158,7 +158,7 @@ export default class MyEquips extends Component {
       });
       let itemNumber = 0;
       indices.forEach((index) =>
-        index
+        index || index == 0
           ? (itemNumber += Number(matList[index].replace(/[^0-9]/g, "")))
           : null
       );
