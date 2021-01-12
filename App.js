@@ -19,6 +19,7 @@ import colors from "./components/Config/colors";
 import MyEquips from "./components/Pages/MyEquips";
 import Storage from "./components/Config/Storage";
 import CharTrack from "./components/Pages/CharTrack";
+import Grasta from "./components/Pages/Grasta";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 if (!firebase.apps.length) {
@@ -34,6 +35,7 @@ export default class AnotherApp extends Component {
     banners: [],
     weapons: [],
     armor: [],
+    grasta: {},
     dates: "",
     freeList: [],
   };
@@ -87,6 +89,15 @@ export default class AnotherApp extends Component {
           freeList: snapshot.val().freeList,
         });
       });
+    firebase
+      .database()
+      .ref("grasta")
+      .once("value", async (snapshot) => {
+        await Storage.setItem("grasta", snapshot.val().grasta);
+        this.setState({
+          grasta: snapshot.val().grasta,
+        });
+      });
     if (firebase.apps.length) {
       this.setDate();
     }
@@ -100,17 +111,19 @@ export default class AnotherApp extends Component {
     let armor = await Storage.getItem("armor");
     let banners = await Storage.getItem("banners");
     let freeList = await Storage.getItem("freeList");
+    let grasta = await Storage.getItem("grasta");
     await delay(100);
     if (
       characters == null ||
       weapons == null ||
       armor == null ||
       freeList == null ||
-      banners == null
+      banners == null ||
+      grasta == null
     ) {
       this.loadData();
     } else {
-      this.setState({ characters, weapons, armor, banners, freeList });
+      this.setState({ characters, weapons, armor, banners, freeList, grasta });
       await delay(200);
       this.setState({ loading: false });
     }
@@ -170,6 +183,12 @@ export default class AnotherApp extends Component {
       >
         <SafeAreaView style={styles.buttons}>
           <Tab
+            title={"Grasta"}
+            color={this.state.display === "grasta" ? "gold" : "primary"}
+            style={styles.button}
+            onPress={() => this.handlePages("grasta")}
+          />
+          <Tab
             title={"Weapons"}
             color={this.state.display === "weapons" ? "gold" : "primary"}
             style={styles.button}
@@ -225,6 +244,8 @@ export default class AnotherApp extends Component {
                 characters={this.state.characters}
                 freeList={this.state.freeList}
               />
+            ) : this.state.display === "grasta" ? (
+              <Grasta grasta={this.state.grasta} />
             ) : (
               <CPage characters={this.state.characters} />
             )}
@@ -275,6 +296,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
     flexGrow: 1,
+    height: 33,
   },
   buttons: {
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 0,
