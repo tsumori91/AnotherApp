@@ -198,7 +198,7 @@ export default class Char extends Component {
         </View>
         <View style={styles.mainPage}>
           {this.state.showAs === false ? (
-            <View style={[styles.deLine, { flex: 2 }]}>
+            <View style={[styles.deLine, { flex: 3 }]}>
               <Image
                 source={
                   this.props.uri
@@ -454,7 +454,7 @@ export default class Char extends Component {
           ) : null}
 
           {this.state.showAs === true ? (
-            <View style={[styles.deLine, { flex: 2 }]}>
+            <View style={[styles.deLine, { flex: 3 }]}>
               <Image
                 source={
                   this.props.uriAs
@@ -753,7 +753,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   main: {
-    flex: 5,
+    flex: 6,
     height: "100%",
     justifyContent: "space-evenly",
     alignContent: "space-around",

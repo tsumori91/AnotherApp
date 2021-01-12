@@ -169,7 +169,7 @@ export default class CharacterBuild extends Component {
           />
         </View>
         <View style={[styles.inLine, styles.mainPage]}>
-          <View style={[styles.deLine, { flex: 2 }]}>
+          <View style={[styles.deLine, { flex: 3 }]}>
             <Image
               source={
                 this.props.uriAs && this.props.as
@@ -662,7 +662,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   main: {
-    flex: 5,
+    flex: 6,
     height: "100%",
     justifyContent: "space-evenly",
     paddingVertical: "1.3%",

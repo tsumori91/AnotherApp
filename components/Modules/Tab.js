@@ -22,6 +22,16 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
     borderRadius: 10,
+    shadowColor: "rgba(0,0,0, .4)", // IOS
+    shadowOffset: { height: 1, width: 1 }, // IOS
+    shadowOpacity: 1, // IOS
+    shadowRadius: 1, //IOS
+    backgroundColor: "#fff",
+    elevation: 10, // Android
+    height: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   text: {
     color: "white",
