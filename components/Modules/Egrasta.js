@@ -8,16 +8,20 @@ import {
   Button,
 } from "react-native";
 import colors from "../Config/colors";
+import { Entypo } from "@expo/vector-icons";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class Egrasta extends Component {
   state = { show: false };
-  handleCheck = (name) => {};
+  handleCheck = (name) => {
+    this.props.handleCheck(name);
+  };
 
   render() {
     let type = this.props.type;
     let stats = this.props.stats;
     let img = null;
+    let check = this.props.check;
     switch (type) {
       case "attack":
         img = require("../pics/AttackGrasta.png");
@@ -62,6 +66,14 @@ export default class Egrasta extends Component {
                   onPress={() => this.handleCheck(this.props.name)}
                 >
                   <View style={styles.checkbox}></View>
+                  {check ? (
+                    <Entypo
+                      name="check"
+                      size={33}
+                      color={"green"}
+                      style={styles.checkMark}
+                    />
+                  ) : null}
                 </TouchableOpacity>
               </View>
               <View style={styles.otherDetails}>
@@ -135,8 +147,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 2,
+    marginTop: 4,
+    marginRight: 1,
   },
-  checkView: { flex: 1, marginVertical: 4 },
+  checkMark: { position: "absolute", elevation: 3 },
+  checkView: { flex: 1, marginVertical: 2, padding: 4 },
   details: { flex: 4 },
   eachStat: {
     flex: 1,
