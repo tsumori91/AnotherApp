@@ -198,7 +198,7 @@ export default class Char extends Component {
         </View>
         <View style={styles.mainPage}>
           {this.state.showAs === false ? (
-            <View style={[styles.deLine, { flex: 3 }]}>
+            <View style={[styles.deLine]}>
               <Image
                 source={
                   this.props.uri
@@ -209,7 +209,7 @@ export default class Char extends Component {
                 }
                 style={styles.image}
               />
-              <View style={styles.inLine}>
+              <View style={[styles.inLine]}>
                 <Tab
                   style={[styles.tabsBottom, { borderBottomEndRadius: 0 }]}
                   textStyle={styles.tabsBottomText}
@@ -326,6 +326,7 @@ export default class Char extends Component {
                 <Text
                   style={{
                     fontWeight: "bold",
+                    flex: 1,
                   }}
                 >
                   Location:{" "}
@@ -454,7 +455,7 @@ export default class Char extends Component {
           ) : null}
 
           {this.state.showAs === true ? (
-            <View style={[styles.deLine, { flex: 3 }]}>
+            <View style={[styles.deLine]}>
               <Image
                 source={
                   this.props.uriAs
@@ -746,6 +747,8 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: "cover",
+    height: 40,
+    width: 130,
     flexGrow: 1,
   },
   inLine: {
@@ -753,16 +756,19 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   main: {
-    flex: 6,
+    flexGrow: 1,
     height: "100%",
     justifyContent: "space-evenly",
     alignContent: "space-around",
-    paddingHorizontal: "1.5%",
+    shadowColor: "rgba(0,0,0, .4)", // IOS
+    shadowOffset: { height: 4, width: 3 }, // IOS
+    shadowOpacity: 1, // IOS
+    shadowRadius: 1, //IOS
   },
   mainPage: {
     alignItems: "flex-start",
     flexDirection: "row",
-    height: 145,
+    height: 160,
   },
   pic: {
     height: 20,
@@ -791,7 +797,6 @@ const styles = StyleSheet.create({
   stats: {
     fontSize: 24,
     fontWeight: "bold",
-    lineHeight: 28,
   },
   subMain: {
     flex: 1,
@@ -802,6 +807,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     paddingVertical: 1,
+    height: 21,
   },
   tabsBottomText: {
     fontSize: 13,

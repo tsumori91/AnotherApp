@@ -121,6 +121,25 @@ export default class Egrasta extends Component {
               </View>
             </View>
           ) : null}
+          {this.state.show && this.props.potential ? (
+            <View style={styles.row}>
+              <View style={styles.picContainer}>
+                <View style={{ minHeight: 40, minWidth: 40 }}></View>
+              </View>
+              <View
+                style={[
+                  styles.details,
+                  styles.border,
+                  { borderTopLeftRadius: 0, borderTopRightRadius: 0 },
+                ]}
+              >
+                <Text style={styles.getHow}>
+                  <Text style={{ fontWeight: "bold" }}>Potential:{" \n"}</Text>
+                  {this.props.potential}
+                </Text>
+              </View>
+            </View>
+          ) : null}
         </TouchableOpacity>
       </View>
     );

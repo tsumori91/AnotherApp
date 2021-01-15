@@ -1,6 +1,5 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Image } from "react-native";
-import colors from "../Config/colors";
 
 export default function WeaponFilter({
   style,

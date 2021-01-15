@@ -265,10 +265,7 @@ export default class Grasta extends Component {
               }
             >
               <Entypo
-                style={[
-                  styles.pic,
-                  this.state.gotOrNot == true ? styles.fade : null,
-                ]}
+                style={[this.state.gotOrNot == true ? styles.fade : null]}
                 name="check"
                 size={33}
                 color={"green"}
@@ -548,6 +545,7 @@ export default class Grasta extends Component {
                       stats={grasta.stats}
                       effect={grasta.effect}
                       getHow={grasta.getHow}
+                      potential={grasta.potential}
                       name={grasta.name}
                       type={"attack"}
                       handleCheck={this.handleCheck}
@@ -569,6 +567,7 @@ export default class Grasta extends Component {
                       stats={grasta.stats}
                       effect={grasta.effect}
                       getHow={grasta.getHow}
+                      potential={grasta.potential}
                       name={grasta.name}
                       type={"life"}
                       handleCheck={this.handleCheck}
@@ -590,6 +589,7 @@ export default class Grasta extends Component {
                       stats={grasta.stats}
                       effect={grasta.effect}
                       getHow={grasta.getHow}
+                      potential={grasta.potential}
                       name={grasta.name}
                       type={"support"}
                       handleCheck={this.handleCheck}
@@ -611,6 +611,7 @@ export default class Grasta extends Component {
                       stats={grasta.stats}
                       effect={grasta.effect}
                       getHow={grasta.getHow}
+                      potential={grasta.potential}
                       name={grasta.name}
                       type={"special"}
                       handleCheck={this.handleCheck}

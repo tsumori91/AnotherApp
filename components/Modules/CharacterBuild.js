@@ -169,7 +169,7 @@ export default class CharacterBuild extends Component {
           />
         </View>
         <View style={[styles.inLine, styles.mainPage]}>
-          <View style={[styles.deLine, { flex: 3 }]}>
+          <View style={[styles.deLine, { width: 130 }]}>
             <Image
               source={
                 this.props.uriAs && this.props.as
@@ -184,7 +184,7 @@ export default class CharacterBuild extends Component {
               }
               style={styles.image}
             />
-            <View style={styles.inLine}>
+            <View style={[styles.inLine, { width: 130.2 }]}>
               <Tab
                 style={[styles.tabsBottom, { borderBottomEndRadius: 0 }]}
                 textStyle={styles.tabsBottomText}
@@ -300,7 +300,7 @@ export default class CharacterBuild extends Component {
                   style={styles.pic}
                   source={require("../pics/Tome.png")}
                 />
-                <Text style={{ fontWeight: "bold" }}>
+                <Text style={{ fontWeight: "bold", flex: 1 }}>
                   Location:{" "}
                   <Text style={{ fontWeight: "normal" }}>
                     {this.props.as === true
@@ -655,6 +655,7 @@ const styles = StyleSheet.create({
   image: {
     resizeMode: "cover",
     flexGrow: 1,
+    width: 130,
   },
 
   inLine: {
@@ -662,14 +663,18 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   main: {
-    flex: 6,
+    flexGrow: 1,
     height: "100%",
     justifyContent: "space-evenly",
     paddingVertical: "1.3%",
+    shadowColor: "rgba(0,0,0, .4)", // IOS
+    shadowOffset: { height: 4, width: 3 }, // IOS
+    shadowOpacity: 1, // IOS
+    shadowRadius: 1, //IOS
   },
   mainPage: {
     alignItems: "flex-start",
-    height: 145,
+    height: 160,
   },
   pic: {
     height: 22,
@@ -704,6 +709,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     paddingVertical: 1,
+    height: 21,
   },
   tabsBottomText: {
     fontSize: 13,

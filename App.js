@@ -139,7 +139,7 @@ export default class AnotherApp extends Component {
     let dates = String(today.getDate()) + String(today.getMonth());
     let oldDate = await Storage.getItem("dates");
     await delay(50);
-    if (dates == oldDate) this.loadDataLocal();
+    if (dates !== oldDate) this.loadDataLocal();
     else this.loadData();
   };
   handlePages = async (v) => {
