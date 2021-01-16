@@ -198,7 +198,9 @@ export default class Char extends Component {
         </View>
         <View style={styles.mainPage}>
           {this.state.showAs === false ? (
-            <View style={[styles.deLine]}>
+            <View
+              style={[styles.deLine, { flex: 3, maxWidth: 130, minWidth: 100 }]}
+            >
               <Image
                 source={
                   this.props.uri
@@ -209,7 +211,7 @@ export default class Char extends Component {
                 }
                 style={styles.image}
               />
-              <View style={[styles.inLine]}>
+              <View style={styles.inLine}>
                 <Tab
                   style={[styles.tabsBottom, { borderBottomEndRadius: 0 }]}
                   textStyle={styles.tabsBottomText}
@@ -397,12 +399,18 @@ export default class Char extends Component {
                   }}
                 />
               ) : null}
-              <View style={styles.inLine}>
+              <View style={[styles.inLine]}>
                 {this.state.statsTotal.map(
                   (stats, i) => (
                     i++,
                     (
-                      <View key={i} style={[styles.inLine, { width: "50%" }]}>
+                      <View
+                        key={i}
+                        style={[
+                          styles.inLine,
+                          { width: "50%", marginVertical: 2 },
+                        ]}
+                      >
                         <Text
                           style={[{ fontWeight: "bold" }, styles.descriptions]}
                         >
@@ -455,7 +463,9 @@ export default class Char extends Component {
           ) : null}
 
           {this.state.showAs === true ? (
-            <View style={[styles.deLine]}>
+            <View
+              style={[styles.deLine, { flex: 3, maxWidth: 130, minWidth: 100 }]}
+            >
               <Image
                 source={
                   this.props.uriAs
@@ -747,8 +757,6 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: "cover",
-    height: 40,
-    width: 130,
     flexGrow: 1,
   },
   inLine: {
@@ -756,19 +764,19 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   main: {
-    flexGrow: 1,
+    flex: 6,
     height: "100%",
-    justifyContent: "space-evenly",
-    alignContent: "space-around",
+    paddingHorizontal: "1.5%",
     shadowColor: "rgba(0,0,0, .4)", // IOS
     shadowOffset: { height: 4, width: 3 }, // IOS
     shadowOpacity: 1, // IOS
     shadowRadius: 1, //IOS
+    elevation: 2, // Android
   },
   mainPage: {
     alignItems: "flex-start",
     flexDirection: "row",
-    height: 160,
+    height: 166,
   },
   pic: {
     height: 20,
@@ -797,6 +805,7 @@ const styles = StyleSheet.create({
   stats: {
     fontSize: 24,
     fontWeight: "bold",
+    lineHeight: 28,
   },
   subMain: {
     flex: 1,

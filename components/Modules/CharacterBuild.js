@@ -169,7 +169,9 @@ export default class CharacterBuild extends Component {
           />
         </View>
         <View style={[styles.inLine, styles.mainPage]}>
-          <View style={[styles.deLine, { width: 130 }]}>
+          <View
+            style={[styles.deLine, { flex: 3, maxWidth: 125, minWidth: 100 }]}
+          >
             <Image
               source={
                 this.props.uriAs && this.props.as
@@ -184,7 +186,7 @@ export default class CharacterBuild extends Component {
               }
               style={styles.image}
             />
-            <View style={[styles.inLine, { width: 130.2 }]}>
+            <View style={styles.inLine}>
               <Tab
                 style={[styles.tabsBottom, { borderBottomEndRadius: 0 }]}
                 textStyle={styles.tabsBottomText}
@@ -379,12 +381,18 @@ export default class CharacterBuild extends Component {
                   }}
                 />
               ) : null}
-              <View style={styles.inLine}>
+              <View style={[styles.inLine]}>
                 {this.state.statsTotal.map(
                   (stats, i) => (
                     i++,
                     (
-                      <View key={i} style={[styles.inLine, { width: "50%" }]}>
+                      <View
+                        key={i}
+                        style={[
+                          styles.inLine,
+                          { width: "50%", marginVertical: 2 },
+                        ]}
+                      >
                         <Text
                           style={[{ fontWeight: "bold" }, styles.descriptions]}
                         >
@@ -655,7 +663,6 @@ const styles = StyleSheet.create({
   image: {
     resizeMode: "cover",
     flexGrow: 1,
-    width: 130,
   },
 
   inLine: {
@@ -663,7 +670,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   main: {
-    flexGrow: 1,
+    flex: 6,
     height: "100%",
     justifyContent: "space-evenly",
     paddingVertical: "1.3%",
@@ -671,10 +678,11 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 4, width: 3 }, // IOS
     shadowOpacity: 1, // IOS
     shadowRadius: 1, //IOS
+    elevation: 2, // Android
   },
   mainPage: {
     alignItems: "flex-start",
-    height: 160,
+    height: 165,
   },
   pic: {
     height: 22,

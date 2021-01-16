@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 4, width: 3 }, // IOS
     shadowOpacity: 1, // IOS
     shadowRadius: 1, //IOS
+    elevation: 2, // Android
     backgroundColor: "#fff",
-    elevation: 10, // Android
     height: 25,
     justifyContent: "center",
     alignItems: "center",
