@@ -639,6 +639,8 @@ const styles = StyleSheet.create({
   checkbox: {
     width: 20,
     height: 20,
+    borderRadius: 2,
+    borderWidth: 2,
     backgroundColor: colors.crystal,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

@@ -20,6 +20,7 @@ import MyEquips from "./components/Pages/MyEquips";
 import Storage from "./components/Config/Storage";
 import CharTrack from "./components/Pages/CharTrack";
 import Grasta from "./components/Pages/Grasta";
+import IDA3 from "./components/Pages/IDA3";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 if (!firebase.apps.length) {
@@ -246,12 +247,20 @@ export default class AnotherApp extends Component {
               />
             ) : this.state.display === "grasta" ? (
               <Grasta grasta={this.state.grasta} />
+            ) : this.state.display === "IDA3" ? (
+              <IDA3 />
             ) : (
               <CPage characters={this.state.characters} />
             )}
           </View>
         )}
         <SafeAreaView style={styles.buttonsBottom}>
+          <Tab
+            title={"IDA3"}
+            color={this.state.display === "IDA3" ? "gold" : "primary"}
+            style={styles.button}
+            onPress={() => this.handlePages("IDA3")}
+          />
           <Tab
             title={"Pullsim"}
             color={this.state.display === "puller" ? "gold" : "primary"}
