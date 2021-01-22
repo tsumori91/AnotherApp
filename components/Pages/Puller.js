@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import Banner from "../Modules/Banner";
 import * as firebase from "firebase";
-import Tab from "../Modules/Tab";
+
 export default class Puller extends Component {
   state = {
     banners: [],
@@ -16,7 +16,7 @@ export default class Puller extends Component {
   render() {
     return (
       <ScrollView style={styles.container} nestedScrollEnabled={true}>
-        {<Tab title={"new banner"} onPress={() => this.handleNewBanner()} />}
+        {/*<Tab title={"new banner"} onPress={() => this.handleNewBanner()} />*/}
         <View style={{ flexDirection: "column-reverse" }}>
           {this.props.banners.map((b) => (
             <Banner
