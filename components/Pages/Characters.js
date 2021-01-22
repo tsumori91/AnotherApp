@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import {
   Button,
   ScrollView,
@@ -17,7 +17,7 @@ import * as firebase from "firebase";
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-class CPage extends Component {
+class CPage extends PureComponent {
   state = {
     charactersRead: [],
     weaponFilter: "",
@@ -212,12 +212,6 @@ class CPage extends Component {
     this.setState({ charactersRead });
     setTimeout(() => this.setState({ loading: false }));
   };
-  saveDate() {
-    let today = new Date();
-    let date = String(today.getDate()) + String(today.getMonth());
-    this.setState({ date });
-    Storage.setItem("charactersDate", date);
-  }
   render() {
     return (
       <View style={styles.container}>

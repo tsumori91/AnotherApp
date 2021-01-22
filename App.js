@@ -113,7 +113,7 @@ export default class AnotherApp extends Component {
     let banners = await Storage.getItem("banners");
     let freeList = await Storage.getItem("freeList");
     let grasta = await Storage.getItem("grasta");
-    await delay(100);
+    await delay(20);
     if (
       characters == null ||
       weapons == null ||
@@ -124,8 +124,15 @@ export default class AnotherApp extends Component {
     ) {
       this.loadData();
     } else {
-      this.setState({ characters, weapons, armor, banners, freeList, grasta });
-      await delay(200);
+      this.setState({
+        characters,
+        weapons,
+        armor,
+        banners,
+        freeList,
+        grasta,
+      });
+      await delay(20);
       this.setState({ loading: false });
     }
   };
@@ -139,20 +146,26 @@ export default class AnotherApp extends Component {
     let today = new Date();
     let dates = String(today.getDate()) + String(today.getMonth());
     let oldDate = await Storage.getItem("dates");
-    await delay(50);
-    if (dates == oldDate) this.loadDataLocal();
-    else this.loadData();
+    await delay(10);
+    if (dates !== oldDate) {
+      this.loadData();
+    } else if (!this.state.characters.length) {
+      this.loadDataLocal();
+    } else this.setState({ loading: false });
   };
   handlePages = async (v) => {
     this.setState({ loading: true });
     this.checkDate();
-    this.setState({ display: v });
-    let tracker = await Storage.getItem("tracker");
-    if (tracker == null || !tracker) {
-      tracker = [];
+    if (v == "myEquips") {
+      let tracker = await Storage.getItem("tracker");
+      if (tracker == null || !tracker) {
+        tracker = [];
+      }
+      this.setState({ tracker });
     }
-    this.setState({ tracker });
-    setTimeout(() => this.setState({ loading: false }));
+    this.setState({ display: v });
+    await delay(10);
+    this.setState({ loading: false });
   };
   addEquip = async (tracker) => {
     this.setState({ tracker });
@@ -175,7 +188,11 @@ export default class AnotherApp extends Component {
     await firebase.database().ref("weaponsBack").set({ weaponsBack });
     await firebase.database().ref("armorBack").set({ armorBack });
   };
+  findCharacters = async () => {
+    return await Storage.getItem("characters");
+  };
   render() {
+    let characters = this.state.characters;
     return (
       <ImageBackground
         imageStyle={{ opacity: 0.45 }}
@@ -250,7 +267,7 @@ export default class AnotherApp extends Component {
             ) : this.state.display === "IDA3" ? (
               <IDA3 />
             ) : (
-              <CPage characters={this.state.characters} />
+              <CPage characters={characters} />
             )}
           </View>
         )}

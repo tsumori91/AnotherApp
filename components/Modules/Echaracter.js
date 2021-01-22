@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import {
   Text,
   View,
@@ -11,7 +11,7 @@ import Slider from "@react-native-community/slider";
 import colors from "../Config/colors";
 import Tab from "./Tab";
 
-export default class Char extends Component {
+export default class Char extends PureComponent {
   state = {
     skills: false,
     showAs: false,
