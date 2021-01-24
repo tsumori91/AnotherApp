@@ -108,14 +108,14 @@ export default class MyEquips extends Component {
               : enhance.location2
               ? enhance.location2.name == d
                 ? matList.push(enhance.location2.mats)
-                : null
-              : enhance.location3
-              ? enhance.location3.name == d
-                ? matList.push(enhance.location3.mats)
-                : null
-              : enhance.location4
-              ? enhance.location4.name == d
-                ? matList.push(enhance.location4.mats)
+                : enhance.location3
+                ? enhance.location3.name == d
+                  ? matList.push(enhance.location3.mats)
+                  : enhance.location4
+                  ? enhance.location4.name == d
+                    ? matList.push(enhance.location4.mats)
+                    : null
+                  : null
                 : null
               : null;
           }
