@@ -4,6 +4,7 @@ export default {
   water: "rgb(95, 165, 255)",
   crystal: "rgb(180, 235, 255)",
   white: "#fff",
+  whiteOpe: "rgba(255, 255, 255, 0.5)",
   black: "#000",
   earth: "rgb(179, 119, 0)",
   earthOpe: "rgba(179, 119, 0, 0.7)",

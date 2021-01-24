@@ -110,17 +110,98 @@ export default class Weapons extends Component {
   handleAddWeapon = async () => {
     const weapons = [...this.props.weapons];
     weapons.push({
-      craft: false,
-      effects: "Yuri only:\nSPD+ 20",
-      getHow: "Citadel of Time ruins Road to Wind Spirit's trial",
-      /*materials: ["1", "2", "3"],
-      materialsLocation: "",
-      materialsLocation2: 0,*/
-      name: "Second Star",
-      stats: [161, 27],
-      uri:
-        "https://static.miraheze.org/anotheredenwiki/thumb/7/70/211020421_ui.png/160px-211020421_ui.png",
-      type: "Katana",
+      craft: true,
+      enhance: false,
+      getHow: "Purchased from Blacksmith",
+      effects: "Non-type Attack+ 30%\nInflict Stun when attacking",
+      materials: [
+        "Silver Pelt (15)",
+        "Snow Grass (Sparkles) (6)",
+        "Coral Jaw (Horror) (1)",
+      ],
+      materialsLocation: "Kunlun Mountains",
+      materialsLocation2: "Kunlun Mountains (Hidden Path)",
+      materialsLocation3: "Demon Sea Caverns",
+      enhanceMats: [
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+          location3: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+          location3: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+          location3: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+          location3: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+        },
+        {
+          location: {
+            mats: ["", ""],
+            name: "",
+          },
+          location2: { mats: [""], name: "" },
+          location3: { mats: [""], name: "" },
+        },
+      ],
+      name: "Crafted Excellence",
+      type: "Sword",
+      stats: [158, 115],
     });
     await firebase.database().ref("weapons").set({ weapons });
   };
