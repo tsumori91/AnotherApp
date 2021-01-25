@@ -9,11 +9,13 @@ import {
   Button,
   ActivityIndicator,
   Alert,
+  TextInput,
 } from "react-native";
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
 import colors from "../Config/colors";
 import DropDownPicker from "react-native-dropdown-picker";
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class Weapons extends Component {
   state = {
@@ -231,7 +233,17 @@ export default class Weapons extends Component {
       { cancelable: true }
     );
   };
+  handleSearchBar = (value) => {
+    value = value.toLowerCase();
+    this.setState({ searchBar: value });
+  };
   render() {
+    let weaponsRead = [...this.state.weaponsRead];
+    if (this.state.searchBar)
+      weaponsRead = weaponsRead.filter(
+        (weapon) =>
+          weapon.name.toLowerCase().indexOf(this.state.searchBar) !== -1
+      );
     return (
       <View style={styles.container}>
         <View style={styles.filter}>
@@ -349,6 +361,13 @@ export default class Weapons extends Component {
             }}
           />
         </View>
+        <View style={styles.searchBar}>
+          <TextInput
+            style={styles.searchBox}
+            placeholder={"Search by Name"}
+            onChangeText={(text) => this.handleSearchBar(text)}
+          ></TextInput>
+        </View>
         <View style={styles.row}>
           <View style={styles.type}>
             <Text>WPN</Text>
@@ -367,7 +386,7 @@ export default class Weapons extends Component {
           <ActivityIndicator size={"large"} color={colors.black} />
         ) : (
           <ScrollView nestedScrollEnabled={true}>
-            {this.state.weaponsRead.map((u, i) => {
+            {weaponsRead.map((u, i) => {
               i++;
               return (
                 <Equip
@@ -433,6 +452,22 @@ const styles = StyleSheet.create({
     height: 43,
     marginVertical: 4,
     marginHorizontal: 9,
+  },
+  searchBar: {
+    backgroundColor: colors.white,
+    borderRadius: 5,
+    maxWidth: "95%",
+    minWidth: "95%",
+    marginVertical: 5,
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  searchBox: {
+    borderBottomWidth: 1,
+    minWidth: "95%",
+    borderColor: colors.grey,
+    marginHorizontal: "2.5%",
+    marginVertical: 5,
   },
   stats: {
     flex: 2,

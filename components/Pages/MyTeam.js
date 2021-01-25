@@ -5,9 +5,11 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Text,
   ActivityIndicator,
   AppRegistry,
   Alert,
+  TextInput,
 } from "react-native";
 import CharacterBuild from "../Modules/CharacterBuild";
 import colors from "../Config/colors";
@@ -15,6 +17,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import Storage from "../Config/Storage";
 import { AntDesign } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
+import EditChar from "../Modules/EditChar";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class MyTeam extends Component {
@@ -53,6 +56,15 @@ export default class MyTeam extends Component {
     asChars.forEach((val, ind, arr) => (arr[ind].score = val.scoreAs));
     asChars.forEach((val, ind, arr) => (arr[ind].stats = val.statsAs));
     characters = characters.concat(asChars);
+    characters.sort((a, b) => {
+      if (a.name.toUpperCase() < b.name.toUpperCase()) {
+        return -1;
+      }
+      if (a.name.toUpperCase() > b.name.toUpperCase()) {
+        return 1;
+      }
+      return 0;
+    });
     this.setState({ charactersRead: characters, characters });
     await delay(50);
     this.setState({ loading: false });
@@ -333,8 +345,59 @@ export default class MyTeam extends Component {
     }
     this.getCharacters();
   };
+  handleEdit = (name) => {
+    this.setState({ edit: true, editChar: name });
+  };
+  closeEdit = () => {
+    this.setState({ edit: false });
+  };
+  handleSearchBar = (value) => {
+    value = value.toLowerCase();
+    this.setState({ searchBar: value });
+  };
   render() {
-    return (
+    let character = null;
+    if (this.state.edit)
+      character = this.state.characters.filter(
+        (character) => character.name == this.state.editChar
+      );
+    let charactersRead = [...this.state.charactersRead];
+    if (this.state.searchBar)
+      charactersRead = charactersRead.filter(
+        (character) =>
+          character.name.toLowerCase().indexOf(this.state.searchBar) !== -1
+      );
+    return this.state.edit ? (
+      <View style={styles.container}>
+        <EditChar
+          name={character[0].name}
+          skills={character[0].skills}
+          weapon={character[0].weapon}
+          shadow={character[0].shadow}
+          element={character[0].element}
+          vc={character[0].vc}
+          vcAS={character[0].vcAS}
+          uri={character[0].uri}
+          tomeName={character[0].tomeName}
+          tomeNameAs={character[0].tomeNameAs}
+          tomeLocation={character[0].tomeLocation}
+          tomeLocationAs={character[0].tomeLocationAs}
+          as={character[0].as}
+          stats={character[0].stats}
+          uriAs={character[0].uriAs}
+          manifest={character[0].manifest}
+          manifestAs={character[0].manifestAs}
+          LStats={character[0].LStats}
+          vcStats={character[0].vcStats}
+          vcStatsAs={character[0].vcStatsAs}
+          poison={character[0].poison}
+          pain={character[0].pain}
+          score={character[0].score}
+          bonusDungeon={character[0].bonusDungeon}
+          close={this.closeEdit}
+        />
+      </View>
+    ) : (
       <View style={styles.container}>
         <View style={styles.wrapper}>
           <Swiper showsButtons={true} showsPagination={false}>
@@ -904,14 +967,21 @@ export default class MyTeam extends Component {
             onChangeItem={(i) => this.sortChars(i.value)}
           />
         </View>
+        <View style={styles.searchBar}>
+          <TextInput
+            style={styles.searchBox}
+            placeholder={"Search by Name"}
+            onChangeText={(text) => this.handleSearchBar(text)}
+          ></TextInput>
+        </View>
         <ScrollView nestedScrollEnabled={true}>
           <View style={styles.characterList}>
             {this.state.loading ? (
               <ActivityIndicator size={"large"} color={"black"} />
             ) : (
               <View>
-                {this.state.charactersRead
-                  ? this.state.charactersRead.map(
+                {charactersRead
+                  ? charactersRead.map(
                       (characters, i) => (
                         i++,
                         (
@@ -947,6 +1017,7 @@ export default class MyTeam extends Component {
                               characters.name,
                               characters.as
                             )}
+                            edit={this.handleEdit}
                           />
                         )
                       )
@@ -980,13 +1051,20 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   characterList: { flexDirection: "column-reverse" },
-  container: { flex: 1, marginBottom: 70 },
+  container: { flex: 1, marginBottom: 70, width: "100%", height: "100%" },
   debuff: {
     resizeMode: "cover",
     height: 34,
     width: 34,
     alignSelf: "center",
     marginVertical: 5,
+  },
+  editChar: {
+    flex: 1,
+    minHeight: "100%",
+    elevation: 10,
+    minWidth: "100%",
+    position: "absolute",
   },
   elementIcon: {
     height: 35,
@@ -1002,6 +1080,22 @@ const styles = StyleSheet.create({
     height: 43,
     marginVertical: 4,
     marginHorizontal: 9,
+  },
+  searchBar: {
+    backgroundColor: colors.white,
+    borderRadius: 5,
+    maxWidth: "95%",
+    minWidth: "95%",
+    marginVertical: 5,
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  searchBox: {
+    borderBottomWidth: 1,
+    minWidth: "95%",
+    borderColor: colors.grey,
+    marginHorizontal: "2.5%",
+    marginVertical: 5,
   },
   sort: {
     flexDirection: "row",
