@@ -10,6 +10,7 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
+  TextInput,
 } from "react-native";
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
@@ -128,7 +129,24 @@ export default class Armors extends Component {
       { cancelable: true }
     );
   };
+  handleSearchBar = (value) => {
+    value = value.toLowerCase();
+    this.setState({ searchBar: value });
+  };
   render() {
+    let armorRead = [...this.state.armorRead];
+    if (this.state.searchBar)
+      armorRead = armorRead.filter((armor) => {
+        if (armor.name.toLowerCase().indexOf(this.state.searchBar) !== -1) {
+          return true;
+        } else if (armor.effects) {
+          if (
+            armor.effects.toLowerCase().indexOf(this.state.searchBar) !== -1
+          ) {
+            return true;
+          }
+        } else return false;
+      });
     return (
       <View style={styles.container}>
         <View style={styles.filter}>
@@ -201,6 +219,13 @@ export default class Armors extends Component {
             }}
           />
         </View>
+        <View style={styles.searchBar}>
+          <TextInput
+            style={styles.searchBox}
+            placeholder={"Search by Name or Effect"}
+            onChangeText={(text) => this.handleSearchBar(text)}
+          ></TextInput>
+        </View>
         <View style={[styles.row]}>
           <View style={styles.type}>
             <Text>ARM</Text>
@@ -219,7 +244,7 @@ export default class Armors extends Component {
           <ActivityIndicator size={"large"} color={colors.black} />
         ) : (
           <ScrollView nestedScrollEnabled={true}>
-            {this.state.armorRead.map((u, i) => {
+            {armorRead.map((u, i) => {
               i++;
               return (
                 <Equip
@@ -286,6 +311,22 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     backgroundColor: colors.crystal,
+  },
+  searchBar: {
+    backgroundColor: colors.white,
+    borderRadius: 5,
+    maxWidth: "95%",
+    minWidth: "95%",
+    marginVertical: 5,
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  searchBox: {
+    borderBottomWidth: 1,
+    minWidth: "95%",
+    borderColor: colors.grey,
+    marginHorizontal: "2.5%",
+    marginVertical: 5,
   },
   stats: {
     flex: 2,

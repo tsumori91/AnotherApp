@@ -240,10 +240,17 @@ export default class Weapons extends Component {
   render() {
     let weaponsRead = [...this.state.weaponsRead];
     if (this.state.searchBar)
-      weaponsRead = weaponsRead.filter(
-        (weapon) =>
-          weapon.name.toLowerCase().indexOf(this.state.searchBar) !== -1
-      );
+      weaponsRead = weaponsRead.filter((weapon) => {
+        if (weapon.name.toLowerCase().indexOf(this.state.searchBar) !== -1) {
+          return true;
+        } else if (weapon.effects) {
+          if (
+            weapon.effects.toLowerCase().indexOf(this.state.searchBar) !== -1
+          ) {
+            return true;
+          }
+        } else return false;
+      });
     return (
       <View style={styles.container}>
         <View style={styles.filter}>
@@ -364,7 +371,7 @@ export default class Weapons extends Component {
         <View style={styles.searchBar}>
           <TextInput
             style={styles.searchBox}
-            placeholder={"Search by Name"}
+            placeholder={"Search by Name or Effect"}
             onChangeText={(text) => this.handleSearchBar(text)}
           ></TextInput>
         </View>
