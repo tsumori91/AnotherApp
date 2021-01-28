@@ -50,8 +50,26 @@ export default class EditChar extends PureComponent {
         }
         style={styles.container}
       >
+        <View style={styles.topTabs}>
+          <TouchableOpacity style={styles.topTab}>
+            <Text style={styles.tabText}>First</Text>
+          </TouchableOpacity>
+          <View style={styles.space}></View>
+          <TouchableOpacity style={styles.topTab}>
+            <Text style={styles.tabText}>First</Text>
+          </TouchableOpacity>
+          <View style={styles.space}></View>
+          <TouchableOpacity style={styles.topTab}>
+            <Text style={styles.tabText}>First</Text>
+          </TouchableOpacity>
+        </View>
         {!this.loadingWeapons ? (
-          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          <View
+            style={[
+              { flexDirection: "row", flexWrap: "wrap" },
+              styles.mainPage,
+            ]}
+          >
             {this.state.weapons.map(
               (wpn, i) => (
                 i++,
@@ -59,11 +77,17 @@ export default class EditChar extends PureComponent {
                   <TouchableOpacity
                     onPress={() => this.setState({ currentWeapon: wpn })}
                     style={styles.weaponView}
+                    key={i}
                   >
                     <Image
                       key={i}
                       source={wpn.uri ? { uri: wpn.uri } : weapon}
-                      style={styles.weaponImage}
+                      style={[
+                        styles.weaponImage,
+                        this.state.currentWeapon == wpn
+                          ? styles.selected
+                          : null,
+                      ]}
                     />
                   </TouchableOpacity>
                 )
@@ -98,12 +122,19 @@ export default class EditChar extends PureComponent {
 }
 const styles = StyleSheet.create({
   allText: { fontSize: 17 },
+  selected: {
+    backgroundColor: colors.gold,
+    borderRadius: 5,
+  },
   container: {
     backgroundColor: colors.white,
     flex: 1,
     minHeight: 600,
     minWidth: "100%",
     resizeMode: "cover",
+  },
+  mainPage: {
+    backgroundColor: colors.earthOpe,
   },
   weaponDescription: {
     borderTopWidth: 1,
@@ -124,5 +155,26 @@ const styles = StyleSheet.create({
     minWidth: 63.3,
     maxHeight: 63.3,
     maxWidth: 63.3,
+    backgroundColor: colors.white,
+  },
+  space: {
+    flex: 1,
+  },
+  tabText: {
+    alignSelf: "center",
+  },
+  topTab: {
+    flex: 1,
+    backgroundColor: colors.earthOpe,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    justifyContent: "center",
+  },
+  topTabs: {
+    flexDirection: "row",
+    width: "98%",
+    height: 50,
+    margin: 3,
+    marginHorizontal: "1%",
   },
 });
