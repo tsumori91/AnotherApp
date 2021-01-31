@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-native";
 import TrackEquip from "../Modules/TrackEquip";
-import EquipsToDo from "./EquipsToDo";
+import EquipsToDo from "../SubPages/EquipsToDo";
 export default class MyEquips extends Component {
   state = { dungeons: [], toDo: false };
   componentDidMount() {

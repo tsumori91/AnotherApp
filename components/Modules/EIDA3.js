@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import colors from "../Config/colors";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import Tab from "./Tab";
+import Tab from "../SubModules/Tab";
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 

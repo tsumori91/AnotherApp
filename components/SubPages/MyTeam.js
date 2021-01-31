@@ -17,7 +17,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import Storage from "../Config/Storage";
 import { AntDesign } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
-import EditChar from "../Modules/EditChar";
+import EditChar from "../SubModules/EditChar";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class MyTeam extends Component {

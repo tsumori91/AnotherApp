@@ -14,9 +14,9 @@ import colors from "../Config/colors";
 import Egrasta from "../Modules/Egrasta";
 import * as firebase from "firebase";
 import Storage from "../Config/Storage";
-import WeaponFilter from "../Modules/WeaponFilter";
+import WeaponFilter from "../SubModules/WeaponFilter";
 import { Entypo } from "@expo/vector-icons";
-import ElementFilter from "../Modules/ElementFilter";
+import ElementFilter from "../SubModules/ElementFilter";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class Grasta extends Component {

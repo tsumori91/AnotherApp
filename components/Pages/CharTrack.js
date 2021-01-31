@@ -11,7 +11,7 @@ import {
 import MySwitch from "../Config/MySwitch";
 import Storage from "../Config/Storage";
 import CTrack from "../Modules/CTrack";
-import MyTeam from "./MyTeam";
+import MyTeam from "../SubPages/MyTeam";
 import * as firebase from "firebase";
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));

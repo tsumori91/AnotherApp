@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import colors from "../Config/colors";
-import Tab from "./Tab";
+import Tab from "../SubModules/Tab";
 
 export default class Banner extends Component {
   state = {

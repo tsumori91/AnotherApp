@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import colors from "../Config/colors";
-import Tab from "./Tab";
+import Tab from "../SubModules/Tab";
 
 export default class Char extends PureComponent {
   state = {

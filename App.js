@@ -12,7 +12,7 @@ import CPage from "./components/Pages/Characters";
 import Puller from "./components/Pages/Puller";
 import * as firebase from "firebase";
 import ApiKeys from "./components/Config/ApiKeys";
-import Tab from "./components/Modules/Tab";
+import Tab from "./components/SubModules/Tab";
 import Weapons from "./components/Pages/Weapons";
 import Armors from "./components/Pages/Armors";
 import colors from "./components/Config/colors";

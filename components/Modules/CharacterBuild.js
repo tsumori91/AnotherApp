@@ -6,10 +6,11 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import colors from "../Config/colors";
-import Tab from "./Tab";
+import Tab from "../SubModules/Tab";
 
 export default class CharacterBuild extends Component {
   state = {
@@ -282,6 +283,10 @@ export default class CharacterBuild extends Component {
               <View style={[styles.inLine, styles.weaponLine]}>
                 <Text style={{ fontWeight: "bold" }}>Element type: </Text>
                 <Text>{this.props.element}</Text>
+                <Button
+                  title={"Edit"}
+                  onPress={() => this.props.edit(this.props.name)}
+                />
               </View>
               <View style={[styles.inLine, styles.weaponLine]}>
                 <Image
