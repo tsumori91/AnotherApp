@@ -9,12 +9,14 @@ import {
   Button,
   ActivityIndicator,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import colors from "../Config/colors";
 import Storage from "../Config/Storage";
+import Tab from "./Tab";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 export default class EditChar extends PureComponent {
-  state = { weapons: [], loadingWeapons: true };
+  state = { weapons: [], loadingWeapons: true, page: "weapons" };
   componentDidMount() {
     this.load();
   }
@@ -24,6 +26,84 @@ export default class EditChar extends PureComponent {
     this.setState({ weapons });
     await delay(1);
     this.setState({ loadingWeapons: false });
+  };
+  pageChange = (page) => {
+    this.setState({ page });
+    this.setState({ currentEquip: null });
+  };
+  handleEquip = async (page, equip) => {
+    let characterEquips = await Storage.getItem("characterEquips");
+    if (characterEquips == null) characterEquips = [];
+    if (
+      !characterEquips.filter((character) => character.name == this.props.name)
+        .length
+    ) {
+      characterEquips.push({
+        name: this.props.name,
+        weapon: page == "weapons" ? equip : null,
+        armor: page == "armor" ? equip : null,
+        badges: page == "badges" ? equip : null,
+        grasta: page == "grasta" ? equip : null,
+      });
+    } else
+      characterEquips.forEach((character) => {
+        if (character.name == this.props.name) {
+          switch (page) {
+            case "weapons":
+              character.weapon = equip;
+              return;
+              break;
+            case "armor":
+              character.armor = equip;
+              return;
+              break;
+            case "badges":
+              character.badges = equip;
+              return;
+              break;
+            case "grasta":
+              character.weapon.grasta = equip;
+              return;
+              break;
+          }
+        }
+      });
+    Storage.setItem("characterEquips", characterEquips);
+  };
+  mapMain = (page, weapon) => {
+    switch (page) {
+      case "weapons":
+        return this.state.weapons.map(
+          (wpn, i) => (
+            i++,
+            (
+              <TouchableOpacity
+                onPress={() => this.setState({ currentEquip: wpn })}
+                style={[
+                  styles.weaponView,
+                  this.state.currentEquip == wpn ? styles.selected : null,
+                ]}
+                key={i}
+              >
+                <Image
+                  key={i}
+                  source={wpn.uri ? { uri: wpn.uri } : weapon}
+                  style={[styles.weaponImage]}
+                />
+              </TouchableOpacity>
+            )
+          )
+        );
+
+        break;
+
+      case "armor":
+        break;
+      case "badges":
+        break;
+      case "grasta":
+        break;
+    }
   };
   render() {
     let weapon = require("../pics/Sword.png");
@@ -50,70 +130,79 @@ export default class EditChar extends PureComponent {
         }
         style={styles.container}
       >
-        <View style={styles.topTabs}>
-          <TouchableOpacity style={styles.topTab}>
-            <Text style={styles.tabText}>First</Text>
+        <View style={[styles.topTabs]}>
+          <TouchableOpacity
+            style={[
+              styles.topTab,
+              this.state.page == "weapons" ? styles.tabSelected : null,
+            ]}
+            onPress={() => {
+              this.pageChange("weapons");
+            }}
+          >
+            <Text style={styles.tabText}>Weapon</Text>
           </TouchableOpacity>
           <View style={styles.space}></View>
-          <TouchableOpacity style={styles.topTab}>
-            <Text style={styles.tabText}>First</Text>
+          <TouchableOpacity
+            style={styles.topTab}
+            onPress={() => {
+              this.pageChange("armor");
+            }}
+          >
+            <Text style={styles.tabText}>Armor</Text>
           </TouchableOpacity>
           <View style={styles.space}></View>
-          <TouchableOpacity style={styles.topTab}>
-            <Text style={styles.tabText}>First</Text>
+          <TouchableOpacity
+            style={styles.topTab}
+            onPress={() => {
+              this.pageChange("badges");
+            }}
+          >
+            <Text style={styles.tabText}>Badges</Text>
+          </TouchableOpacity>
+          <View style={styles.space}></View>
+          <TouchableOpacity
+            style={styles.topTab}
+            onPress={() => {
+              this.pageChange("grasta");
+            }}
+          >
+            <Text style={styles.tabText}>Grasta</Text>
           </TouchableOpacity>
         </View>
-        {!this.loadingWeapons ? (
-          <View
-            style={[
-              { flexDirection: "row", flexWrap: "wrap" },
-              styles.mainPage,
-            ]}
-          >
-            {this.state.weapons.map(
-              (wpn, i) => (
-                i++,
-                (
-                  <TouchableOpacity
-                    onPress={() => this.setState({ currentWeapon: wpn })}
-                    style={styles.weaponView}
-                    key={i}
-                  >
-                    <Image
-                      key={i}
-                      source={wpn.uri ? { uri: wpn.uri } : weapon}
-                      style={[
-                        styles.weaponImage,
-                        this.state.currentWeapon == wpn
-                          ? styles.selected
-                          : null,
-                      ]}
-                    />
-                  </TouchableOpacity>
-                )
-              )
-            )}
-          </View>
-        ) : (
-          <ActivityIndicator style={{ flex: 1 }} />
-        )}
-        {this.state.currentWeapon ? (
-          <View style={styles.weaponDescription}>
+        <ScrollView style={styles.mainScroll}>
+          {this.state.page ? (
+            <View style={[styles.mainPage]}>
+              {this.mapMain(this.state.page, weapon)}
+            </View>
+          ) : null}
+        </ScrollView>
+        <View style={styles.weaponDescription}>
+          {this.state.currentEquip ? (
             <Text style={styles.allText}>
-              <Text>{this.state.currentWeapon.name}</Text>
+              <Text>{this.state.currentEquip.name}</Text>
               <Text>
-                {"\n"}Atk:{this.state.currentWeapon.stats[0]}
+                {"\n"}Atk:{this.state.currentEquip.stats[0]}
               </Text>
               <Text>
-                {"\n"}M.Atk:{this.state.currentWeapon.stats[1]}
+                {"\n"}M.Atk:{this.state.currentEquip.stats[1]}
               </Text>
               <Text>
-                {"\n"}Effects: {this.state.currentWeapon.effects}
+                {"\n"}Effects: {this.state.currentEquip.effects}
               </Text>
             </Text>
-            <View></View>
-          </View>
-        ) : null}
+          ) : null}
+          {this.state.currentEquip ? (
+            <Tab
+              title={"Equip"}
+              style={styles.equipButton}
+              color={"shadow"}
+              onPress={() =>
+                this.handleEquip(this.state.page, this.state.currentEquip)
+              }
+            />
+          ) : null}
+        </View>
         <Text> {this.props.name} </Text>
         <Button title={"Close"} onPress={this.props.close} />
       </ImageBackground>
@@ -123,8 +212,8 @@ export default class EditChar extends PureComponent {
 const styles = StyleSheet.create({
   allText: { fontSize: 17 },
   selected: {
-    backgroundColor: colors.gold,
-    borderRadius: 5,
+    backgroundColor: colors.wind,
+    borderColor: colors.water,
   },
   container: {
     backgroundColor: colors.white,
@@ -133,11 +222,32 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     resizeMode: "cover",
   },
+  equipButton: {
+    position: "absolute",
+    alignSelf: "flex-end",
+    margin: 6,
+    right: 5,
+    paddingHorizontal: 7,
+    paddingVertical: 13,
+    elevation: 2,
+    borderRadius: 4,
+  },
+  mainScroll: {
+    maxHeight: "65%",
+  },
   mainPage: {
-    backgroundColor: colors.earthOpe,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    backgroundColor: colors.earth,
+    padding: 10,
+    justifyContent: "space-evenly",
+    borderRightWidth: 3,
+    borderLeftWidth: 3,
+    borderColor: colors.water,
   },
   weaponDescription: {
-    borderTopWidth: 1,
+    borderColor: colors.water,
+    borderTopWidth: 3,
     width: "100%",
     backgroundColor: colors.whiteOpe,
     flexGrow: 0.8,
@@ -147,10 +257,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   weaponView: {
-    margin: 2,
+    margin: 4,
     flex: 1,
     borderRadius: 5,
-    borderWidth: 1,
+    borderWidth: 3,
+    borderColor: colors.shadow,
     minHeight: 63.3,
     minWidth: 63.3,
     maxHeight: 63.3,
@@ -159,22 +270,29 @@ const styles = StyleSheet.create({
   },
   space: {
     flex: 1,
+    borderBottomWidth: 3,
+    borderColor: colors.water,
   },
   tabText: {
     alignSelf: "center",
   },
+  tabSelected: {
+    backgroundColor: colors.earth,
+    borderBottomWidth: 0,
+  },
   topTab: {
-    flex: 1,
-    backgroundColor: colors.earthOpe,
+    flex: 2,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     justifyContent: "center",
+    backgroundColor: colors.earthOpe,
+    borderWidth: 3,
+    borderColor: colors.water,
   },
   topTabs: {
     flexDirection: "row",
-    width: "98%",
-    height: 50,
-    margin: 3,
-    marginHorizontal: "1%",
+    width: "100%",
+    height: 35,
+    marginTop: 5,
   },
 });
