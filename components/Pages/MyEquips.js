@@ -141,12 +141,14 @@ export default class MyEquips extends Component {
         : null
     );
     let uniqueList = [...new Set(cleanMatList)];
-    const plzWork = this.addValues(uniqueList, cleanMatList, matList);
-    if (matList.length)
+    let plzWork = this.addValues(uniqueList, cleanMatList, matList);
+    if (matList.length){
+      plzWork = plzWork.sort();
       return plzWork.map((mat, i) => {
         i++;
         return <Text key={i}>{mat}</Text>;
       });
+    }
     else return false;
   };
   addValues = (uniqueList, cleanMatList, matList) => {
