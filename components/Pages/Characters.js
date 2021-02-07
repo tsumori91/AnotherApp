@@ -217,7 +217,10 @@ class CPage extends PureComponent {
       <View style={styles.container}>
         <View style={styles.allButtons}>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Staff")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterWeapon("Staff")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -226,7 +229,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Staff.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Sword")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterWeapon("Sword")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -235,7 +241,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Sword.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Katana")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterWeapon("Katana")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -244,7 +253,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Katana.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Axe")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterWeapon("Axe")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -253,7 +265,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Axe.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Lance")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterWeapon("Lance")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -262,7 +277,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Lance.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Bow")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterWeapon("Bow")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -271,7 +289,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Bow.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Fists")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterWeapon("Fists")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -280,7 +301,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Fists.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterWeapon("Hammer")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterWeapon("Hammer")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -289,7 +313,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Hammer.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterPoison()}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterPoison()}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -301,7 +328,10 @@ class CPage extends PureComponent {
             </TouchableOpacity>
           </View>
           <View style={[styles.buttonContainer]}>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Fire")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterElement("Fire")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -311,7 +341,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Fire.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Wind")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterElement("Wind")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -321,7 +354,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Wind.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Water")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterElement("Water")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -331,7 +367,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Water.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Earth")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterElement("Earth")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -341,7 +380,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Earth.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterElement("Shade")}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterElement("Shade")}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -352,6 +394,7 @@ class CPage extends PureComponent {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              style={styles.buttonView}
               onPress={() => this.handleFilterElement("Thunder")}
             >
               <Image
@@ -364,6 +407,7 @@ class CPage extends PureComponent {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              style={styles.buttonView}
               onPress={() => this.handleFilterElement("Crystal")}
             >
               <Image
@@ -375,7 +419,10 @@ class CPage extends PureComponent {
                 source={require("../pics/Crystal.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleFilterPain()}>
+            <TouchableOpacity
+              style={styles.buttonView}
+              onPress={() => this.handleFilterPain()}
+            >
               <Image
                 style={[
                   styles.weaponIcon,
@@ -451,6 +498,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  buttonView: {
+    flex: 1,
+    maxWidth: "10%",
+    height: 40,
+    marginHorizontal: 1,
+    marginVertical: 2,
+    justifyContent: "center",
+    alignContent: "center",
+  },
   buttonContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -467,10 +523,12 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   weaponIcon: {
-    height: 40,
-    width: 40,
-    marginHorizontal: 1,
-    marginVertical: 2,
+    width: "100%",
+    justifyContent: "center",
+    alignSelf: "center",
+    maxWidth: 40,
+    maxHeight: 40,
+    resizeMode: "contain",
   },
   fade: {
     opacity: 0.65,

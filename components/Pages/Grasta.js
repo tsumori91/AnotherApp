@@ -257,6 +257,7 @@ export default class Grasta extends Component {
         <View style={styles.allFilters}>
           <View style={styles.weaponFilter}>
             <TouchableOpacity
+              style={styles.maxWidth}
               onPress={() => this.handleFilterGot(true)}
               onLongPress={() =>
                 Alert.alert("Grasta you have", "", [{ text: "Okay" }], {
@@ -272,6 +273,7 @@ export default class Grasta extends Component {
               />
             </TouchableOpacity>
             <WeaponFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.weaponFilter == "staff" ? styles.fade : null,
@@ -280,6 +282,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleWF("staff")}
             />
             <WeaponFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.weaponFilter == "sword" ? styles.fade : null,
@@ -288,6 +291,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleWF("sword")}
             />
             <WeaponFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.weaponFilter == "katana" ? styles.fade : null,
@@ -296,6 +300,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleWF("katana")}
             />
             <WeaponFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.weaponFilter == "axe" ? styles.fade : null,
@@ -304,6 +309,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleWF("axe")}
             />
             <WeaponFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.weaponFilter == "lance" ? styles.fade : null,
@@ -312,6 +318,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleWF("lance")}
             />
             <WeaponFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.weaponFilter == "bow" ? styles.fade : null,
@@ -320,6 +327,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleWF("bow")}
             />
             <WeaponFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.weaponFilter == "fists" ? styles.fade : null,
@@ -328,6 +336,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleWF("fists")}
             />
             <WeaponFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.weaponFilter == "hammer" ? styles.fade : null,
@@ -338,6 +347,7 @@ export default class Grasta extends Component {
           </View>
           <View style={[styles.weaponFilter, { right: 15 }]}>
             <TouchableOpacity
+              style={styles.maxWidth}
               onPress={() => this.handleFilterGot(false)}
               onLongPress={() =>
                 Alert.alert(
@@ -360,6 +370,7 @@ export default class Grasta extends Component {
               </View>
             </TouchableOpacity>
             <ElementFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.elementFilter == "void" ? styles.fade : null,
@@ -368,6 +379,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleEF("void")}
             />
             <ElementFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.elementFilter == "inferno" ? styles.fade : null,
@@ -376,6 +388,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleEF("inferno")}
             />
             <ElementFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.elementFilter == "gale" ? styles.fade : null,
@@ -384,6 +397,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleEF("gale")}
             />
             <ElementFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.elementFilter == "rapids" ? styles.fade : null,
@@ -392,6 +406,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleEF("rapids")}
             />
             <ElementFilter
+              style={styles.maxWidth}
               imageStyle={[
                 styles.pic,
                 this.state.elementFilter == "quake" ? styles.fade : null,
@@ -400,6 +415,7 @@ export default class Grasta extends Component {
               onPress={() => this.handleEF("quake")}
             />
             <TouchableOpacity
+              style={styles.maxWidth}
               onPress={() => this.handleLF("antiquity garulea")}
               onLongPress={() =>
                 Alert.alert(
@@ -423,6 +439,7 @@ export default class Grasta extends Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              style={[styles.maxWidth, { left: 4 }]}
               onPress={() => this.handleLF("present garulea")}
               onLongPress={() =>
                 Alert.alert(
@@ -660,10 +677,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginHorizontal: 1,
   },
+  maxWidth: { maxWidth: "10%", marginHorizontal: 1, marginVertical: 1 },
   pic: {
     height: 40,
     width: 40,
-    marginHorizontal: 1,
+    maxWidth: "100%",
+    marginHorizontal: 2,
     marginVertical: 2,
     resizeMode: "contain",
   },
