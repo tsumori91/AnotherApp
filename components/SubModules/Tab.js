@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text, Platform } from "react-native";
 import colors from "../Config/colors";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function Tab({
   style,
@@ -8,13 +9,18 @@ export default function Tab({
   onPress,
   color = "primary",
   textStyle,
+  up,
+  down,
+  arrowStyle,
 }) {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.container, { backgroundColor: colors[color] }, style]}
     >
-      <Text style={[styles.text, textStyle]}>{title}</Text>
+      <Text style={[styles.text, textStyle]}>{title} </Text>
+      {up ? <AntDesign style={arrowStyle} name={"caretup"} /> : null}
+      {down ? <AntDesign style={arrowStyle} name={"caretdown"} /> : null}
     </TouchableOpacity>
   );
 }
