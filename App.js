@@ -38,12 +38,35 @@ export default class AnotherApp extends Component {
     weapons: [],
     armor: [],
     grasta: {},
-    fish: [{name:"Kid Kamasu", rarity: 1, tier: 1, reqLv: 1, hook: 1, 
-              location: ["Kira Beach", "Dragon Palace - Inner Wall Maps", "Dragon Palace - Pine Maps", "Dragon Palace - Plum Maps", "Dragon Palace - Bamboo Maps", "Charol Plains"], 
-              uri: "https://static.miraheze.org/anotheredenwiki/thumb/4/42/870000102.png/120px-870000102.png"},
-           {name: "Kraken", rarity: 4, tier: 6, reqLv: 30, hook: 3,
-           location: ["Actuel"], 
-           uri: "https://static.miraheze.org/anotheredenwiki/thumb/0/07/870000079.png/120px-870000079.png"}],
+    fish: [
+      {
+        name: "Kid Kamasu",
+        rarity: 1,
+        tier: 1,
+        reqLv: 1,
+        hook: 1,
+        location: [
+          "Kira Beach",
+          "Dragon Palace - Inner Wall Maps",
+          "Dragon Palace - Pine Maps",
+          "Dragon Palace - Plum Maps",
+          "Dragon Palace - Bamboo Maps",
+          "Charol Plains",
+        ],
+        uri:
+          "https://static.miraheze.org/anotheredenwiki/thumb/4/42/870000102.png/120px-870000102.png",
+      },
+      {
+        name: "Kraken",
+        rarity: 4,
+        tier: 6,
+        reqLv: 30,
+        hook: 3,
+        location: ["Actuel"],
+        uri:
+          "https://static.miraheze.org/anotheredenwiki/thumb/0/07/870000079.png/120px-870000079.png",
+      },
+    ],
     dates: "",
     freeList: [],
     showMenu: "",
@@ -214,17 +237,17 @@ export default class AnotherApp extends Component {
         style={styles.allContainer}
         source={require("./components/pics/Background.png")}
       >
-        <SafeAreaView style={styles.buttons}>
-          <View
-            style={[
-              styles.buttonDrop,
-              {
-                ...(Platform.OS !== "android" && {
-                  zIndex: 9999,
-                }),
-              },
-            ]}
-          >
+        <SafeAreaView
+          style={[
+            styles.buttons,
+            {
+              ...(Platform.OS !== "android" && {
+                zIndex: 9999,
+              }),
+            },
+          ]}
+        >
+          <View style={[styles.buttonDrop]}>
             <Tab
               title={`Equipment`}
               color={this.state.showMenu === "equipment" ? "gold" : "primary"}
@@ -360,7 +383,7 @@ export default class AnotherApp extends Component {
             ) : this.state.display === "IDA3" ? (
               <IDA3 />
             ) : this.state.display === "fishing" ? (
-              <Fishing fish={this.state.fish}/>
+              <Fishing fish={this.state.fish} />
             ) : (
               <CPage characters={characters} />
             )}
