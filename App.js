@@ -29,7 +29,7 @@ if (!firebase.apps.length) {
 
 export default class AnotherApp extends Component {
   state = {
-    display: "characters",
+    display: "myEquips",
     loading: true,
     tracker: [],
     characters: [],
@@ -39,6 +39,7 @@ export default class AnotherApp extends Component {
     grasta: {},
     dates: "",
     freeList: [],
+    showMenu: "",
   };
   componentDidMount() {
     this.checkDate();
@@ -163,7 +164,7 @@ export default class AnotherApp extends Component {
       }
       this.setState({ tracker });
     }
-    this.setState({ display: v });
+    this.setState({ display: v, showMenu: "" });
     await delay(10);
     this.setState({ loading: false });
   };
@@ -191,6 +192,13 @@ export default class AnotherApp extends Component {
   findCharacters = async () => {
     return await Storage.getItem("characters");
   };
+  handleMenu = (showMenu) => {
+    if (this.state.showMenu == showMenu) {
+      this.setState({ showMenu: "" });
+    } else {
+      this.setState({ showMenu });
+    }
+  };
   render() {
     let characters = this.state.characters;
     return (
@@ -200,29 +208,101 @@ export default class AnotherApp extends Component {
         source={require("./components/pics/Background.png")}
       >
         <SafeAreaView style={styles.buttons}>
+          <View
+            style={[
+              styles.buttonDrop,
+              {
+                ...(Platform.OS !== "android" && {
+                  zIndex: 9999,
+                }),
+              },
+            ]}
+          >
+            <Tab
+              title={`Equipment`}
+              color={this.state.showMenu === "equipment" ? "gold" : "primary"}
+              style={[styles.button, { width: "100%" }]}
+              onPress={() => this.handleMenu("equipment")}
+              up={this.state.showMenu === "equipment" && true}
+              down={this.state.showMenu !== "equipment" && true}
+              arrowStyle={styles.arrowStyle}
+            />
+            {this.state.showMenu !== "equipment" ? null : (
+              <View style={styles.subButtons}>
+                <Tab
+                  title={"Grasta"}
+                  color={this.state.display === "grasta" ? "gold" : "primary"}
+                  style={[styles.button, styles.eachDropButton]}
+                  onPress={() => this.handlePages("grasta")}
+                />
+                <Tab
+                  title={"Weapons"}
+                  color={this.state.display === "weapons" ? "gold" : "primary"}
+                  style={[styles.button, styles.eachDropButton]}
+                  onPress={() => this.handlePages("weapons")}
+                />
+                <Tab
+                  title={"Armors"}
+                  color={this.state.display === "armor" ? "gold" : "primary"}
+                  style={[styles.button, styles.eachDropButton]}
+                  onPress={() => this.handlePages("armor")}
+                />
+                <Tab
+                  title={"My Equips"}
+                  color={this.state.display === "myEquips" ? "gold" : "primary"}
+                  style={[styles.button, styles.eachDropButton]}
+                  onPress={() => this.handlePages("myEquips")}
+                />
+              </View>
+            )}
+          </View>
+          <View
+            style={[
+              styles.buttonDrop,
+              {
+                ...(Platform.OS !== "android" && {
+                  zIndex: 9999,
+                }),
+              },
+            ]}
+          >
+            <Tab
+              title={"Other"}
+              color={this.state.showMenu === "other" ? "gold" : "primary"}
+              style={[styles.button, { width: "100%" }]}
+              onPress={() => this.handleMenu("other")}
+              up={this.state.showMenu === "other" && true}
+              down={this.state.showMenu !== "other" && true}
+              arrowStyle={styles.arrowStyle}
+            />
+            {this.state.showMenu !== "other" ? null : (
+              <View style={styles.subButtons}>
+                <Tab
+                  title={"IDA3"}
+                  color={this.state.display === "IDA3" ? "gold" : "primary"}
+                  style={[styles.button, styles.eachDropButton]}
+                  onPress={() => this.handlePages("IDA3")}
+                />
+                <Tab
+                  title={"Pullsim"}
+                  color={this.state.display === "puller" ? "gold" : "primary"}
+                  style={[styles.button, styles.eachDropButton]}
+                  onPress={() => this.handlePages("puller")}
+                />
+              </View>
+            )}
+          </View>
           <Tab
-            title={"Grasta"}
-            color={this.state.display === "grasta" ? "gold" : "primary"}
+            title={"MyChars"}
+            color={this.state.display === "myChars" ? "gold" : "primary"}
+            onPress={() => this.handlePages("myChars")}
             style={styles.button}
-            onPress={() => this.handlePages("grasta")}
           />
           <Tab
-            title={"Weapons"}
-            color={this.state.display === "weapons" ? "gold" : "primary"}
+            title={"Characters"}
+            color={this.state.display === "characters" ? "gold" : "primary"}
+            onPress={() => this.handlePages("characters")}
             style={styles.button}
-            onPress={() => this.handlePages("weapons")}
-          />
-          <Tab
-            title={"Armors"}
-            color={this.state.display === "armor" ? "gold" : "primary"}
-            style={styles.button}
-            onPress={() => this.handlePages("armor")}
-          />
-          <Tab
-            title={"My Equips"}
-            color={this.state.display === "myEquips" ? "gold" : "primary"}
-            style={styles.button}
-            onPress={() => this.handlePages("myEquips")}
           />
         </SafeAreaView>
         {this.state.loading ? (
@@ -232,7 +312,7 @@ export default class AnotherApp extends Component {
             style={{ flex: 1, alignSelf: "center" }}
           />
         ) : (
-          <View style={styles.container}>
+          <SafeAreaView style={styles.container}>
             {this.state.display === "weapons" ? (
               <Weapons
                 tracker={this.state.tracker}
@@ -269,34 +349,8 @@ export default class AnotherApp extends Component {
             ) : (
               <CPage characters={characters} />
             )}
-          </View>
+          </SafeAreaView>
         )}
-        <SafeAreaView style={styles.buttonsBottom}>
-          <Tab
-            title={"IDA3"}
-            color={this.state.display === "IDA3" ? "gold" : "primary"}
-            style={styles.button}
-            onPress={() => this.handlePages("IDA3")}
-          />
-          <Tab
-            title={"Pullsim"}
-            color={this.state.display === "puller" ? "gold" : "primary"}
-            style={styles.button}
-            onPress={() => this.handlePages("puller")}
-          />
-          <Tab
-            title={"MyChars"}
-            color={this.state.display === "myChars" ? "gold" : "primary"}
-            onPress={() => this.handlePages("myChars")}
-            style={styles.button}
-          />
-          <Tab
-            title={"Characters"}
-            color={this.state.display === "characters" ? "gold" : "primary"}
-            onPress={() => this.handlePages("characters")}
-            style={styles.button}
-          />
-        </SafeAreaView>
       </ImageBackground>
     );
   }
@@ -309,11 +363,17 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     flex: 1,
   },
+  arrowStyle: { color: colors.white },
   container: {
     alignItems: "center",
     justifyContent: "flex-start",
     marginHorizontal: "0.5%",
     flex: 1,
+  },
+  eachDropButton: { minWidth: "100%", alignSelf: "center", borderTopWidth: 1 },
+  buttonDrop: {
+    flexShrink: 1,
+    flexDirection: "column",
   },
   button: {
     borderRadius: 0,
@@ -323,6 +383,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     flexGrow: 1,
     height: 33,
+    alignSelf: "flex-start",
+  },
+  subButtons: {
+    alignItems: "flex-start",
+    position: "absolute",
+    top: 33,
+    elevation: 10,
   },
   buttons: {
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 0,
