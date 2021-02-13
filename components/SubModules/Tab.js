@@ -1,7 +1,8 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet, Text, Platform } from "react-native";
+import { StyleSheet, Text, Platform } from "react-native";
 import colors from "../Config/colors";
 import { AntDesign } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Tab({
   style,

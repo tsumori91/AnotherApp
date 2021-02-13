@@ -286,16 +286,7 @@ export default class AnotherApp extends Component {
               </View>
             )}
           </View>
-          <View
-            style={[
-              styles.buttonDrop,
-              {
-                ...(Platform.OS !== "android" && {
-                  zIndex: 9999,
-                }),
-              },
-            ]}
-          >
+          <View style={styles.buttonDrop}>
             <Tab
               title={"Other"}
               color={this.state.showMenu === "other" ? "gold" : "primary"}
@@ -323,7 +314,7 @@ export default class AnotherApp extends Component {
                   title={"Fishing"}
                   color={this.state.display === "fishing" ? "gold" : "primary"}
                   onPress={() => this.handlePages("fishing")}
-                  style={styles.button}
+                  style={[styles.button, styles.eachDropButton]}
                 />
               </View>
             )}
@@ -348,7 +339,10 @@ export default class AnotherApp extends Component {
             style={{ flex: 1, alignSelf: "center" }}
           />
         ) : (
-          <SafeAreaView style={styles.container}>
+          <SafeAreaView
+            style={styles.container}
+            accessible={this.state.showMenu == "" ? true : false}
+          >
             {this.state.display === "weapons" ? (
               <Weapons
                 tracker={this.state.tracker}
@@ -407,8 +401,15 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     marginHorizontal: "0.5%",
     flex: 1,
+    elevation: 1,
   },
-  eachDropButton: { minWidth: "100%", alignSelf: "center", borderTopWidth: 1 },
+  eachDropButton: {
+    minWidth: "100%",
+    alignSelf: "center",
+    borderTopWidth: 1,
+    height: 10,
+    elevation: 3,
+  },
   buttonDrop: {
     flexShrink: 1,
     flexDirection: "column",
@@ -437,14 +438,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     marginHorizontal: "1%",
     flexDirection: "row",
-  },
-  buttonsBottom: {
-    marginVertical: 10,
-    backgroundColor: "#fff",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    marginHorizontal: "1%",
-    flexDirection: "row",
+    elevation: 3,
   },
 });
