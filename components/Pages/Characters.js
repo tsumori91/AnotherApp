@@ -133,7 +133,7 @@ class CPage extends PureComponent {
         },
       ],
     };
-    characters.splice(80, 0, newChar);
+    characters = characters.push(newChar);
     /*await firebase.database().ref("characters").set({ characters });*/
   };
   handleFilterWeapon = (v) => {

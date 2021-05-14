@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+    width: "100%",
   },
   text: {
     color: "white",

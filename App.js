@@ -22,6 +22,7 @@ import CharTrack from "./components/Pages/CharTrack";
 import Grasta from "./components/Pages/Grasta";
 import Fishing from "./components/Pages/Fishing";
 import IDA3 from "./components/Pages/IDA3";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 if (!firebase.apps.length) {
@@ -343,44 +344,48 @@ export default class AnotherApp extends Component {
             style={styles.container}
             accessible={this.state.showMenu == "" ? true : false}
           >
-            {this.state.display === "weapons" ? (
-              <Weapons
-                tracker={this.state.tracker}
-                addEquip={this.addEquip}
-                weapons={this.state.weapons}
-              />
-            ) : this.state.display === "puller" ? (
-              <Puller
-                characters={this.state.characters}
-                banners={this.state.banners}
-              />
-            ) : this.state.display === "armor" ? (
-              <Armors
-                tracker={this.state.tracker}
-                addEquip={this.addEquip}
-                armor={this.state.armor}
-              />
-            ) : this.state.display === "myEquips" ? (
-              <MyEquips
-                tracker={this.state.tracker}
-                weapons={this.state.weapons}
-                armor={this.state.armor}
-                addEquip={this.addEquip}
-              />
-            ) : this.state.display === "myChars" ? (
-              <CharTrack
-                characters={this.state.characters}
-                freeList={this.state.freeList}
-              />
-            ) : this.state.display === "grasta" ? (
-              <Grasta grasta={this.state.grasta} />
-            ) : this.state.display === "IDA3" ? (
-              <IDA3 />
-            ) : this.state.display === "fishing" ? (
-              <Fishing fish={this.state.fish} />
-            ) : (
-              <CPage characters={characters} />
-            )}
+            <TouchableWithoutFeedback
+              onPress={() => this.setState({ showMenu: null })}
+            >
+              {this.state.display === "weapons" ? (
+                <Weapons
+                  tracker={this.state.tracker}
+                  addEquip={this.addEquip}
+                  weapons={this.state.weapons}
+                />
+              ) : this.state.display === "puller" ? (
+                <Puller
+                  characters={this.state.characters}
+                  banners={this.state.banners}
+                />
+              ) : this.state.display === "armor" ? (
+                <Armors
+                  tracker={this.state.tracker}
+                  addEquip={this.addEquip}
+                  armor={this.state.armor}
+                />
+              ) : this.state.display === "myEquips" ? (
+                <MyEquips
+                  tracker={this.state.tracker}
+                  weapons={this.state.weapons}
+                  armor={this.state.armor}
+                  addEquip={this.addEquip}
+                />
+              ) : this.state.display === "myChars" ? (
+                <CharTrack
+                  characters={this.state.characters}
+                  freeList={this.state.freeList}
+                />
+              ) : this.state.display === "grasta" ? (
+                <Grasta grasta={this.state.grasta} />
+              ) : this.state.display === "IDA3" ? (
+                <IDA3 />
+              ) : this.state.display === "fishing" ? (
+                <Fishing fish={this.state.fish} />
+              ) : (
+                <CPage characters={characters} />
+              )}
+            </TouchableWithoutFeedback>
           </SafeAreaView>
         )}
       </ImageBackground>
@@ -420,8 +425,9 @@ const styles = StyleSheet.create({
     borderWidth: 0.8,
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    flexGrow: 1,
     height: 33,
+    width: null,
+    flexGrow: 1,
     alignSelf: "flex-start",
   },
   subButtons: {

@@ -142,14 +142,13 @@ export default class MyEquips extends Component {
     );
     let uniqueList = [...new Set(cleanMatList)];
     let plzWork = this.addValues(uniqueList, cleanMatList, matList);
-    if (matList.length){
+    if (matList.length) {
       plzWork = plzWork.sort();
       return plzWork.map((mat, i) => {
         i++;
         return <Text key={i}>{mat}</Text>;
       });
-    }
-    else return false;
+    } else return false;
   };
   addValues = (uniqueList, cleanMatList, matList) => {
     let finishedList = [];
@@ -182,6 +181,7 @@ export default class MyEquips extends Component {
     return (
       <View style={styles.container}>
         <Button
+          style={styles.button}
           title={
             this.state.toDo
               ? "Craftable 'To-Farm' List"
@@ -284,7 +284,8 @@ export default class MyEquips extends Component {
   }
 }
 const styles = StyleSheet.create({
-  container: {},
+  button: { elevation: 1 },
+  container: { elevation: 1 },
   main: { flex: 1 },
   scrollDungeons: { flex: 3 },
   scrollItems: { flex: 2 },

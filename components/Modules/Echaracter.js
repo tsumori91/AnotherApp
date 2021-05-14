@@ -168,7 +168,9 @@ export default class Char extends PureComponent {
               styles.topTab,
               styles.topLeftTab,
               this.tabColor(!this.state.showAs),
-              this.props.as === false ? { borderTopRightRadius: 10 } : null,
+              this.props.as === false
+                ? { borderTopRightRadius: 10, minWidth: "100%" }
+                : null,
             ]}
             onPress={() => {
               this.setState({
@@ -211,7 +213,7 @@ export default class Char extends PureComponent {
                 }
                 style={styles.image}
               />
-              <View style={styles.inLine}>
+              <View style={[styles.inLine, styles.subTabs]}>
                 <Tab
                   style={[styles.tabsBottom, { borderBottomEndRadius: 0 }]}
                   textStyle={styles.tabsBottomText}
@@ -811,12 +813,16 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 20,
   },
+  subTabs: {
+    minHeight: 21,
+  },
   tabsBottom: {
-    flex: 1,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     paddingVertical: 1,
     height: 21,
+    minWidth: "33.33333%",
+    flex: 1,
   },
   tabsBottomText: {
     fontSize: 13,
@@ -825,7 +831,7 @@ const styles = StyleSheet.create({
   tabGreyed: { backgroundColor: colors.black },
   tabSelected: { backgroundColor: colors.gold },
   topTab: {
-    flex: 1,
+    minWidth: "50%",
     borderBottomStartRadius: 0,
     borderBottomEndRadius: 0,
   },
