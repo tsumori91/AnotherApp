@@ -35,9 +35,9 @@ class CPage extends PureComponent {
     this.setState({ charactersRead });
   };
   handleAdd = async () => {
-    let characters = [...this.props.characters];
+    let oldCharacters = [...this.props.characters];
     const newChar = {
-      id: characters[characters.length - 1].id + 1,
+      id: oldCharacters[oldCharacters.length - 1].id + 1,
       name: "",
       vc: "",
       vcAS: "",
@@ -133,8 +133,12 @@ class CPage extends PureComponent {
         },
       ],
     };
-    characters = characters.push(newChar);
-    /*await firebase.database().ref("characters").set({ characters });*/
+    oldCharacters.push(newChar);
+    oldCharacters.push(newChar);
+    oldCharacters.push(newChar);
+    oldCharacters.push(newChar);
+    const characters = oldCharacters;
+    await firebase.database().ref("characters").set({ characters });
   };
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });
@@ -439,6 +443,16 @@ class CPage extends PureComponent {
           <ActivityIndicator size={"large"} color={colors.black} />
         ) : (
           <ScrollView nestedScrollEnabled={true}>
+            {
+              <View>
+                <TouchableOpacity
+                  style={styles.buttonView}
+                  onPress={() => this.handleAdd()}
+                >
+                  <Text>New Char</Text>
+                </TouchableOpacity>
+              </View>
+            }
             <View style={{ flexDirection: "column-reverse" }}>
               {this.state.charactersRead.map(
                 (characters, i) => (
