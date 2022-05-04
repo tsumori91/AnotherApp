@@ -9,27 +9,27 @@
   },
   "dependencies": {
     "@react-firebase/database": "^0.2.10",
-    "@react-native-async-storage/async-storage": "^1.15.9",
-    "@react-native-community/slider": "^3.0.3",
+    "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-native-community/slider": "4.1.12",
     "axios": "^0.21.4",
     "cheerio": "^1.0.0-rc.10",
-    "expo": "^1.0.0",
-    "expo-status-bar": "^1.0.4",
+    "expo": "^44.0.0",
+    "expo-status-bar": "~1.2.0",
     "firebase": "^8.10.0",
     "global": "^4.4.0",
     "needle": "^2.9.1",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.3",
     "react-native-cheerio": "^1.0.0-rc.4",
     "react-native-dropdown-picker": "^3.8.3",
-    "react-native-gesture-handler": "^1.10.3",
+    "react-native-gesture-handler": "~2.1.0",
     "react-native-swiper": "^1.6.0",
-    "react-native-web": "^0.17.7",
+    "react-native-web": "0.17.1",
     "request-promise": "^4.2.6"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "^7.12.9"
   },
   "private": true
 }
