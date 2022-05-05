@@ -6,6 +6,7 @@ import {
   Text,
   Alert,
   Button,
+  Dimensions,
 } from "react-native";
 import TrackEquip from "../Modules/TrackEquip";
 import EquipsToDo from "../SubPages/EquipsToDo";
@@ -287,6 +288,6 @@ const styles = StyleSheet.create({
   button: { elevation: 1 },
   container: { elevation: 1 },
   main: { flex: 1 },
-  scrollDungeons: { flex: 3 },
-  scrollItems: { flex: 2 },
+  scrollDungeons: { height: (Dimensions.get("window").height - 150) / 2 },
+  scrollItems: { height: (Dimensions.get("window").height - 150) / 2 },
 });

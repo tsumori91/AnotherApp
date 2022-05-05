@@ -7,6 +7,7 @@ import {
   Alert,
   Button,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import MySwitch from "../Config/MySwitch";
 import Storage from "../Config/Storage";
@@ -162,7 +163,9 @@ export default class CharTrack extends Component {
               </Text>
               <Button title={"Reset"} onPress={() => this.handleReset()} />
             </View>
-            <ScrollView>
+            <ScrollView
+              style={{ height: Dimensions.get("window").height - 150 }}
+            >
               <Text style={styles.heading}>
                 Free Characters {this.state.myFreeCharacters.length}/
                 {this.state.freeCharacters.length +

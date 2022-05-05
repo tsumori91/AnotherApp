@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Platform,
   TextInput,
+  Dimensions,
 } from "react-native";
 import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
@@ -243,7 +244,10 @@ export default class Armors extends Component {
         {this.state.loading ? (
           <ActivityIndicator size={"large"} color={colors.black} />
         ) : (
-          <ScrollView nestedScrollEnabled={true}>
+          <ScrollView
+            style={{ height: Dimensions.get("window").height - 150 }}
+            nestedScrollEnabled={true}
+          >
             {armorRead.map((u, i) => {
               i++;
               return (

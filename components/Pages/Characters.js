@@ -9,6 +9,7 @@ import {
   Text,
   Alert,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import Char from "../Modules/Echaracter";
 import Storage from "../Config/Storage";
@@ -442,17 +443,10 @@ class CPage extends PureComponent {
         {this.state.loading ? (
           <ActivityIndicator size={"large"} color={colors.black} />
         ) : (
-          <ScrollView nestedScrollEnabled={true}>
-            {
-              <View>
-                <TouchableOpacity
-                  style={styles.buttonView}
-                  onPress={() => this.handleAdd()}
-                >
-                  <Text>New Char</Text>
-                </TouchableOpacity>
-              </View>
-            }
+          <ScrollView
+            style={{ height: Dimensions.get("window").height - 150 }}
+            nestedScrollEnabled={true}
+          >
             <View style={{ flexDirection: "column-reverse" }}>
               {this.state.charactersRead.map(
                 (characters, i) => (

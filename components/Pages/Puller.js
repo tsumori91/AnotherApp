@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { Text, View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import Banner from "../Modules/Banner";
 import * as firebase from "firebase";
 
@@ -39,6 +39,7 @@ export default class Puller extends Component {
 }
 const styles = StyleSheet.create({
   container: {
+    height: Dimensions.get("window").height - 150,
     marginTop: 40,
     width: "95%",
     flex: 1,

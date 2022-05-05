@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Button,
   Alert,
+  Dimensions,
 } from "react-native";
 import colors from "../Config/colors";
 import Egrasta from "../Modules/Egrasta";
@@ -672,6 +673,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   listContainer: {
+    height: Dimensions.get("window").height - 150,
     flex: 1,
     backgroundColor: "rgba(232,227,227, .8)",
     paddingTop: 10,

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  Dimensions,
 } from "react-native";
 import Storage from "../Config/Storage";
 import Equip from "../Modules/Equip";
@@ -284,7 +285,10 @@ export default class EquipsToDo extends Component {
           <ActivityIndicator size={"large"} color={"black"} />
         ) : (
           <View style={styles.main}>
-            <ScrollView nestedScrollEnabled={true}>
+            <ScrollView
+              style={{ height: Dimensions.get("window").height - 150 }}
+              nestedScrollEnabled={true}
+            >
               {this.state.weaponsRead.map((u, i) => {
                 i++;
                 return (

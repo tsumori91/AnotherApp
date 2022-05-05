@@ -7,6 +7,7 @@ import {
   ImageBackground,
   SafeAreaView,
   Button,
+  ScrollView,
 } from "react-native";
 import CPage from "./components/Pages/Characters";
 import Puller from "./components/Pages/Puller";
@@ -22,7 +23,6 @@ import CharTrack from "./components/Pages/CharTrack";
 import Grasta from "./components/Pages/Grasta";
 import Fishing from "./components/Pages/Fishing";
 import IDA3 from "./components/Pages/IDA3";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 if (!firebase.apps.length) {
@@ -54,8 +54,7 @@ export default class AnotherApp extends Component {
           "Dragon Palace - Bamboo Maps",
           "Charol Plains",
         ],
-        uri:
-          "https://static.miraheze.org/anotheredenwiki/thumb/4/42/870000102.png/120px-870000102.png",
+        uri: "https://static.miraheze.org/anotheredenwiki/thumb/4/42/870000102.png/120px-870000102.png",
       },
       {
         name: "Kraken",
@@ -64,8 +63,7 @@ export default class AnotherApp extends Component {
         reqLv: 30,
         hook: 3,
         location: ["Actuel"],
-        uri:
-          "https://static.miraheze.org/anotheredenwiki/thumb/0/07/870000079.png/120px-870000079.png",
+        uri: "https://static.miraheze.org/anotheredenwiki/thumb/0/07/870000079.png/120px-870000079.png",
       },
     ],
     dates: "",
@@ -238,17 +236,8 @@ export default class AnotherApp extends Component {
         style={styles.allContainer}
         source={require("./components/pics/Background.png")}
       >
-        <SafeAreaView
-          style={[
-            styles.buttons,
-            {
-              ...(Platform.OS !== "android" && {
-                zIndex: 9999,
-              }),
-            },
-          ]}
-        >
-          <View style={[styles.buttonDrop]}>
+        <SafeAreaView style={styles.buttons}>
+          <View style={styles.buttonDrop}>
             <Tab
               title={`Equipment`}
               color={this.state.showMenu === "equipment" ? "gold" : "primary"}
@@ -263,25 +252,25 @@ export default class AnotherApp extends Component {
                 <Tab
                   title={"Grasta"}
                   color={this.state.display === "grasta" ? "gold" : "primary"}
-                  style={[styles.button, styles.eachDropButton]}
+                  style={styles.eachDropButton}
                   onPress={() => this.handlePages("grasta")}
                 />
                 <Tab
                   title={"Weapons"}
                   color={this.state.display === "weapons" ? "gold" : "primary"}
-                  style={[styles.button, styles.eachDropButton]}
+                  style={styles.eachDropButton}
                   onPress={() => this.handlePages("weapons")}
                 />
                 <Tab
                   title={"Armors"}
                   color={this.state.display === "armor" ? "gold" : "primary"}
-                  style={[styles.button, styles.eachDropButton]}
+                  style={styles.eachDropButton}
                   onPress={() => this.handlePages("armor")}
                 />
                 <Tab
                   title={"My Equips"}
                   color={this.state.display === "myEquips" ? "gold" : "primary"}
-                  style={[styles.button, styles.eachDropButton]}
+                  style={styles.eachDropButton}
                   onPress={() => this.handlePages("myEquips")}
                 />
               </View>
@@ -302,20 +291,20 @@ export default class AnotherApp extends Component {
                 <Tab
                   title={"IDA3"}
                   color={this.state.display === "IDA3" ? "gold" : "primary"}
-                  style={[styles.button, styles.eachDropButton]}
+                  style={styles.eachDropButton}
                   onPress={() => this.handlePages("IDA3")}
                 />
                 <Tab
                   title={"Pullsim"}
                   color={this.state.display === "puller" ? "gold" : "primary"}
-                  style={[styles.button, styles.eachDropButton]}
+                  style={styles.eachDropButton}
                   onPress={() => this.handlePages("puller")}
                 />
                 <Tab
                   title={"Fishing"}
                   color={this.state.display === "fishing" ? "gold" : "primary"}
                   onPress={() => this.handlePages("fishing")}
-                  style={[styles.button, styles.eachDropButton]}
+                  style={styles.eachDropButton}
                 />
               </View>
             )}
@@ -340,13 +329,8 @@ export default class AnotherApp extends Component {
             style={{ flex: 1, alignSelf: "center" }}
           />
         ) : (
-          <SafeAreaView
-            style={styles.container}
-            accessible={this.state.showMenu == "" ? true : false}
-          >
-            <TouchableWithoutFeedback
-              onPress={() => this.setState({ showMenu: null })}
-            >
+          <SafeAreaView style={styles.container}>
+            <View nestedScrollEnabled={true} style={styles.componentContainer}>
               {this.state.display === "weapons" ? (
                 <Weapons
                   tracker={this.state.tracker}
@@ -381,11 +365,14 @@ export default class AnotherApp extends Component {
               ) : this.state.display === "IDA3" ? (
                 <IDA3 />
               ) : this.state.display === "fishing" ? (
-                <Fishing fish={this.state.fish} />
+                <Fishing
+                  characters={this.state.characters}
+                  fish={this.state.fish}
+                />
               ) : (
                 <CPage characters={characters} />
               )}
-            </TouchableWithoutFeedback>
+            </View>
           </SafeAreaView>
         )}
       </ImageBackground>
@@ -405,19 +392,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     marginHorizontal: "0.5%",
+    position: "absolute",
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 65 : 50,
+    marginBottom: Platform.OS === "android" ? 10 : 0,
+  },
+  componentContainer: {
     flex: 1,
     elevation: 1,
   },
   eachDropButton: {
-    minWidth: "100%",
+    width: "100%",
     alignSelf: "center",
-    borderTopWidth: 1,
-    height: 10,
-    elevation: 3,
+    borderRadius: 0,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    height: 33,
+    flexGrow: 1,
+    alignSelf: "flex-start",
   },
   buttonDrop: {
     flexShrink: 1,
-    flexDirection: "column",
+    alignSelf: "flex-start",
   },
   button: {
     borderRadius: 0,
@@ -425,25 +420,25 @@ const styles = StyleSheet.create({
     borderWidth: 0.8,
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    height: 33,
+    maxHeight: 33,
     width: null,
     flexGrow: 1,
     alignSelf: "flex-start",
   },
   subButtons: {
     alignItems: "flex-start",
-    position: "absolute",
-    top: 33,
     elevation: 10,
   },
   buttons: {
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : 0,
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 15 : 0,
     marginBottom: Platform.OS === "android" ? 10 : 0,
+    minHeight: 10,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-evenly",
     marginHorizontal: "1%",
     flexDirection: "row",
-    elevation: 3,
+    elevation: 30,
+    zIndex: 1,
   },
 });

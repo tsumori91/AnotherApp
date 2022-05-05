@@ -1,8 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, Platform } from "react-native";
+import { TouchableOpacity, StyleSheet, Text, Platform } from "react-native";
 import colors from "../Config/colors";
 import { AntDesign } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Tab({
   style,
@@ -39,7 +38,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    width: "100%",
   },
   text: {
     color: "white",
@@ -47,7 +45,6 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     fontWeight: "bold",
     alignSelf: "center",
-    textTransform: "none",
     fontFamily: Platform.OS == "android" ? "normal" : "Arial",
   },
 });

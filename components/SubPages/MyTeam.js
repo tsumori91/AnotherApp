@@ -10,6 +10,7 @@ import {
   AppRegistry,
   Alert,
   TextInput,
+  Dimensions,
 } from "react-native";
 import CharacterBuild from "../Modules/CharacterBuild";
 import colors from "../Config/colors";
@@ -974,7 +975,10 @@ export default class MyTeam extends Component {
             onChangeText={(text) => this.handleSearchBar(text)}
           ></TextInput>
         </View>
-        <ScrollView nestedScrollEnabled={true}>
+        <ScrollView
+          style={{ height: Dimensions.get("window").height - 150 }}
+          nestedScrollEnabled={true}
+        >
           <View style={styles.characterList}>
             {this.state.loading ? (
               <ActivityIndicator size={"large"} color={"black"} />

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ScrollView, Text, View, StyleSheet } from "react-native";
+import { ScrollView, Text, View, StyleSheet, Dimensions } from "react-native";
 import Storage from "../Config/Storage";
 import EIDA3 from "../Modules/EIDA3";
 
@@ -298,8 +298,9 @@ export default class IDA3 extends Component {
     Storage.setItem("IDA3characters", characters);
   };
   render() {
-    let done = this.state.characters.filter((character) => character.done)
-      .length;
+    let done = this.state.characters.filter(
+      (character) => character.done
+    ).length;
     return (
       <View>
         <View style={styles.topHalf}>
@@ -320,7 +321,7 @@ export default class IDA3 extends Component {
             </Text>
           )}
         </View>
-        <ScrollView>
+        <ScrollView style={{ height: Dimensions.get("window").height - 150 }}>
           {this.state.characters.map(
             (character, i) => (
               i++,
