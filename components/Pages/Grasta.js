@@ -57,18 +57,6 @@ export default class Grasta extends Component {
     });
     this.setState({ loading: false });
   };
-  add = async () => {
-    let grasta = this.props.grasta;
-    for (let i = 0; i < 0; i++) {
-      grasta.support.push({
-        effect: "Obtain 's Prayer (+30% damage, 2 turns) skill",
-        getHow: "Antiquity Garulea (Hard)\nSuperior Dogu exchange in Gadaro",
-        name: "'s Prayer",
-        stats: ["mp", "lck"],
-      });
-    }
-    await firebase.database().ref("grasta").set({ grasta });
-  };
   findTotal = () => {
     let grasta = this.state.grasta;
     if (grasta && grasta.special) {
