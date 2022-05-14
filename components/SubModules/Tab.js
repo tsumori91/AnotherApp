@@ -1,5 +1,11 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet, Text, Platform } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  Platform,
+  View,
+} from "react-native";
 import colors from "../Config/colors";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -7,40 +13,67 @@ export default function Tab({
   style,
   title,
   onPress,
-  color = "primary",
+  color = "grey",
   textStyle,
   up,
   down,
   arrowStyle,
+  selected = false,
 }) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.container, { backgroundColor: colors[color] }, style]}
+      style={[
+        styles.container,
+        selected
+          ? { backgroundColor: "darkGrey" }
+          : { backgroundColor: "grey" },
+        { backgroundColor: colors[color] },
+        style,
+      ]}
     >
-      <Text style={[styles.text, textStyle]}>{title} </Text>
-      {up ? <AntDesign style={arrowStyle} name={"caretup"} /> : null}
-      {down ? <AntDesign style={arrowStyle} name={"caretdown"} /> : null}
+      <View
+        style={[
+          styles.innerContainer,
+          up || down ? { justifyContent: "space-between" } : null,
+        ]}
+      >
+        <Text
+          style={[
+            styles.text,
+            selected ? { color: colors.offWhite } : null,
+            textStyle,
+          ]}
+        >
+          {title}
+        </Text>
+        {up ? <AntDesign style={arrowStyle} name={"caretup"} /> : null}
+        {down ? <AntDesign style={arrowStyle} name={"caretdown"} /> : null}
+      </View>
     </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
-    borderRadius: 10,
+    borderRadius: 5,
     shadowColor: "rgba(0,0,0, .4)", // IOS
     shadowOffset: { height: 4, width: 3 }, // IOS
     shadowOpacity: 1, // IOS
     shadowRadius: 1, //IOS
-    elevation: 2, // Android
     backgroundColor: "#fff",
     height: 25,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
   },
+  innerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   text: {
-    color: "white",
+    color: "black",
     fontSize: 18,
     textTransform: "capitalize",
     fontWeight: "bold",
