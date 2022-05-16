@@ -15,12 +15,14 @@ import Char from "../Modules/Echaracter";
 import Storage from "../Config/Storage";
 import colors from "../Config/colors";
 import * as firebase from "firebase";
+import CharacterBuildNaoko from "../Modules/CharacterBuildNaoko";
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 class CPage extends PureComponent {
   state = {
     charactersRead: [],
+    charactersTest: [],
     weaponFilter: "",
     elementFilter: "",
     loading: false,
@@ -33,7 +35,8 @@ class CPage extends PureComponent {
   }
   setPage = () => {
     let charactersRead = [...this.props.characters];
-    this.setState({ charactersRead });
+    let charactersTest = [...this.props.charactersTest];
+    this.setState({ charactersRead, charactersTest });
   };
   handleAdd = async () => {
     let oldCharacters = [...this.props.characters];
@@ -447,14 +450,27 @@ class CPage extends PureComponent {
             style={{ height: Dimensions.get("window").height - 150 }}
             nestedScrollEnabled={true}
           >
-            <View style={{ flexDirection: "column-reverse" }}>
-              {this.state.charactersRead.map(
+            <View>
+              {this.state.charactersTest.map(
                 (characters, i) => (
                   i++,
                   (
                     <View key={i}>
                       {characters.name !== "" ? (
-                        <Char
+                        <CharacterBuildNaoko
+                          name={characters.name}
+                          shadow={characters.shadow}
+                          weapon={characters.weapon}
+                          uri={characters.source}
+                          activeSkills={characters.activeSkills}
+                          passiveSkills={characters.passiveSkills}
+                          bonusStats={characters.bonusStats}
+                          element={characters.element}
+                          roles={characters.roles}
+                          stats={characters.stats}
+                          valorChant={characters.valorChant}
+                          ranking={0}
+                          /*<Char
                           key={characters.id}
                           id={characters.id}
                           name={characters.name}
@@ -481,7 +497,7 @@ class CPage extends PureComponent {
                           poison={characters.poison}
                           pain={characters.pain}
                           score={characters.score}
-                          scoreAs={characters.scoreAs}
+                          scoreAs={characters.scoreAs}*/
                         />
                       ) : null}
                     </View>
