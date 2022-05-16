@@ -31,10 +31,11 @@ if (!firebase.apps.length) {
 
 export default class AnotherApp extends Component {
   state = {
-    display: "myEquips",
+    display: "fishing",
     loading: true,
     tracker: [],
     characters: [],
+    charactersTest: [],
     banners: [],
     weapons: [],
     armor: [],
@@ -82,6 +83,15 @@ export default class AnotherApp extends Component {
         await Storage.setItem("characters", snapshot.val().characters);
         this.setState({
           characters: snapshot.val().characters,
+        });
+      });
+    firebase
+      .database()
+      .ref("charactersTest")
+      .once("value", async (snapshot) => {
+        await Storage.setItem("charactersTest", snapshot.val().charactersTest);
+        this.setState({
+          charactersTest: snapshot.val().charactersTest,
         });
       });
     firebase
@@ -138,6 +148,7 @@ export default class AnotherApp extends Component {
   loadDataLocal = async () => {
     this.setState({ loading: true });
     let characters = await Storage.getItem("characters");
+    let charactersTest = await Storage.getItem("charactersTest");
     let weapons = await Storage.getItem("weapons");
     let armor = await Storage.getItem("armor");
     let banners = await Storage.getItem("banners");
@@ -146,6 +157,7 @@ export default class AnotherApp extends Component {
     await delay(20);
     if (
       characters == null ||
+      charactersTest == null ||
       weapons == null ||
       armor == null ||
       freeList == null ||
@@ -156,6 +168,7 @@ export default class AnotherApp extends Component {
     } else {
       this.setState({
         characters,
+        charactersTest,
         weapons,
         armor,
         banners,
@@ -239,9 +252,11 @@ export default class AnotherApp extends Component {
         <SafeAreaView style={styles.buttons}>
           <View style={styles.buttonDrop}>
             <Tab
+              textStyle={styles.tabText}
+              selected={this.state.showMenu === "equipment" ? true : false}
               title={`Equipment`}
-              color={this.state.showMenu === "equipment" ? "gold" : "primary"}
-              style={[styles.button, { width: "100%" }]}
+              color={this.state.showMenu === "equipment" ? "darkGrey" : "grey"}
+              style={styles.button}
               onPress={() => this.handleMenu("equipment")}
               up={this.state.showMenu === "equipment" && true}
               down={this.state.showMenu !== "equipment" && true}
@@ -250,26 +265,36 @@ export default class AnotherApp extends Component {
             {this.state.showMenu !== "equipment" ? null : (
               <View style={styles.subButtons}>
                 <Tab
+                  textStyle={styles.tabText}
+                  selected={this.state.display === "grasta" ? true : false}
                   title={"Grasta"}
-                  color={this.state.display === "grasta" ? "gold" : "primary"}
+                  color={this.state.display === "grasta" ? "darkGrey" : "grey"}
                   style={styles.eachDropButton}
                   onPress={() => this.handlePages("grasta")}
                 />
                 <Tab
+                  textStyle={styles.tabText}
+                  selected={this.state.display === "weapons" ? true : false}
                   title={"Weapons"}
-                  color={this.state.display === "weapons" ? "gold" : "primary"}
+                  color={this.state.display === "weapons" ? "darkGrey" : "grey"}
                   style={styles.eachDropButton}
                   onPress={() => this.handlePages("weapons")}
                 />
                 <Tab
+                  textStyle={styles.tabText}
+                  selected={this.state.display === "armor" ? true : false}
                   title={"Armors"}
-                  color={this.state.display === "armor" ? "gold" : "primary"}
+                  color={this.state.display === "armor" ? "darkGrey" : "grey"}
                   style={styles.eachDropButton}
                   onPress={() => this.handlePages("armor")}
                 />
                 <Tab
+                  textStyle={styles.tabText}
+                  selected={this.state.display === "myEquips" ? true : false}
                   title={"My Equips"}
-                  color={this.state.display === "myEquips" ? "gold" : "primary"}
+                  color={
+                    this.state.display === "myEquips" ? "darkGrey" : "grey"
+                  }
                   style={styles.eachDropButton}
                   onPress={() => this.handlePages("myEquips")}
                 />
@@ -278,9 +303,11 @@ export default class AnotherApp extends Component {
           </View>
           <View style={styles.buttonDrop}>
             <Tab
+              textStyle={styles.tabText}
+              selected={this.state.showMenu === "other" ? true : false}
               title={"Other"}
-              color={this.state.showMenu === "other" ? "gold" : "primary"}
-              style={[styles.button, { width: "100%" }]}
+              color={this.state.showMenu === "other" ? "darkGrey" : "grey"}
+              style={styles.button}
               onPress={() => this.handleMenu("other")}
               up={this.state.showMenu === "other" && true}
               down={this.state.showMenu !== "other" && true}
@@ -289,38 +316,52 @@ export default class AnotherApp extends Component {
             {this.state.showMenu !== "other" ? null : (
               <View style={styles.subButtons}>
                 <Tab
+                  textStyle={styles.tabText}
+                  selected={this.state.display === "IDA3" ? true : false}
                   title={"IDA3"}
-                  color={this.state.display === "IDA3" ? "gold" : "primary"}
+                  color={this.state.display === "IDA3" ? "darkGrey" : "grey"}
                   style={styles.eachDropButton}
                   onPress={() => this.handlePages("IDA3")}
                 />
                 <Tab
+                  textStyle={styles.tabText}
+                  selected={this.state.display === "puller" ? true : false}
                   title={"Pullsim"}
-                  color={this.state.display === "puller" ? "gold" : "primary"}
+                  color={this.state.display === "puller" ? "darkGrey" : "grey"}
                   style={styles.eachDropButton}
                   onPress={() => this.handlePages("puller")}
                 />
                 <Tab
+                  textStyle={styles.tabText}
+                  selected={this.state.display === "fishing" ? true : false}
                   title={"Fishing"}
-                  color={this.state.display === "fishing" ? "gold" : "primary"}
+                  color={this.state.display === "fishing" ? "darkGrey" : "grey"}
                   onPress={() => this.handlePages("fishing")}
                   style={styles.eachDropButton}
                 />
               </View>
             )}
           </View>
-          <Tab
-            title={"MyChars"}
-            color={this.state.display === "myChars" ? "gold" : "primary"}
-            onPress={() => this.handlePages("myChars")}
-            style={styles.button}
-          />
-          <Tab
-            title={"Characters"}
-            color={this.state.display === "characters" ? "gold" : "primary"}
-            onPress={() => this.handlePages("characters")}
-            style={styles.button}
-          />
+          <View style={styles.buttonDrop}>
+            <Tab
+              textStyle={styles.tabText}
+              selected={this.state.display === "myChars" ? true : false}
+              title={"MyChars"}
+              color={this.state.display === "myChars" ? "darkGrey" : "grey"}
+              onPress={() => this.handlePages("myChars")}
+              style={styles.button}
+            />
+          </View>
+          <View style={styles.buttonDrop}>
+            <Tab
+              textStyle={styles.tabText}
+              selected={this.state.display === "characters" ? true : false}
+              title={"Characters"}
+              color={this.state.display === "characters" ? "darkGrey" : "grey"}
+              onPress={() => this.handlePages("characters")}
+              style={styles.button}
+            />
+          </View>
         </SafeAreaView>
         {this.state.loading ? (
           <ActivityIndicator
@@ -370,7 +411,10 @@ export default class AnotherApp extends Component {
                   fish={this.state.fish}
                 />
               ) : (
-                <CPage characters={characters} />
+                <CPage
+                  characters={characters}
+                  charactersTest={this.state.charactersTest}
+                />
               )}
             </View>
           </SafeAreaView>
@@ -387,18 +431,17 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     flex: 1,
   },
-  arrowStyle: { color: colors.white },
+  arrowStyle: { color: colors.black },
   container: {
     alignItems: "center",
     justifyContent: "flex-start",
     marginHorizontal: "0.5%",
     position: "absolute",
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 65 : 50,
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 65 : 75,
     marginBottom: Platform.OS === "android" ? 10 : 0,
   },
   componentContainer: {
     flex: 1,
-    elevation: 1,
   },
   eachDropButton: {
     width: "100%",
@@ -416,29 +459,35 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 0,
-    borderColor: colors.white,
+    paddingHorizontal: 10,
+    borderColor: colors.offWhite,
     borderWidth: 0.8,
     borderTopWidth: 0,
     borderBottomWidth: 0,
+    paddingVertical: 7,
     maxHeight: 33,
-    width: null,
     flexGrow: 1,
     alignSelf: "flex-start",
-  },
-  subButtons: {
-    alignItems: "flex-start",
-    elevation: 10,
+    width: "100%",
+    height: "100%",
   },
   buttons: {
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 15 : 0,
     marginBottom: Platform.OS === "android" ? 10 : 0,
-    minHeight: 10,
+    minHeight: 82,
+    maxHeight: 82,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-evenly",
     marginHorizontal: "1%",
     flexDirection: "row",
-    elevation: 30,
+    elevation: 1,
     zIndex: 1,
+  },
+  subButtons: {
+    alignItems: "flex-start",
+  },
+  tabText: {
+    fontSize: 14,
   },
 });
