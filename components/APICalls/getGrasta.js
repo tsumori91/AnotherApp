@@ -109,18 +109,43 @@ export default getGrasta = async () => {
             attack.push(item);
           });
           allGrasta.forEach((item) => attack.push(item));
+        } else if (name.indexOf("(Weapon") !== -1) {
+          let allGrasta = [
+            { ...grasta },
+            { ...grasta },
+            { ...grasta },
+            { ...grasta },
+            { ...grasta },
+            { ...grasta },
+            { ...grasta },
+            { ...grasta },
+          ];
+          allGrasta[0].name = name.replace("(Weapon", "(Staff");
+          allGrasta[1].name = name.replace("(Weapon", "(Ax");
+          allGrasta[2].name = name.replace("(Weapon", "(Sword");
+          allGrasta[3].name = name.replace("(Weapon", "(Hammer");
+          allGrasta[4].name = name.replace("(Weapon", "(Fists");
+          allGrasta[5].name = name.replace("(Weapon", "(Katana");
+          allGrasta[6].name = name.replace("(Weapon", "(Bow");
+          allGrasta[7].name = name.replace("(Weapon", "(Lance");
+          allGrasta.forEach((item) => {
+            item.dupe = true;
+            attack.push(item);
+          });
+          allGrasta.forEach((item) => attack.push(item));
         } else attack.push(grasta);
       }
     });
     attack.sort(compare);
-    attack.forEach((item, i, obj) => {
-      if (item.name == "") obj.splice(i, 1);
-      if (i == 0) return;
-      if (item.name == attack[i - 1].name) {
-        if (item.dupe) obj.splice(i, 1);
-        else obj.splice(i - 1, 1);
+    for (let i = attack.length - 1; i >= 0; --i) {
+      if (attack[i].name == "") attack.splice(i, 1);
+      else if (
+        attack[i].dupe &&
+        attack.filter((e) => e.name === attack[i].name).length > 1
+      ) {
+        attack.splice(i, 1);
       }
-    });
+    }
     return attack;
   };
   console.log("called");
