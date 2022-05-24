@@ -365,7 +365,6 @@ export default class CharacterBuildNaoko extends Component {
                     <View
                       style={{
                         flex: 1,
-                        // alignItems: "center",
                       }}
                     >
                       <Text style={styles.eachStat}>
