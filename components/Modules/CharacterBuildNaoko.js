@@ -331,7 +331,9 @@ export default class CharacterBuildNaoko extends Component {
                           style={styles.linearGradient}
                         ></LinearGradient>
                         <Text style={styles.skillDetails}>{skill.effect}</Text>
-                        <Text style={[styles.skillDetails, {color: colors.gold}]}>
+                        <Text
+                          style={[styles.skillDetails, { color: colors.gold }]}
+                        >
                           Multiplier: {skill.multiplier}
                         </Text>
                       </View>
@@ -360,7 +362,6 @@ export default class CharacterBuildNaoko extends Component {
                     <View
                       style={{
                         flex: 1,
-                        // alignItems: "center",
                       }}
                     >
                       <Text style={styles.eachStat}>
@@ -530,7 +531,7 @@ const styles = StyleSheet.create({
   },
   skillName: {
     color: colors.offWhite,
-    marginTop:10 ,
+    marginTop: 10,
     alignSelf: "center",
     fontSize: 18,
     fontWeight: "bold",
