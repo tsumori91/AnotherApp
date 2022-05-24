@@ -1,5 +1,11 @@
 import * as cheerio from "cheerio";
 import updateCharacters from "./UpdateCharacters";
+import * as firebase from "firebase";
+import ApiKeys from "../Config/ApiKeys";
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(ApiKeys.firebaseConfig);
+}
 
 const getCharacters = async () => {
   let page = await fetch("https://anothereden.miraheze.org/wiki/Characters", {
@@ -40,7 +46,66 @@ const getCharacters = async () => {
   let things3 = things2.filter(
     (item) => item.rarity !== "3" && item.rarity !== "4" && item.rarity !== "34"
   );
-  updateCharacters(things3);
+  const things4 = await updateCharacters(things3);
+  const characterList = await updateWithTomeLocations(things4);
+  if (characterList == null) {
+    console.log("fail");
+    return;
+  } else
+    await firebase
+      .database()
+      .ref("charactersTest")
+      .set({ charactersTest: characterList });
 };
 
 export default getCharacters;
+
+const updateWithTomeLocations = async (characterList) => {
+  if (!characterList) return null;
+  console.log("here");
+  let page = await fetch(
+    "https://anothereden.miraheze.org/wiki/Tome_Location_List",
+    {
+      method: "GET",
+    }
+  );
+  let pageData = await page.text();
+  const $ = cheerio.load(pageData);
+
+  const tomeTable = $(".anotherTable").find("tr");
+  const tomeList = [];
+  tomeTable.each((id, element) => {
+    const locationList = $(element).find($("td:nth-child(3)"));
+    let location = "";
+    locationList.find($("li")).each((i, e) => {
+      if (i == locationList.find($("li")).length - 1) {
+        location = $(e).text();
+      }
+    });
+    tomeList.push({
+      tomeName: $(element).find($("td:nth-child(1) > a")).attr("title"),
+      characterLink:
+        "https://anothereden.miraheze.org" +
+        $(element).find($("td:nth-child(2)")).find($("a")).attr("href"),
+      tomeLocation: location,
+    });
+  });
+  characterList.forEach((character) => {
+    if (
+      character.tomeName.indexOf("Treatise") !== -1 ||
+      character.tomeName.indexOf("Codex") !== -1
+    ) {
+      character.tomeLocation = "VH Dungeons/Garulea/UnderWorld";
+    } else if (character.tomeName.indexOf("Opus") !== -1) {
+      character.tomeLocation = "VH Dungeons only";
+    } else
+      tomeList.forEach((tome) => {
+        if (tome.characterLink == character.link) {
+          if (tome.tomeName == character.tomeName) {
+            character.tomeLocation = tome.tomeLocation;
+          }
+        }
+      });
+  });
+  return characterList;
+};

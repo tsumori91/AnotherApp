@@ -464,12 +464,15 @@ class CPage extends PureComponent {
                           uri={characters.source}
                           activeSkills={characters.activeSkills}
                           passiveSkills={characters.passiveSkills}
+                          manifestSkills={characters.manifest}
                           bonusStats={characters.bonusStats}
                           element={characters.element}
                           roles={characters.roles}
                           stats={characters.stats}
                           valorChant={characters.valorChant}
                           ranking={0}
+                          tomeName={characters.tomeName}
+                          tomeLocation={characters.tomeLocation}
                           /*<Char
                           key={characters.id}
                           id={characters.id}

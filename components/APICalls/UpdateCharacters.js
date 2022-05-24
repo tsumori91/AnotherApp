@@ -1,17 +1,11 @@
 import * as cheerio from "cheerio";
-import * as firebase from "firebase";
-import ApiKeys from "../Config/ApiKeys";
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(ApiKeys.firebaseConfig);
-}
 
 const updateCharacters = async (input) => {
   if (!input) return;
-  let characterList = input.charactersTest;
+  let characterList = input;
   for (const character of characterList) {
     let name = character.name;
-    scrapeData = async () => {
+    const scrapeData = async () => {
       try {
         let characterPage = await fetch(character.link, {
           method: "GET",
@@ -24,18 +18,33 @@ const updateCharacters = async (input) => {
         character.stats = getStatsData($);
         character.bonusStats = getBonusStatsData($);
         character.valorChant = getValorChantData($);
+        character.tomeName = getTomeName($);
 
         console.log("y");
       } catch {
         console.log(name + " failed");
       }
+      function getTomeName($) {
+        let tomeTable = $(".character-class");
+        let tomeName = $(tomeTable)
+          .find($("tbody > tr:nth-child(5) > td:nth-child(2) > div > a"))
+          .attr("title");
+        if (typeof tomeName !== "string")
+          tomeName = $(tomeTable)
+            .find(
+              $("tbody > tr:nth-child(5) > td:nth-child(2) > div:nth-child(1)")
+            )
+            .text();
+        if (typeof tomeName == "string") return tomeName;
+        else return "";
+      }
       function getValorChantData($) {
         let valorChantTable = $(".character-valor-chant").find("tr");
         let valorChant = [];
         valorChantTable.each((id, element) => {
-          valorChant.push($(element).find($("td:nth-child(2)")).text());
+          if (id >= valorChantTable.length - 2)
+            valorChant.push($(element).find($("td:nth-child(2)")).text());
         });
-        valorChant = valorChant.splice(3, valorChant.length);
         return valorChant;
       }
       function getBonusStatsData($) {
@@ -152,10 +161,7 @@ const updateCharacters = async (input) => {
     };
     await scrapeData();
   }
-  await firebase
-    .database()
-    .ref("charactersTest")
-    .set({ charactersTest: characterList });
+  return characterList;
 };
 
 export default updateCharacters;

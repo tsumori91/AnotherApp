@@ -238,7 +238,10 @@ export default class CharacterBuildNaoko extends Component {
           <View style={styles.Accordion}>
             <View style={styles.tabContainer}>
               <TouchableOpacity
-                style={styles.tabBox}
+                style={[
+                  styles.tabBox,
+                  this.state.accordionTab == "main" ? styles.tabSelected : null,
+                ]}
                 onPress={() => this.onAccordionTabPress("main")}
               >
                 <Text style={styles.tabName}>Main</Text>
@@ -331,7 +334,9 @@ export default class CharacterBuildNaoko extends Component {
                           style={styles.linearGradient}
                         ></LinearGradient>
                         <Text style={styles.skillDetails}>{skill.effect}</Text>
-                        <Text style={[styles.skillDetails, {color: colors.gold}]}>
+                        <Text
+                          style={[styles.skillDetails, { color: colors.gold }]}
+                        >
                           Multiplier: {skill.multiplier}
                         </Text>
                       </View>
@@ -441,7 +446,19 @@ export default class CharacterBuildNaoko extends Component {
                   </View>
                 </View>
               ) : this.state.accordionTab == "main" ? (
-                <View style={styles.main}></View>
+                <View style={styles.main}>
+                  <Text>
+                    Valor Chant:{" "}
+                    {this.props.valorChant[0] !== undefined
+                      ? this.props.valorChant[0]
+                      : null}
+                    {this.props.valorChant[1] ? (
+                      <Text>With proof: {this.props.valorChant[1]}</Text>
+                    ) : null}
+                  </Text>
+                  <Text>Tome Name: {this.props.tomeName}</Text>
+                  <Text>Tome Location: {this.props.tomeLocation}</Text>
+                </View>
               ) : null}
             </View>
           </View>
@@ -522,6 +539,15 @@ const styles = StyleSheet.create({
   linearGradient: {
     height: 2,
   },
+  main: {
+    backgroundColor: colors.burgandy,
+    borderRadius: 5,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    minWidth: "91%",
+    maxWidth: "91%",
+    height: 255,
+  },
   shadow: {
     resizeMode: "contain",
     width: 30,
@@ -530,7 +556,7 @@ const styles = StyleSheet.create({
   },
   skillName: {
     color: colors.offWhite,
-    marginTop:10 ,
+    marginTop: 10,
     alignSelf: "center",
     fontSize: 18,
     fontWeight: "bold",
