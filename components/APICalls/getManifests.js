@@ -109,10 +109,10 @@ const addManifestDetails = async (weaponList) => {
             : null;
         });
         skills.push({
-          skillName,
-          skillDescription,
-          skillMultiplier,
-          skillElement,
+          name: skillName,
+          effect: skillDescription,
+          multiplier: skillMultiplier,
+          element: skillElement,
         });
       });
       weapon.skills = skills;

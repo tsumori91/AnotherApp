@@ -7,18 +7,18 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Button,
   ImageBackground,
 } from "react-native";
 import colors from "../Config/colors";
 import Tab from "../SubModules/Tab";
 import Slider from "@react-native-community/slider";
+import EachSkill from "./EachSkill";
 
 export default class CharacterBuildNaoko extends Component {
   state = {
     light: 0,
-    expand: true,
-    accordionTab: "skill",
+    expand: false,
+    accordionTab: "main",
     statsTotal: [],
     bonusStats: [],
   };
@@ -175,7 +175,7 @@ export default class CharacterBuildNaoko extends Component {
                 ></LinearGradient>
               </View>
               <View style={styles.elementContianer}>
-                {this.props.element.map((elementRaw) => {
+                {this.props.element.map((elementRaw, i) => {
                   let elementColour = { backgroundColor: colors.black };
                   // let textColor = {color: colors.white};
                   const element = elementRaw
@@ -209,7 +209,7 @@ export default class CharacterBuildNaoko extends Component {
                       break;
                   }
                   return (
-                    <View style={[styles.elementBox, elementColour]}>
+                    <View key={i} style={[styles.elementBox, elementColour]}>
                       <Text style={styles.element}>{elementRaw}</Text>
                     </View>
                   );
@@ -307,39 +307,24 @@ export default class CharacterBuildNaoko extends Component {
                       default:
                         break;
                     }
+                    let mSkill = false;
+                    if (
+                      this.props.manifestSkills &&
+                      this.props.manifestSkills.filter(
+                        (mskill) => mskill.name == skill.name
+                      ).length > 0
+                    ) {
+                      mSkill = this.props.manifestSkills.filter(
+                        (mskill) => mskill.name == skill.name
+                      )[0];
+                    }
                     return (
-                      <View key={i}>
-                        <LinearGradient
-                          colors={[
-                            colors.burgandy,
-                            colors.gold,
-                            colors.burgandy,
-                          ]}
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 1, y: 0 }}
-                          style={styles.linearGradient}
-                        ></LinearGradient>
-                        <Text style={styles.skillName}>{skill.name}</Text>
-                        <View style={[styles.elementBox, skillElement]}>
-                          <Text style={[styles.element]}>{skill.element}</Text>
-                        </View>
-                        <LinearGradient
-                          colors={[
-                            colors.burgandy,
-                            colors.gold,
-                            colors.burgandy,
-                          ]}
-                          start={{ x: 1, y: 0 }}
-                          end={{ x: 0, y: 0 }}
-                          style={styles.linearGradient}
-                        ></LinearGradient>
-                        <Text style={styles.skillDetails}>{skill.effect}</Text>
-                        <Text
-                          style={[styles.skillDetails, { color: colors.gold }]}
-                        >
-                          Multiplier: {skill.multiplier}
-                        </Text>
-                      </View>
+                      <EachSkill
+                        key={i}
+                        skill={skill}
+                        skillElement={skillElement}
+                        mSkill={mSkill}
+                      />
                     );
                   })}
                 </ScrollView>
