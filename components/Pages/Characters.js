@@ -34,120 +34,14 @@ class CPage extends PureComponent {
     this.setPage();
   }
   setPage = () => {
-    let charactersRead = [...this.props.characters];
-    let charactersTest = [...this.props.charactersTest];
-    this.setState({ charactersRead, charactersTest });
-  };
-  handleAdd = async () => {
-    let oldCharacters = [...this.props.characters];
-    const newChar = {
-      id: oldCharacters[oldCharacters.length - 1].id + 1,
-      name: "",
-      vc: "",
-      vcAS: "",
-      shadow: false,
-      as: false,
-      weapon: "",
-      manifest: false,
-      manifestAs: false,
-      uri: "",
-      uriAs: "",
-      tomeName: "",
-      tomeNameAs: "",
-      tomeLocationAs: "VH/Garulea dungeons",
-      tomeLocation: "",
-      element: "",
-      LStats: [
-        { stat: "", value: 5 },
-        { stat: "", value: 10 },
-        { stat: "", value: 10 },
-        { stat: "", value: 15 },
-        { stat: "", value: 15 },
-        { stat: "", value: 20 },
-        { stat: "", value: 20 },
-        { stat: "", value: 25 },
-        { stat: "", value: 25 },
-        { stat: "", value: 30 },
-      ],
-      score: 0,
-      stats: [
-        { stat: "HP", value: 0 },
-        { stat: "MP", value: 0 },
-        { stat: "PWR", value: 0 },
-        { stat: "INT", value: 0 },
-        { stat: "SPD", value: 0 },
-        { stat: "LCK", value: 0 },
-        { stat: "END", value: 0 },
-        { stat: "SPR", value: 0 },
-      ],
-      statsAs: [
-        { stat: "HP", value: 0 },
-        { stat: "MP", value: 0 },
-        { stat: "PWR", value: 0 },
-        { stat: "INT", value: 0 },
-        { stat: "SPD", value: 0 },
-        { stat: "LCK", value: 0 },
-        { stat: "END", value: 0 },
-        { stat: "SPR", value: 0 },
-      ],
-      skills: [
-        {
-          skillName: "",
-          skillEffect: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-          skillEffectManifest: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-          skillEffectManifest: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-          skillEffectManifest: "",
-        },
-        {
-          skillName: "",
-          skillEffect: "",
-          skillEffectManifest: "",
-        },
-      ],
-    };
-    oldCharacters.push(newChar);
-    oldCharacters.push(newChar);
-    oldCharacters.push(newChar);
-    oldCharacters.push(newChar);
-    const characters = oldCharacters;
-    await firebase.database().ref("characters").set({ characters });
+    let charactersRead = [...this.props.charactersTest];
+    this.setState({ charactersRead });
   };
   handleFilterWeapon = (v) => {
     this.setState({ loading: true });
-    let charactersRead = this.props.characters.filter((w) => w.weapon == v);
-    if (v === this.state.weaponFilter) charactersRead = this.props.characters;
+    let charactersRead = this.props.charactersTest.filter((w) => w.weapon == v);
+    if (v === this.state.weaponFilter)
+      charactersRead = this.props.charactersTest;
     if (this.state.elementFilter !== "")
       charactersRead = charactersRead.filter(
         (e) => e.element == this.state.elementFilter
@@ -165,8 +59,11 @@ class CPage extends PureComponent {
   };
   handleFilterElement = (v) => {
     this.setState({ loading: true });
-    let charactersRead = this.props.characters.filter((e) => e.element == v);
-    if (v === this.state.elementFilter) charactersRead = this.props.characters;
+    let charactersRead = this.props.charactersTest.filter(
+      (e) => e.element[0] == v || e.element[1] == v
+    );
+    if (v === this.state.elementFilter)
+      charactersRead = this.props.charactersTest;
     if (this.state.weaponFilter !== "")
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter
@@ -184,8 +81,10 @@ class CPage extends PureComponent {
   };
   handleFilterPain = () => {
     this.setState({ loading: true });
-    let charactersRead = this.props.characters.filter((e) => e.pain == true);
-    if (this.state.painFilter) charactersRead = [...this.props.characters];
+    let charactersRead = this.props.charactersTest.filter(
+      (e) => e.roles.filter((role) => role == "InflictPainIgnore").length > 0
+    );
+    if (this.state.painFilter) charactersRead = [...this.props.charactersTest];
     if (this.state.weaponFilter !== "")
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter
@@ -203,8 +102,11 @@ class CPage extends PureComponent {
   };
   handleFilterPoison = () => {
     this.setState({ loading: true });
-    let charactersRead = this.props.characters.filter((e) => e.poison == true);
-    if (this.state.poisonFilter) charactersRead = [...this.props.characters];
+    let charactersRead = this.props.charactersTest.filter(
+      (e) => e.roles.filter((role) => role == "InflictPoisonIgnore").length > 0
+    );
+    if (this.state.poisonFilter)
+      charactersRead = [...this.props.charactersTest];
     if (this.state.weaponFilter !== "")
       charactersRead = charactersRead.filter(
         (w) => w.weapon == this.state.weaponFilter
@@ -263,12 +165,12 @@ class CPage extends PureComponent {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonView}
-              onPress={() => this.handleFilterWeapon("Axe")}
+              onPress={() => this.handleFilterWeapon("Ax")}
             >
               <Image
                 style={[
                   styles.weaponIcon,
-                  this.state.weaponFilter === "Axe" ? styles.fade : null,
+                  this.state.weaponFilter === "Ax" ? styles.fade : null,
                 ]}
                 source={require("../pics/Axe.png")}
               />
@@ -451,7 +353,7 @@ class CPage extends PureComponent {
             nestedScrollEnabled={true}
           >
             <View>
-              {this.state.charactersTest.map(
+              {this.state.charactersRead.map(
                 (characters, i) => (
                   i++,
                   (
