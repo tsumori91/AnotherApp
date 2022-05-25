@@ -6,9 +6,9 @@ import {
   ActivityIndicator,
   ImageBackground,
   SafeAreaView,
-  Button,
-  ScrollView,
+  Dimensions,
 } from "react-native";
+
 import CPage from "./components/Pages/Characters";
 import Puller from "./components/Pages/Puller";
 import * as firebase from "firebase";
@@ -23,15 +23,21 @@ import CharTrack from "./components/Pages/CharTrack";
 import Grasta from "./components/Pages/Grasta";
 import Fishing from "./components/Pages/Fishing";
 import IDA3 from "./components/Pages/IDA3";
+
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 if (!firebase.apps.length) {
   firebase.initializeApp(ApiKeys.firebaseConfig);
 }
 
+const SCREEN_HEIGHT = Dimensions.get("screen").height; // device height
+const STATUS_BAR_HEIGHT = StatusBar.currentHeight || 24;
+const WINDOW_HEIGHT = Dimensions.get("window").height;
+const navBar_Height = SCREEN_HEIGHT - WINDOW_HEIGHT - STATUS_BAR_HEIGHT;
+
 export default class AnotherApp extends Component {
   state = {
-    display: "fishing",
+    display: "characters",
     loading: true,
     tracker: [],
     characters: [],
@@ -249,7 +255,9 @@ export default class AnotherApp extends Component {
         style={styles.allContainer}
         source={require("./components/pics/Background.png")}
       >
-        <SafeAreaView style={styles.buttons}>
+        <SafeAreaView
+          style={[styles.buttons, Platform.OS === "ios" ? { zIndex: 3 } : null]}
+        >
           <View style={styles.buttonDrop}>
             <Tab
               textStyle={styles.tabText}
@@ -331,14 +339,14 @@ export default class AnotherApp extends Component {
                   style={styles.eachDropButton}
                   onPress={() => this.handlePages("puller")}
                 />
-                <Tab
+                {/* <Tab
                   textStyle={styles.tabText}
                   selected={this.state.display === "fishing" ? true : false}
                   title={"Fishing"}
                   color={this.state.display === "fishing" ? "darkGrey" : "grey"}
                   onPress={() => this.handlePages("fishing")}
                   style={styles.eachDropButton}
-                />
+                /> */}
               </View>
             )}
           </View>
@@ -371,7 +379,7 @@ export default class AnotherApp extends Component {
           />
         ) : (
           <SafeAreaView style={styles.container}>
-            <View nestedScrollEnabled={true} style={styles.componentContainer}>
+            <View style={styles.componentContainer}>
               {this.state.display === "weapons" ? (
                 <Weapons
                   tracker={this.state.tracker}
@@ -408,6 +416,8 @@ export default class AnotherApp extends Component {
               ) : this.state.display === "fishing" ? (
                 <Fishing
                   characters={this.state.characters}
+                  charactersTest={this.state.charactersTest}
+                  banners={this.state.banners}
                   fish={this.state.fish}
                 />
               ) : (
@@ -436,9 +446,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     marginHorizontal: "0.5%",
-    position: "absolute",
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 65 : 75,
-    marginBottom: Platform.OS === "android" ? 10 : 0,
+    zIndex: 1,
+    elevation: 1,
+    marginBottom: Platform.OS === "android" ? navBar_Height + 20 : 0,
+    marginTop: Platform.OS === "ios" ? 45 : 7,
   },
   componentContainer: {
     flex: 1,
@@ -449,9 +460,11 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    height: 33,
-    flexGrow: 1,
+    paddingVertical: 5,
     alignSelf: "flex-start",
+    zIndex: 2,
+    elevation: 2,
+    height: 30,
   },
   buttonDrop: {
     flexShrink: 1,
@@ -465,24 +478,19 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
     paddingVertical: 7,
-    maxHeight: 33,
-    flexGrow: 1,
     alignSelf: "flex-start",
     width: "100%",
-    height: "100%",
+    height: 33,
   },
   buttons: {
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 15 : 0,
-    marginBottom: Platform.OS === "android" ? 10 : 0,
-    minHeight: 82,
-    maxHeight: 82,
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 17 : 0,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-evenly",
     marginHorizontal: "1%",
     flexDirection: "row",
-    elevation: 1,
-    zIndex: 1,
+    maxHeight: 33,
+    minHeight: 33,
   },
   subButtons: {
     alignItems: "flex-start",
