@@ -16,7 +16,6 @@ import Equip from "../Modules/Equip";
 import * as firebase from "firebase";
 import colors from "../Config/colors";
 import DropDownPicker from "react-native-dropdown-picker";
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export default class Weapons extends Component {
   state = {
@@ -282,11 +281,11 @@ export default class Weapons extends Component {
               source={require("../pics/Katana.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.handleFilterWeapon("Axe")}>
+          <TouchableOpacity onPress={() => this.handleFilterWeapon("Ax")}>
             <Image
               style={[
                 styles.weaponIcon,
-                this.state.weaponFilter === "Axe" ? styles.fade : null,
+                this.state.weaponFilter === "Ax" ? styles.fade : null,
               ]}
               source={require("../pics/Axe.png")}
             />
