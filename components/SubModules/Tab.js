@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1, // IOS
     shadowRadius: 1, //IOS
     backgroundColor: "#fff",
-    height: 25,
+    // height: 25,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",

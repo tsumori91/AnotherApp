@@ -464,7 +464,7 @@ class CPage extends PureComponent {
                           uri={characters.source}
                           activeSkills={characters.activeSkills}
                           passiveSkills={characters.passiveSkills}
-                          manifestSkills={characters.manifest}
+                          manifestSkills={characters.manifestSkills}
                           bonusStats={characters.bonusStats}
                           element={characters.element}
                           roles={characters.roles}
